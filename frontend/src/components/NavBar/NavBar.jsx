@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 /* style */
 import * as S from './style';
 
-export default function Main() {
+export default function NavBar() {
   return (
     <S.NavBarContainer>
       <S.BrandLogoContainer>
