@@ -1,47 +1,120 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.3'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'org.asciidoctor.convert' version '1.5.8'
-	id 'java'
+    id 'org.springframework.boot' version '2.5.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id "org.flywaydb.flyway" version "7.0.3"
+    id 'java'
 }
 
 group = 'com.miniprac'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+ext['spring-restdocs.version'] = '2.0.6.BUILD-SNAPSHOT'
+
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    asciidoctorExtensions
 }
 
 repositories {
-	mavenCentral()
-}
 
-ext {
-	set('snippetsDir', file("build/generated-snippets"))
+    maven { url 'https://repo.spring.io/snapshot' }
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'mysql:mysql-connector-java'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    /**
+     * Security
+     */
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    /**
+     * Lombok
+     */
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    /**
+     * JWT Dependencies
+     */
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.1'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.1', 'io.jsonwebtoken:jjwt-jackson:0.11.1'
+
+    /**
+     * Database
+     */
+    runtimeOnly 'mysql:mysql-connector-java'
+    implementation "org.flywaydb:flyway-core"
+
+    /**
+     * Test Dependencies
+     */
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    testImplementation('org.mockito:mockito-inline:3.4.0')
+    testImplementation('org.mockito:mockito-core:3.4.0')
+    testImplementation('org.mockito:mockito-junit-jupiter:3.4.0')
+
+    /**
+     * RestDocs
+     */
+    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 test {
-	outputs.dir snippetsDir
-	useJUnitPlatform()
+    outputs.dir snippetsDir
+    useJUnitPlatform()
 }
 
 asciidoctor {
-	inputs.dir snippetsDir
-	dependsOn test
+    configurations "asciidoctorExtensions"
+    inputs.dir snippetsDir
+    dependsOn test
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/asciidoc") {
+        into 'static/docs'
+    }
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/docs")
+}
+
+build {
+    dependsOn copyDocument
+}
+
+/*************************
+ * Flyway
+ *************************/
+flyway {
+    baselineVersion = 0
+    encoding = 'UTF-8'
+    validateOnMigrate = true
+    baselineOnMigrate = true
+    locations = ["filesystem:${file('src/main/resources/db/migration').absolutePath}"]
 }
