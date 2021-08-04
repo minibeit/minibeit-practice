@@ -3,6 +3,8 @@ package com.miniprac;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.miniprac.config.RestDocsConfig;
 import com.miniprac.config.WebMvcConfig;
+import com.miniprac.security.oauth.CustomOAuth2UserService;
+import com.miniprac.security.oauth.OAuth2SuccessHandler;
 import com.miniprac.security.token.JwtAuthEntryPoint;
 import com.miniprac.security.token.JwtProps;
 import com.miniprac.security.token.TokenProvider;
@@ -30,4 +32,8 @@ public abstract class MvcTest {
     protected CustomUserDetailsService customUserDetailsService;
     @MockBean
     protected JwtAuthEntryPoint jwtAuthEntryPoint;
+    @MockBean
+    protected OAuth2SuccessHandler oAuth2SuccessHandler;
+    @MockBean
+    protected CustomOAuth2UserService customOAuth2UserService;
 }

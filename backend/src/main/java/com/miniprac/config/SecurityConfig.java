@@ -1,5 +1,7 @@
 package com.miniprac.config;
 
+import com.miniprac.security.oauth.CustomOAuth2UserService;
+import com.miniprac.security.oauth.OAuth2SuccessHandler;
 import com.miniprac.security.token.JwtAuthEntryPoint;
 import com.miniprac.security.token.JwtTokenAuthenticationFilter;
 import com.miniprac.security.token.TokenProvider;
@@ -21,6 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -55,6 +59,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/docs/**").permitAll()
                 .antMatchers("/api/user/signup", "/api/user/login").permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService)
+                .and()
+                .successHandler(oAuth2SuccessHandler)
                 .and()
                 .addFilterBefore(tokenAuthenticationFilter(), OAuth2LoginAuthenticationFilter.class);
     }

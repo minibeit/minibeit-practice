@@ -8,6 +8,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 클라이언트키
+            client-secret: 비밀키
+            scope: profile, email
 
 logging.level:
   org.hibernate.SQL: debug
