@@ -1,5 +1,6 @@
-package com.miniprac.user.domain;
+package com.miniprac.user.domain.repository;
 
+import com.miniprac.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
 package com.miniprac.security.userdetails;
 
 import com.miniprac.user.domain.User;
-import com.miniprac.user.domain.UserRepository;
+import com.miniprac.user.domain.repository.UserRepository;
 import com.miniprac.user.service.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

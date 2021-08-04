@@ -1,7 +1,7 @@
 package com.miniprac.security.oauth;
 
 import com.miniprac.user.domain.User;
-import com.miniprac.user.domain.UserRepository;
+import com.miniprac.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -16,8 +16,8 @@ import java.util.Collections;
 
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final UserRepository userRepository;
 

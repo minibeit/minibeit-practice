@@ -45,7 +45,7 @@ public class OAuthAttributes {
                 .oauthId(id)
                 .name(name)
                 .email(email)
-                .role(Role.User)
+                .role(Role.USER)
                 .provider(signupProvider)
                 .build();
     }

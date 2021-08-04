@@ -1,9 +1,10 @@
 package com.miniprac.security.oauth;
 
+import com.miniprac.security.token.RefreshTokenService;
 import com.miniprac.security.token.Token;
 import com.miniprac.security.token.TokenProvider;
 import com.miniprac.user.domain.User;
-import com.miniprac.user.domain.UserRepository;
+import com.miniprac.user.domain.repository.UserRepository;
 import com.miniprac.user.service.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,11 +19,12 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 
 @Component
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
+    private final RefreshTokenService refreshTokenService;
     @Value("${oauth2.success.redirect.url}")
     private String url;
 
@@ -38,6 +40,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         User user = userRepository.findByOauthId(oAuthId).orElseThrow(UserNotFoundException::new);
 
         Token token = tokenProvider.generateAccessToken(user);
+        refreshTokenService.createOrUpdateRefreshToken(user);
 
         response.sendRedirect(url + token.getToken());
     }

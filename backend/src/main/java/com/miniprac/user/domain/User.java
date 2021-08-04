@@ -39,7 +39,7 @@ public class User extends BaseEntity {
                 .name(name)
                 .email(email)
                 .password(passwordEncoder.encode(password))
-                .role(Role.User)
+                .role(Role.USER)
                 .provider(SignupProvider.MINIBEIT)
                 .build();
     }
