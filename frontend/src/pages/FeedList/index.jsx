@@ -1,5 +1,13 @@
 import React from "react";
 
-export default function FeedList() {
-  return <div>feedlist</div>;
+/* Components */
+import NavBar from '../../components/NavBar/NavBar';
+
+export default function FeedList({match}) {
+  return (
+    <>
+      <NavBar/>
+      <div>{match.params.category} feedlist</div>
+    </>
+  );
 }

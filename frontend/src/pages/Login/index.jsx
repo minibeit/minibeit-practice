@@ -1,5 +1,13 @@
 import React from "react";
 
+/* Components */
+import NavBar from '../../components/NavBar/NavBar';
+
 export default function Login() {
-  return <div>login</div>;
+  return (
+    <>
+      <NavBar/>
+      <div>login</div>
+    </>
+  );
 }

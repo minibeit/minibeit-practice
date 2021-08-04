@@ -23,7 +23,7 @@ function App() {
         <Route path="/mypage/edit" component={MypageEdit}/>
         <Route path="/mypage" component={Mypage} />
         <Route path="/feedList/:category/:postPk/feedEdit"  component={FeedEdit} />
-        <Route path="/feedNew"  component={FeedNew} />
+        <Route path="/feedList/:category/feedNew"  component={FeedNew} />
         <Route path="/feedList/:category/:postPk" exact component={FeedDetail} />
         <Route path="/feedList/:category" exact component={FeedList} />
         <Route path="/applyHome" component={ApplyHome} />

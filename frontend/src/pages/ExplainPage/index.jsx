@@ -1,5 +1,13 @@
 import React from "react";
 
-export default function ExplainPage() {
-  return <div>explainpage</div>;
+/* Components */
+import NavBar from '../../components/NavBar/NavBar';
+
+export default function ExplainPage({match}) {
+  return (
+      <>
+        <NavBar/>
+        <div>{match.params.category} explainpage</div>
+      </>
+    );
 }
