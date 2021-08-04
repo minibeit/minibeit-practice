@@ -1,7 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id "org.asciidoctor.convert" version "1.5.9.2"
     id "org.flywaydb.flyway" version "7.0.3"
     id 'java'
 }
@@ -10,22 +10,8 @@ group = 'com.miniprac'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
-
-ext['spring-restdocs.version'] = '2.0.6.BUILD-SNAPSHOT'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-    asciidoctorExtensions
-}
 
 repositories {
-
-    maven { url 'https://repo.spring.io/snapshot' }
     mavenCentral()
 }
 
@@ -76,8 +62,19 @@ dependencies {
     /**
      * RestDocs
      */
-    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.4.RELEASE'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+}
+
+jar {
+    enabled = false
+}
+
+/*************************
+ * RestDocs
+ *************************/
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
 }
 
 test {
@@ -86,26 +83,25 @@ test {
 }
 
 asciidoctor {
-    configurations "asciidoctorExtensions"
     inputs.dir snippetsDir
     dependsOn test
 }
 
-bootJar {
-    dependsOn asciidoctor
-    from ("${asciidoctor.outputDir}/asciidoc") {
-        into 'static/docs'
-    }
-}
-
 task copyDocument(type: Copy) {
     dependsOn asciidoctor
-    from file("build/docs/asciidoc")
+    from file("build/asciidoc/html5/")
     into file("src/main/resources/static/docs")
 }
 
 build {
     dependsOn copyDocument
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
 }
 
 /*************************
