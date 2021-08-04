@@ -1,11 +1,17 @@
 import React from "react";
+import { FDBottomContainer, FDTopContainer } from "../../components/FeedDetail";
+import NavBar from "../../components/Common/NavBar";
 
-export default function FeedDetail({ match }) {
-  const { category, postPK } = match.params;
+function FeedDetail({ match }) {
+  const { category, postId } = match.params;
+  console.log(postId);
+  //postId에 따른 엔드포인트 찍어서 보여주기
   return (
     <>
-      <div>{category}</div>
-      <div>{postPK}</div>
+      <NavBar />
+      <FDTopContainer category={category} />
+      <FDBottomContainer postId={postId} />
     </>
   );
 }
+export default FeedDetail;
