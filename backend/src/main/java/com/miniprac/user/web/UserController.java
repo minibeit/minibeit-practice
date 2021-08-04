@@ -17,11 +17,17 @@ import java.net.URI;
 public class UserController {
     private final UserService userService;
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
     public ResponseEntity<UserResponse.OnlyId> signup(@RequestBody UserRequest.Signup request) {
         User user = userService.create(request);
 
         return ResponseEntity.created(URI.create("/api/user/" + user.getId())).body(UserResponse.OnlyId.builder().id(user.getId()).build());
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserResponse.Login> login(@RequestBody UserRequest.Login request) {
+        UserResponse.Login response = userService.login(request);
+
+        return ResponseEntity.ok().body(response);
     }
 }

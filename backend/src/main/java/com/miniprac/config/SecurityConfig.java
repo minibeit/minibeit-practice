@@ -1,20 +1,40 @@
 package com.miniprac.config;
 
+import com.miniprac.security.token.JwtAuthEntryPoint;
+import com.miniprac.security.token.JwtTokenAuthenticationFilter;
+import com.miniprac.security.token.TokenProvider;
+import com.miniprac.security.userdetails.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    private final TokenProvider tokenProvider;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final JwtAuthEntryPoint jwtAuthEntryPoint;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtTokenAuthenticationFilter tokenAuthenticationFilter() {
+        return new JwtTokenAuthenticationFilter(tokenProvider, customUserDetailsService);
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -29,9 +49,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint)
+                .and()
                 .authorizeRequests()
                 .antMatchers("/docs/**").permitAll()
-                .antMatchers("/api/user/signup").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/api/user/signup", "/api/user/login").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(tokenAuthenticationFilter(), OAuth2LoginAuthenticationFilter.class);
     }
 }
