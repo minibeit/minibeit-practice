@@ -2,7 +2,7 @@ package com.miniprac.board.service;
 
 import com.miniprac.board.domain.Board;
 import com.miniprac.board.domain.Category;
-import com.miniprac.board.dto.BoardInfo;
+import com.miniprac.board.dto.BoardRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -22,7 +22,7 @@ class BoardServiceTest {
     @Test
     public void 게시글_생성() throws Exception {
         //given
-        BoardInfo boardInfo = BoardInfo.builder()
+        BoardRequest boardRequest = BoardRequest.builder()
                 .categoryType("설문")
                 .content("내용")
                 .pay(50000)
@@ -45,21 +45,21 @@ class BoardServiceTest {
                 .title("새로운 실험")
                 .build();
 
-        lenient().when(boardService.createBoard(boardInfo))
+        lenient().when(boardService.createBoard(boardRequest))
                 .thenReturn(board);
 
         //when
 
         //then
         assertEquals(board.getId(), 1L);
-        assertEquals(board.getCategory().getType(), boardInfo.getCategoryType());
-        assertEquals(board.getContent(), boardInfo.getContent());
-        assertEquals(board.getPay(), boardInfo.getPay());
-        assertEquals(board.getPhoneNum(), boardInfo.getPhoneNum());
-        assertEquals(board.getPlace(), boardInfo.getPlace());
-        assertEquals(board.getRecruitmentPeriod(), boardInfo.getRecruitmentPeriod());
-        assertEquals(board.getTitle(), boardInfo.getTitle());
-        assertEquals(board.getRecruitmentPeriod(), boardInfo.getRecruitmentPeriod());
+        assertEquals(board.getCategory().getType(), boardRequest.getCategoryType());
+        assertEquals(board.getContent(), boardRequest.getContent());
+        assertEquals(board.getPay(), boardRequest.getPay());
+        assertEquals(board.getPhoneNum(), boardRequest.getPhoneNum());
+        assertEquals(board.getPlace(), boardRequest.getPlace());
+        assertEquals(board.getRecruitmentPeriod(), boardRequest.getRecruitmentPeriod());
+        assertEquals(board.getTitle(), boardRequest.getTitle());
+        assertEquals(board.getRecruitmentPeriod(), boardRequest.getRecruitmentPeriod());
 
     }
 

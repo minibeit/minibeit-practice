@@ -34,31 +34,28 @@ public class Board extends BaseEntity {
 
     private String place;
 
+    @Column(name = "phone_num")
     private String phoneNum;
 
     private int pay;
 
-    //모집 기간
-    private String recruitmentPeriod;
+    //마감 날짜
+    private String deadline;
 
     // 실험/ 설문 날짜 시간
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
 
-
-    public void settingCategoryType(Category category){
-         this.category = category;
-    }
-
-    public static Board create(String title, String content, String place, String phoneNum, int pay, String recruitmentPeriod, LocalDateTime startDate) {
+    public static Board create(String title, String content, String place, String phoneNum, int pay, String deadline, LocalDateTime startDate, Category category) {
         return Board.builder()
                 .title(title)
                 .content(content)
                 .place(place)
                 .phoneNum(phoneNum)
                 .pay(pay)
-                .recruitmentPeriod(recruitmentPeriod)
+                .deadline(deadline)
                 .startDate(startDate)
+                .category(category)
                 .build();
     }
 }

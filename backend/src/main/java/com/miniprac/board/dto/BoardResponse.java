@@ -1,8 +1,10 @@
 package com.miniprac.board.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.miniprac.board.domain.Category;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardInfo {
+public class BoardResponse {
 
     private String title;
 
@@ -23,10 +25,8 @@ public class BoardInfo {
     private String categoryType;
     private int pay;
 
-    //모집 기간
-    private String recruitmentPeriod;
+    //마감 날짜
+    private String deadline;
 
-    // 실험/ 설문 날짜 시간
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
 }
