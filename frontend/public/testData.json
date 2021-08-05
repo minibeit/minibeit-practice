@@ -2,6 +2,7 @@
     {
         "id": 1,
         "title": "제목1",
+        "author": "seol",
         "category": "survey",
         "dueDate": "2020-10-20",
         "doDate": "2021-02-02",
@@ -14,6 +15,7 @@
     {
         "id": 2,
         "title": "제목2",
+        "author": "hee",
         "category": "experi",
         "dueDate": "2020-10-20",
         "doDate": "2021-02-02",
@@ -26,6 +28,7 @@
     {
         "id": 3,
         "title": "제목3",
+        "author": "seok",
         "category": "survey",
         "dueDate": "2020-10-20",
         "doDate": "2021-02-02",
@@ -38,6 +41,7 @@
     {
         "id": 4,
         "title": "제목4",
+        "author": "kim",
         "category": "experi",
         "dueDate": "2020-10-20",
         "doDate": "2021-02-02",

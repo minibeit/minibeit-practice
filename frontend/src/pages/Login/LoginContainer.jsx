@@ -6,7 +6,7 @@ import * as S from './style';
 
 export default function LoginContainer() {
   return (
-    <S.LoginForm>
+    <S.LoginForm> {/* 액션, 메소드 추가 */}
       <label for='email'>이메일</label>
       <S.EmailInput
         id='email'
@@ -19,7 +19,7 @@ export default function LoginContainer() {
         name='password'
         required='required'
       />
-      <input type='submit'/>
+      <input type='submit'/> {/* default prevent 받은데이터 formdata 만든 후 전송 */}
       <Link to='/signup'><p>회원가입</p></Link>
     </S.LoginForm>
   );
