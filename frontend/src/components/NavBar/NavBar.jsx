@@ -19,9 +19,6 @@ export default function NavBar() {
           <Link to='/explainPage/apply'><p>실험자 지원 설명</p></Link>
         </S.NavItem>
         <S.NavItem>
-          <Link><p>내정보 or 회원가입</p></Link>
-        </S.NavItem>
-        <S.NavItem>
           <Link to='/login'><p>로그인</p></Link>
         </S.NavItem>
       </S.NavItemsContainer>
