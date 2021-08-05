@@ -1,3 +1,7 @@
+branches:
+  - only:
+    - develop
+
 matrix:
   include:
     - language: java
@@ -5,7 +9,7 @@ matrix:
         - openjdk11
       branches:
         only:
-          - feature/2
+          - develop
 
       cache:
         directories:
