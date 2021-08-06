@@ -5,3 +5,7 @@ CREATE TABLE `board_category`
     `type` VARCHAR(100),
     PRIMARY KEY (`id`)
 );
+
+INSERT INTO `board_category` (type)
+VALUES ('SURVEY'),
+       ('EXPERIMENT')
