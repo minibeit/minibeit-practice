@@ -6,6 +6,7 @@ import com.miniprac.board.domain.BoardCategoryType;
 import com.miniprac.board.domain.repository.BoardCategoryRepository;
 import com.miniprac.board.domain.repository.BoardRepository;
 import com.miniprac.board.dto.BoardRequest;
+import com.miniprac.board.service.exception.BoardNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,4 +31,17 @@ public class BoardService {
         BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow();
         return boardRepository.findAllByCategoryId(category.getId());
     }
+
+    public void deleteBoard(Long boardId){
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+        boardRepository.delete(board);
+    }
+
+    public void update(BoardRequest.Update request, Long boardId){
+        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow();
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+        board.update(request, category);
+    }
+
+
 }

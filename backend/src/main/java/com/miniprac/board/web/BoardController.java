@@ -22,7 +22,6 @@ public class BoardController {
     @PostMapping
     public ResponseEntity<BoardResponse.OnlyId> create(@RequestBody BoardRequest.Create request) {
         Board board = boardService.create(request);
-
         return ResponseEntity.created(URI.create("/api/board/" + board.getId())).body(BoardResponse.OnlyId.build(board));
     }
 
@@ -32,5 +31,18 @@ public class BoardController {
         List<BoardResponse.GetList> response = board.stream().map(BoardResponse.GetList::build).collect(Collectors.toList());
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping("/delete/{boardId}")
+    public ResponseEntity<BoardResponse.OnlyId> delete(@PathVariable("boardId") Long boardId){
+        boardService.deleteBoard(boardId);
+        return ResponseEntity.ok().body(BoardResponse.OnlyId.builder().id(boardId).build());
+    }
+
+    @PutMapping("/edit/{boardId}")
+    public ResponseEntity<BoardResponse.OnlyId> update(@PathVariable("boardId")Long boardId,
+                                                       @RequestBody BoardRequest.Update request){
+        boardService.update(request, boardId);
+        return ResponseEntity.ok().body(BoardResponse.OnlyId.builder().id(boardId).build());
     }
 }
