@@ -1,30 +1,35 @@
 package com.miniprac.board.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.miniprac.board.domain.Category;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class BoardRequest {
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class Create {
+        private String title;
 
-    private String title;
+        private String content;
 
-    private String content;
+        private String place;
 
-    private String place;
+        private String phoneNum;
 
-    private String phoneNum;
+        private String category;
 
-    private String categoryType;
-    private int pay;
+        private int pay;
 
-    //마감 날짜
-    private String deadline;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+        private LocalDate dueDate;
 
-    private LocalDateTime startDate;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime doDate;
+    }
+
 }

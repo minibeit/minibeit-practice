@@ -1,31 +1,26 @@
 package com.miniprac.board.service;
 
 import com.miniprac.board.domain.Board;
-import com.miniprac.board.domain.Category;
+import com.miniprac.board.domain.BoardCategory;
+import com.miniprac.board.domain.repository.BoardCategoryRepository;
 import com.miniprac.board.domain.repository.BoardRepository;
-import com.miniprac.board.domain.repository.CategoryRepository;
 import com.miniprac.board.dto.BoardRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
-    private final CategoryRepository categoryRepository;
+    private final BoardCategoryRepository boardCategoryRepository;
 
-    public Board createBoard(BoardRequest request){
+    public Board create(BoardRequest.Create request) {
+        BoardCategory category = boardCategoryRepository.save(BoardCategory.create(request.getCategory()));
 
-        Category category = categoryRepository.save(Category.builder().type(request.getCategoryType()).build());
-
-        Board board = Board.create(request.getTitle(), request.getContent(),
-                request.getPlace(), request.getPhoneNum(),
-                request.getPay(), request.getDeadline(), request.getStartDate(), category);
+        Board board = Board.create(request, category);
 
         return boardRepository.save(board);
     }
-
-
 }

@@ -1,0 +1,25 @@
+= Minibeit API 문서 (Board)
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:snippets: ../../../build/generated-snippets
+
+= Board
+---
+== 기본 API
+
+=== 게시물 생성
+
+`POST /api/board`
+
+요청 HTTP
+include::{snippets}/board-create/http-request.adoc[]
+include::{snippets}/board-create/request-fields.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/board-create/http-response.adoc[]
+include::{snippets}/board-create/request-fields.adoc[]
+
