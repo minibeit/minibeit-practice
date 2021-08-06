@@ -6,6 +6,7 @@ import com.miniprac.board.domain.BoardCategoryType;
 import com.miniprac.board.domain.repository.BoardCategoryRepository;
 import com.miniprac.board.domain.repository.BoardRepository;
 import com.miniprac.board.dto.BoardRequest;
+import com.miniprac.board.service.exception.BoardCategoryNotFoundException;
 import com.miniprac.board.service.exception.BoardNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,14 +22,15 @@ public class BoardService {
     private final BoardCategoryRepository boardCategoryRepository;
 
     public Board create(BoardRequest.Create request) {
-        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow();
+        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
         Board board = Board.create(request, category);
 
         return boardRepository.save(board);
     }
 
+    @Transactional(readOnly = true)
     public List<Board> getList(BoardRequest.GetListByCategory request) {
-        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow();
+        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
         return boardRepository.findAllByCategoryId(category.getId());
     }
 
@@ -44,4 +46,8 @@ public class BoardService {
     }
 
 
+    @Transactional(readOnly = true)
+    public Board getOne(Long boardId) {
+        return boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+    }
 }

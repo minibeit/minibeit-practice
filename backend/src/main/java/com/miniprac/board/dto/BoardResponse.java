@@ -26,16 +26,12 @@ public class BoardResponse {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class GetList {
         private Long id;
-
         private String title;
-
         private String place;
-
         private String author;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate dueDate;
-
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime doDate;
 
@@ -50,4 +46,40 @@ public class BoardResponse {
                     .build();
         }
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class GetOne {
+        private Long id;
+        private String category;
+        private String title;
+        private String content;
+        private String place;
+        private String author;
+        private Integer pay;
+        private Integer time;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+        private LocalDate dueDate;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
+        private LocalDateTime doDate;
+
+        public static BoardResponse.GetOne build(Board board) {
+            return GetOne.builder()
+                    .id(board.getId())
+                    .category(board.getCategory().getType().name())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .place(board.getPlace())
+                    .author(board.getCreatedBy().getName())
+                    .pay(board.getPay())
+                    .time(board.getTime())
+                    .dueDate(board.getDueDate())
+                    .doDate(board.getDoDate())
+                    .build();
+        }
+    }
 }
+

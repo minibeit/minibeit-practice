@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -29,6 +30,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,6 +58,7 @@ class BoardControllerTest extends MvcTest {
                 .content("피실험자 모집합니다~")
                 .place("고려대 신공학관")
                 .pay(20000)
+                .time(20)
                 .phoneNum("010-1234-5678")
                 .category(boardCategory)
                 .dueDate(LocalDate.of(2021, 8, 20))
@@ -66,6 +71,7 @@ class BoardControllerTest extends MvcTest {
                 .content("피실험자 모집합니다~")
                 .place("고려대 신공학관")
                 .pay(50000)
+                .time(30)
                 .phoneNum("010-1234-5678")
                 .category(boardCategory)
                 .dueDate(LocalDate.of(2021, 8, 20))
@@ -78,6 +84,7 @@ class BoardControllerTest extends MvcTest {
                 .content("피실험자 모집합니다~")
                 .place("고려대 신공학관")
                 .pay(30000)
+                .time(40)
                 .phoneNum("010-1234-5678")
                 .category(boardCategory)
                 .dueDate(LocalDate.of(2021, 8, 20))
@@ -121,6 +128,7 @@ class BoardControllerTest extends MvcTest {
                                 fieldWithPath("content").type(JsonFieldType.STRING).description("내용"),
                                 fieldWithPath("place").type(JsonFieldType.STRING).description("장소"),
                                 fieldWithPath("pay").type(JsonFieldType.NUMBER).description("급여"),
+                                fieldWithPath("time").type(JsonFieldType.NUMBER).description("소요시간(분단위)"),
                                 fieldWithPath("phoneNum").type(JsonFieldType.STRING).description("연락처"),
                                 fieldWithPath("category").type(JsonFieldType.STRING).description("카테고리 SURVEY or EXPERIMENT"),
                                 fieldWithPath("dueDate").type(JsonFieldType.STRING).description("마감날짜"),
@@ -224,4 +232,31 @@ class BoardControllerTest extends MvcTest {
     }
 
 
+    @DisplayName("게시물 단건 조회 문서화")
+    public void getOne() throws Exception {
+        given(boardService.getOne(any())).willReturn(board1);
+
+        ResultActions results = mvc.perform(RestDocumentationRequestBuilders
+                .get("/api/board/{boardId}", 1));
+
+        results.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("board-getOne",
+                        pathParameters(
+                                parameterWithName("boardId").description("조회할 게시물 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("게시물 식별자"),
+                                fieldWithPath("category").type(JsonFieldType.STRING).description("카테고리"),
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("내용"),
+                                fieldWithPath("place").type(JsonFieldType.STRING).description("장소"),
+                                fieldWithPath("author").type(JsonFieldType.STRING).description("게시물 작성자 이름"),
+                                fieldWithPath("pay").type(JsonFieldType.NUMBER).description("게시물 작성자 이름"),
+                                fieldWithPath("time").type(JsonFieldType.NUMBER).description("소요시간(분단위)"),
+                                fieldWithPath("dueDate").type(JsonFieldType.STRING).description("마감날짜"),
+                                fieldWithPath("doDate").type(JsonFieldType.STRING).description("실험/설문 날짜")
+                        )
+                ));
+    }
 }

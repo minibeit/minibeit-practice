@@ -34,6 +34,8 @@ public class Board extends BaseEntity {
 
     private int pay;
 
+    private int time;
+
     //마감 날짜
     @Column(name = "due_date")
     private LocalDate dueDate;
@@ -49,6 +51,7 @@ public class Board extends BaseEntity {
                 .place(request.getPlace())
                 .phoneNum(request.getPhoneNum())
                 .pay(request.getPay())
+                .time(request.getTime())
                 .dueDate(request.getDueDate())
                 .doDate(request.getDoDate())
                 .category(category)

@@ -41,8 +41,15 @@ public class BoardController {
 
     @PutMapping("/edit/{boardId}")
     public ResponseEntity<BoardResponse.OnlyId> update(@PathVariable("boardId")Long boardId,
-                                                       @RequestBody BoardRequest.Update request){
+                                                       @RequestBody BoardRequest.Update request) {
         boardService.update(request, boardId);
         return ResponseEntity.ok().body(BoardResponse.OnlyId.builder().id(boardId).build());
+    }
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<BoardResponse.GetOne> getOne(@PathVariable Long boardId) {
+        Board board = boardService.getOne(boardId);
+
+        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board));
     }
 }
