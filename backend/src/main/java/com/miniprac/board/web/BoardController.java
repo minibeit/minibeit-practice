@@ -33,14 +33,13 @@ public class BoardController {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping("/delete/{boardId}")
-    public ResponseEntity<BoardResponse.OnlyId> delete(@PathVariable("boardId") Long boardId){
+    @DeleteMapping("/{boardId}")
+    public void delete(@PathVariable Long boardId){
         boardService.deleteBoard(boardId);
-        return ResponseEntity.ok().body(BoardResponse.OnlyId.builder().id(boardId).build());
     }
 
-    @PutMapping("/edit/{boardId}")
-    public ResponseEntity<BoardResponse.OnlyId> update(@PathVariable("boardId")Long boardId,
+    @PutMapping("/{boardId}")
+    public ResponseEntity<BoardResponse.OnlyId> update(@PathVariable Long boardId,
                                                        @RequestBody BoardRequest.Update request) {
         boardService.update(request, boardId);
         return ResponseEntity.ok().body(BoardResponse.OnlyId.builder().id(boardId).build());

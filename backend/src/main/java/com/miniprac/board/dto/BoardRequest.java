@@ -47,6 +47,7 @@ public class BoardRequest {
         private String phoneNum;
         private String category;
         private int pay;
+        private int time;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate dueDate;

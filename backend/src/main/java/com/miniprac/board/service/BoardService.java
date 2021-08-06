@@ -40,7 +40,7 @@ public class BoardService {
     }
 
     public void update(BoardRequest.Update request, Long boardId){
-        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow();
+        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
         board.update(request, category);
     }

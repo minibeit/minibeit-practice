@@ -67,6 +67,7 @@ public class Board extends BaseEntity {
                 .pay(request.getPay())
                 .dueDate(request.getDueDate())
                 .doDate(request.getDoDate())
+                .time(request.getTime())
                 .category(category)
                 .build();
     }
