@@ -23,6 +23,18 @@ include::{snippets}/board-create/request-fields.adoc[]
 include::{snippets}/board-create/http-response.adoc[]
 include::{snippets}/board-create/response-fields.adoc[]
 
+=== 게시물 단건 조회
+
+`POST /api/board/{boardId}`
+
+요청 HTTP
+include::{snippets}/board-getOne/http-request.adoc[]
+include::{snippets}/board-getOne/path-parameters.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/board-getOne/http-response.adoc[]
+include::{snippets}/board-getOne/response-fields.adoc[]
+
 === 게시물 목록 조회
 
 `POST /api/board/list`

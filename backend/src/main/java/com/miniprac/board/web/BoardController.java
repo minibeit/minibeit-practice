@@ -33,4 +33,11 @@ public class BoardController {
 
         return ResponseEntity.ok().body(response);
     }
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<BoardResponse.GetOne> getOne(@PathVariable Long boardId) {
+        Board board = boardService.getOne(boardId);
+
+        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board));
+    }
 }

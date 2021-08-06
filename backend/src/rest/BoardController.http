@@ -9,6 +9,7 @@ Authorization: {{authorizationToken}}
   "phoneNum": "010-1234-5678",
   "category": "SURVEY",
   "pay": 20000,
+  "time": 20,
   "dueDate": "2021-08-20",
   "doDate": "2021-08-10T09:30:00"
 }
@@ -17,3 +18,9 @@ Authorization: {{authorizationToken}}
 
 GET {{apiUrl}}/board/list?category=survey
 Authorization: {{authorizationToken}}
+
+###
+
+GET {{apiUrl}}/board/1
+Authorization: {{authorizationToken}}
+
