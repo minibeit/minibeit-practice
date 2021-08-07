@@ -25,6 +25,13 @@ public class BoardController {
         return ResponseEntity.created(URI.create("/api/board/" + board.getId())).body(BoardResponse.OnlyId.build(board));
     }
 
+    @GetMapping("/{boardId}")
+    public ResponseEntity<BoardResponse.GetOne> getOne(@PathVariable Long boardId) {
+        Board board = boardService.getOne(boardId);
+
+        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board));
+    }
+
     @GetMapping("/list")
     public ResponseEntity<List<BoardResponse.GetList>> getList(BoardRequest.GetListByCategory request) {
         List<Board> board = boardService.getList(request);
@@ -33,22 +40,17 @@ public class BoardController {
         return ResponseEntity.ok().body(response);
     }
 
-    @DeleteMapping("/{boardId}")
-    public void delete(@PathVariable Long boardId){
-        boardService.deleteBoard(boardId);
-    }
-
     @PutMapping("/{boardId}")
-    public ResponseEntity<BoardResponse.OnlyId> update(@PathVariable Long boardId,
-                                                       @RequestBody BoardRequest.Update request) {
-        boardService.update(request, boardId);
-        return ResponseEntity.ok().body(BoardResponse.OnlyId.builder().id(boardId).build());
+    public ResponseEntity<BoardResponse.OnlyId> update(@PathVariable Long boardId, @RequestBody BoardRequest.Update request) {
+        Board board = boardService.update(request, boardId);
+
+        return ResponseEntity.ok().body(BoardResponse.OnlyId.build(board));
     }
 
-    @GetMapping("/{boardId}")
-    public ResponseEntity<BoardResponse.GetOne> getOne(@PathVariable Long boardId) {
-        Board board = boardService.getOne(boardId);
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<Void> delete(@PathVariable Long boardId){
+        boardService.deleteBoard(boardId);
 
-        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board));
+        return ResponseEntity.ok().build();
     }
 }

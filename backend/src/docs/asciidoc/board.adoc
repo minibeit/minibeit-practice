@@ -47,3 +47,28 @@ include::{snippets}/board-getList/request-parameters.adoc[]
 include::{snippets}/board-getList/http-response.adoc[]
 include::{snippets}/board-getList/response-fields.adoc[]
 
+=== 게시물 수정
+
+`PUT /api/board/{boardId}`
+
+요청 HTTP
+include::{snippets}/board-update/http-request.adoc[]
+include::{snippets}/board-update/path-parameters.adoc[]
+include::{snippets}/board-update/request-fields.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/board-update/http-response.adoc[]
+include::{snippets}/board-update/response-fields.adoc[]
+
+=== 게시물 삭제
+
+`DELETE /api/board/{boardId}`
+
+요청 HTTP
+include::{snippets}/board-delete/http-request.adoc[]
+include::{snippets}/board-delete/path-parameters.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/board-delete/http-response.adoc[]
+
+

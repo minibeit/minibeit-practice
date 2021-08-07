@@ -58,17 +58,15 @@ public class Board extends BaseEntity {
                 .build();
     }
 
-    public Board update(BoardRequest.Update request, BoardCategory category) {
-        return Board.builder()
-                .title(request.getTitle())
-                .content(request.getContent())
-                .place(request.getPlace())
-                .phoneNum(request.getPhoneNum())
-                .pay(request.getPay())
-                .dueDate(request.getDueDate())
-                .doDate(request.getDoDate())
-                .time(request.getTime())
-                .category(category)
-                .build();
+    public void update(BoardRequest.Update request, BoardCategory category) {
+       this.title= request.getTitle();
+       this.content=request.getContent();
+       this.place=request.getPlace();
+       this.phoneNum=request.getPhoneNum();
+       this.pay= request.getPay();
+       this.time=request.getTime();
+       this.doDate=request.getDoDate();
+       this.dueDate=request.getDueDate();
+       this.category=category;
     }
 }

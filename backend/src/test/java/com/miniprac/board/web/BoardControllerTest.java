@@ -24,15 +24,10 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -167,71 +162,6 @@ class BoardControllerTest extends MvcTest {
     }
 
     @Test
-    @DisplayName("게시글 삭제 문서화")
-    public void deleteBoard() throws Exception {
-        //given
-        boardService.deleteBoard(board1.getId());
-
-        ResultActions results = mvc.perform(
-                delete("/api/board/delete/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-        );
-
-        results.andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document("board-delete",
-                        responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("삭제된 게시물 식별자")
-                        )
-                ));
-        //then
-
-    }
-
-    @Test
-    @DisplayName("게시물 수정 문서화")
-    public void edit() throws Exception {
-        BoardRequest.Update request = BoardRequest.Update.builder()
-                .title("피실험자 모집 수정 버전")
-                .content("피실험자 모집합니다~~ (수정했습니다!!)")
-                .place("고려대 신공학관")
-                .pay(50000)
-                .phoneNum("010-1234-5678")
-                .category("SURVEY")
-                .dueDate(LocalDate.of(2021, 8, 20))
-                .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
-                .build();
-
-        boardService.update(request,1L);
-
-        ResultActions results = mvc.perform(
-                put("/api/board/edit/2")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(objectMapper.writeValueAsString(request))
-        );
-
-        results.andExpect(status().isOk())
-                .andDo(print())
-                .andDo(document("board-update",
-                        requestFields(
-                                fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
-                                fieldWithPath("content").type(JsonFieldType.STRING).description("내용"),
-                                fieldWithPath("place").type(JsonFieldType.STRING).description("장소"),
-                                fieldWithPath("pay").type(JsonFieldType.NUMBER).description("급여"),
-                                fieldWithPath("phoneNum").type(JsonFieldType.STRING).description("연락처"),
-                                fieldWithPath("category").type(JsonFieldType.STRING).description("카테고리 SURVEY or EXPERIMENT"),
-                                fieldWithPath("dueDate").type(JsonFieldType.STRING).description("마감날짜"),
-                                fieldWithPath("doDate").type(JsonFieldType.STRING).description("실험/설문 날짜")
-                        ),
-                        responseFields(
-                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("수정된 게시물 식별자")
-                        )
-                ));
-    }
-
-
     @DisplayName("게시물 단건 조회 문서화")
     public void getOne() throws Exception {
         given(boardService.getOne(any())).willReturn(board1);
@@ -256,6 +186,67 @@ class BoardControllerTest extends MvcTest {
                                 fieldWithPath("time").type(JsonFieldType.NUMBER).description("소요시간(분단위)"),
                                 fieldWithPath("dueDate").type(JsonFieldType.STRING).description("마감날짜"),
                                 fieldWithPath("doDate").type(JsonFieldType.STRING).description("실험/설문 날짜")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("게시물 수정 문서화")
+    public void edit() throws Exception {
+        BoardRequest.Update request = BoardRequest.Update.builder()
+                .title("피실험자 모집 수정 버전")
+                .content("피실험자 모집합니다~~ (수정했습니다!!)")
+                .place("고려대 신공학관")
+                .pay(50000)
+                .phoneNum("010-1234-5678")
+                .category("SURVEY")
+                .dueDate(LocalDate.of(2021, 8, 20))
+                .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
+                .build();
+
+        given(boardService.update(any(), any())).willReturn(board1);
+
+        ResultActions results = mvc.perform(RestDocumentationRequestBuilders
+                .put("/api/board/{boardId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(objectMapper.writeValueAsString(request))
+        );
+
+        results.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("board-update",
+                        pathParameters(
+                                parameterWithName("boardId").description("수정할 게시물 식별자")
+                        ),
+                        requestFields(
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("내용"),
+                                fieldWithPath("place").type(JsonFieldType.STRING).description("장소"),
+                                fieldWithPath("pay").type(JsonFieldType.NUMBER).description("급여"),
+                                fieldWithPath("time").type(JsonFieldType.NUMBER).description("소요 시간"),
+                                fieldWithPath("phoneNum").type(JsonFieldType.STRING).description("연락처"),
+                                fieldWithPath("category").type(JsonFieldType.STRING).description("카테고리 SURVEY or EXPERIMENT"),
+                                fieldWithPath("dueDate").type(JsonFieldType.STRING).description("마감날짜"),
+                                fieldWithPath("doDate").type(JsonFieldType.STRING).description("실험/설문 날짜")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("수정된 게시물 식별자")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 문서화")
+    public void deleteBoard() throws Exception {
+        ResultActions results = mvc.perform(RestDocumentationRequestBuilders
+                .delete("/api/board/{boardId}", 1));
+
+        results.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("board-delete",
+                        pathParameters(
+                                parameterWithName("boardId").description("수정할 게시물 식별자")
                         )
                 ));
     }

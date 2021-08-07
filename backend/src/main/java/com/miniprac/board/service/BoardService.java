@@ -34,20 +34,20 @@ public class BoardService {
         return boardRepository.findAllByCategoryId(category.getId());
     }
 
-    public void deleteBoard(Long boardId){
-        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
-        boardRepository.delete(board);
-    }
-
-    public void update(BoardRequest.Update request, Long boardId){
-        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
-        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
-        board.update(request, category);
-    }
-
-
     @Transactional(readOnly = true)
     public Board getOne(Long boardId) {
         return boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+    }
+
+    public Board update(BoardRequest.Update request, Long boardId){
+        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+        board.update(request, category);
+        return board;
+    }
+
+    public void deleteBoard(Long boardId){
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+        boardRepository.delete(board);
     }
 }
