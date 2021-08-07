@@ -4,7 +4,10 @@ import com.miniprac.board.domain.Board;
 import com.miniprac.board.dto.BoardRequest;
 import com.miniprac.board.dto.BoardResponse;
 import com.miniprac.board.service.BoardService;
+import com.miniprac.common.dto.PageDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,11 +36,11 @@ public class BoardController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<BoardResponse.GetList>> getList(BoardRequest.GetListByCategory request) {
-        List<Board> board = boardService.getList(request);
-        List<BoardResponse.GetList> response = board.stream().map(BoardResponse.GetList::build).collect(Collectors.toList());
+    public Page<BoardResponse.GetList> getList(PageDto pageDto, BoardRequest.GetListByCategory request) {
+        Page<Board> list = boardService.getList(pageDto, request);
+        List<BoardResponse.GetList> response = list.stream().map(BoardResponse.GetList::build).collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(response);
+        return new PageImpl<>(response, pageDto.of(), list.getTotalElements());
     }
 
     @PutMapping("/{boardId}")
