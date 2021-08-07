@@ -9,3 +9,13 @@ export const onSignup = (config, success, fail)=>{
         fail(err)
     }))
 }
+
+export const onLogin = (config, success, fail)=>{
+    axios(config)
+    .then((res)=>{
+        success(res)
+    })
+    .catch((err)=>{
+        fail()
+    })
+}
