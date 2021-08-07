@@ -1,6 +1,7 @@
 package com.miniprac.user.web;
 
 import com.miniprac.MvcTest;
+import com.miniprac.security.token.RefreshTokenService;
 import com.miniprac.security.token.Token;
 import com.miniprac.user.domain.User;
 import com.miniprac.user.dto.UserRequest;
@@ -28,6 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends MvcTest {
     @MockBean
     private UserService userService;
+    @MockBean
+    private RefreshTokenService refreshTokenService;
 
     @Test
     @DisplayName("회원가입 문서화")
@@ -83,6 +86,28 @@ class UserControllerTest extends MvcTest {
                                 fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
                                 fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
                         ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("로그인한 유저 식별자"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("로그인한 유저 식별자"),
+                                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("accessToken"),
+                                fieldWithPath("accessTokenExpiredAt").type(JsonFieldType.STRING).description("accessToken 만료일")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("refresh token 테스트")
+    public void refreshToken() throws Exception {
+        UserResponse.Login response = UserResponse.Login.build(1L, "테스터", Token.builder().token("accessToken").expiredAt(LocalDateTime.now()).build());
+
+        given(refreshTokenService.createAccessToken(any())).willReturn(response);
+        ResultActions results = mvc.perform(
+                post("/api/user/refreshtoken")
+        );
+
+        results.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("user-refresh-token",
                         responseFields(
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("로그인한 유저 식별자"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("로그인한 유저 식별자"),

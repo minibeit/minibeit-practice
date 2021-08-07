@@ -3,6 +3,9 @@ package com.miniprac.security.token;
 import com.miniprac.user.domain.RefreshToken;
 import com.miniprac.user.domain.User;
 import com.miniprac.user.domain.repository.RefreshTokenRepository;
+import com.miniprac.user.dto.UserResponse;
+import com.miniprac.user.service.exception.RefreshTokenExpiredException;
+import com.miniprac.user.service.exception.RefreshTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +29,16 @@ public class RefreshTokenService {
             RefreshToken refreshToken = RefreshToken.create(createdRefreshToken.getToken(), createdRefreshToken.getExpiredAt(), user);
             refreshTokenRepository.save(refreshToken);
         }
+    }
+
+    public UserResponse.Login createAccessToken(User user){
+        RefreshToken refreshToken = refreshTokenRepository.findByUserId(user.getId()).orElseThrow(RefreshTokenNotFoundException::new);
+        if (!refreshToken.verifyExpiration()) {
+            throw new RefreshTokenExpiredException();
+        }
+        Token token = tokenProvider.generateRefreshToken();
+        refreshToken.update(token.getToken(), token.getExpiredAt());
+
+        return UserResponse.Login.build(user.getId(), user.getName(), tokenProvider.generateAccessToken(user));
     }
 }

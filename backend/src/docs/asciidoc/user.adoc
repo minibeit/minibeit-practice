@@ -41,3 +41,14 @@ include::{snippets}/user-login/response-fields.adoc[]
 
 - 해당 url 리다이렉트
 - http://localhost:3000?token=accessToken 반환
+
+=== Refresh Token 으로 accessToken 받기
+
+`POST /api/user/refreshtoken`
+
+요청 HTTP
+include::{snippets}/user-refresh-token/http-request.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/user-refresh-token/http-response.adoc[]
+include::{snippets}/user-refresh-token/response-fields.adoc[]

@@ -1,5 +1,8 @@
 package com.miniprac.user.web;
 
+import com.miniprac.security.token.RefreshTokenService;
+import com.miniprac.security.userdetails.CurrentUser;
+import com.miniprac.security.userdetails.CustomUserDetails;
 import com.miniprac.user.domain.User;
 import com.miniprac.user.dto.UserRequest;
 import com.miniprac.user.dto.UserResponse;
@@ -18,6 +21,7 @@ import java.net.URI;
 @RequestMapping(path = "/api/user")
 public class UserController {
     private final UserService userService;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
     public ResponseEntity<UserResponse.OnlyId> signup(@RequestBody UserRequest.Signup request) {
@@ -31,5 +35,10 @@ public class UserController {
         UserResponse.Login response = userService.login(request);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/refreshtoken")
+    public UserResponse.Login refreshToken(@CurrentUser CustomUserDetails customUserDetails){
+        return refreshTokenService.createAccessToken(customUserDetails.getUser());
     }
 }
