@@ -19,7 +19,7 @@ GET {{apiUrl}}/board/list?category=experiment
 Authorization: {{authorizationToken}}
 
 ###
-GET {{apiUrl}}/board/1
+GET {{apiUrl}}/board/9
 Authorization: {{authorizationToken}}
 
 ###
