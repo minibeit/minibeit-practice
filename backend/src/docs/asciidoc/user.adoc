@@ -21,6 +21,7 @@ include::{snippets}/user-signup/request-fields.adoc[]
 
 성공 응답 HTTP
 include::{snippets}/user-signup/http-response.adoc[]
+include::{snippets}/user-signup/response-fields.adoc[]
 
 === 로그인
 
@@ -32,3 +33,11 @@ include::{snippets}/user-login/request-fields.adoc[]
 
 성공 응답 HTTP
 include::{snippets}/user-login/http-response.adoc[]
+include::{snippets}/user-login/response-fields.adoc[]
+
+=== 구글 로그인
+
+`Redirect /oauth2/authorization/google`
+
+- 해당 url 리다이렉트
+- http://localhost:3000?token=accessToken 반환

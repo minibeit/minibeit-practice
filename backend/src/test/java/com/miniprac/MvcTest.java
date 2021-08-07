@@ -15,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
-
 @AutoConfigureRestDocs
 @Import({
         WebMvcConfig.class,
@@ -23,9 +22,10 @@ import org.springframework.test.web.servlet.MockMvc;
         JwtProps.class,
         RestDocsConfig.class,
 })
+@WithMockCustomUser
 public abstract class MvcTest {
     @Autowired
-    protected MockMvc mockMvc;
+    protected MockMvc mvc;
     @Autowired
     protected ObjectMapper objectMapper;
     @MockBean

@@ -41,7 +41,7 @@ class UserControllerTest extends MvcTest {
 
         given(userService.create(any())).willReturn(user);
 
-        ResultActions results = mockMvc.perform(
+        ResultActions results = mvc.perform(
                 post("/api/user/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
@@ -69,7 +69,7 @@ class UserControllerTest extends MvcTest {
 
         given(userService.login(any())).willReturn(response);
 
-        ResultActions results = mockMvc.perform(
+        ResultActions results = mvc.perform(
                 post("/api/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")

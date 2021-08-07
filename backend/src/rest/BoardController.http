@@ -1,0 +1,44 @@
+POST {{apiUrl}}/board
+Content-Type: application/json;charset=UTF-8
+Authorization: {{authorizationToken}}
+
+{
+  "title": "피실험자 모집",
+  "content": "피실험자 모집합니다~~",
+  "place": "고려대 신공학관",
+  "phoneNum": "010-1234-5678",
+  "category": "SURVEY",
+  "pay": 20000,
+  "time": 20,
+  "dueDate": "2021-08-20",
+  "doDate": "2021-08-10T09:30:00"
+}
+
+###
+GET {{apiUrl}}/board/list?category=experiment
+Authorization: {{authorizationToken}}
+
+###
+GET {{apiUrl}}/board/9
+Authorization: {{authorizationToken}}
+
+###
+PUT {{apiUrl}}/board/1
+Content-Type: application/json;charset=UTF-8
+Authorization: {{authorizationToken}}
+
+{
+  "title": "피실험자 모집2",
+  "content": "피실험자 모집합니다~~2",
+  "place": "고려대 신공학관2",
+  "phoneNum": "010-1234-1234",
+  "category": "EXPERIMENT",
+  "pay": 50000,
+  "time": 100,
+  "dueDate": "2021-08-21",
+  "doDate": "2021-08-11T09:30:00"
+}
+
+###
+DELETE {{apiUrl}}/board/1
+Authorization: {{authorizationToken}}

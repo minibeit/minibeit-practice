@@ -1,1 +1,2 @@
 - link:/docs/user.html[회원가입 및 인증 API]
+- link:/docs/board.html[게시물 API]
