@@ -2,18 +2,14 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 /* Components */
-import NavBar from '../../components/NavBar/NavBar';
-import { RecruitExplain, ApplyExplain } from './Explain'
+import { NavBar } from "../../components/Common";import { Explain } from "../../components/ExplainPage";
 
 export default function ExplainPage({match}) {
+  let category = match.params.category;
   return (
       <>
         <NavBar/>
-        {
-          match.params.category == 'recurit'
-          ? <RecruitExplain/>
-          : <ApplyExplain/>
-        }
+        <Explain category={ category }/>
         <Link to='/applyHome'><button>minibeit 시작하기</button></Link>
       </>
     );

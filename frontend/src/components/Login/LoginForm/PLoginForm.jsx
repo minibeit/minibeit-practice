@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 /* Components */
-import * as S from './style';
+import * as S from '../style';
 
-export default function LoginContainer() {
+export default function PLoginForm() {
   return (
     <S.LoginForm> {/* 액션, 메소드 추가 */}
       <label for='email'>이메일</label>

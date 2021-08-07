@@ -1,13 +1,12 @@
 /*eslint-disable*/
 import React from "react";
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 /* style */
-import * as S from './style';
+import * as S from '../style';
 
-export default function FeedCard(props) {
+export default function PFeedCards(props) {
   const history = useHistory();
-  console.log(props.data)
   return (
       <S.FeedCard onClick={()=>{
         history.push(`/feedList/${props.category}/${props.data.id}`)

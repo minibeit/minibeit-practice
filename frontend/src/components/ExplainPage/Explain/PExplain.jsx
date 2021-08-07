@@ -1,9 +1,9 @@
 import React from "react";
 
 /* Components */
-import * as S from './style'
+import * as S from '../style'
 
-export function RecruitExplain(){
+export function PRecruitExplain(){
     return (
         <S.ExplainBox>
             <img src="http://placeimg.com/200/200/any"/>
@@ -12,7 +12,7 @@ export function RecruitExplain(){
     )
 }
 
-export function ApplyExplain(){
+export function PApplyExplain(){
     return (
         <S.ExplainBox>
             <img src="http://placeimg.com/200/200/any"/>

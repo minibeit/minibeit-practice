@@ -1,7 +1,7 @@
 import React from "react";
 
 /* Components */
-import NavBar from '../../components/NavBar/NavBar';
+import { NavBar } from "../../components/Common";
 
 export default function FeedNew({ match }) {
   return (

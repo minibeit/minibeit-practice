@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 /* Components */
-import NavBar from '../../components/NavBar/NavBar';
+import { NavBar } from "../../components/Common";
 
 export default function ApplyHome() {
   return (

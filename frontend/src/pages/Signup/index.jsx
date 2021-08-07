@@ -1,14 +1,14 @@
 import React from "react";
 
 /* Components */
-import NavBar from "../../components/NavBar/NavBar";
-import SignupContainer from "./SignupContainer";
+import { NavBar } from "../../components/Common";
+import { SignupForm } from "../../components/Signup";
 
 export default function Signup() {
   return (
     <>
       <NavBar/>
-      <SignupContainer/>
+      <SignupForm/>
     </>
   );
 }

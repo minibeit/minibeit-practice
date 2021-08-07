@@ -1,9 +1,9 @@
 import React from "react";
 
 /* Components */
-import * as S from './style';
+import * as S from '../style';
 
-export default function SignupContainer() {
+export default function PSignupForm() {
   return (
     <S.SignupForm>
         <label for='email'>이메일</label>

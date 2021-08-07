@@ -5,8 +5,6 @@ export const GreetingMsgBox = styled.div`
     text-align: center;
 `;
 
-export const GreetingMsg = styled.p``;
-
 export const StartBtn = styled.button`
     margin-top: 5rem;
 `;
