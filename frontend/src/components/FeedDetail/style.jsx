@@ -35,3 +35,6 @@ export const FDcontact = styled.div`
 export const FDdetailInfo = styled.div`
   border: 1px solid black;
 `;
+
+export const FDdeletebutton = styled.button``;
+export const FDeditbutton = styled.button``;
