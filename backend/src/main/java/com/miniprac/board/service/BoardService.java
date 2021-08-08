@@ -45,8 +45,10 @@ public class BoardService {
 
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
 
-        PermissionCheck(user, board);
-        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
+        if(!user.getId().equals(board.getCreatedBy().getId())){
+            throw new PermissionException();
+        }
+       BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
 
         board.update(request, category);
         return board;
