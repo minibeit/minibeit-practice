@@ -3,9 +3,11 @@ package com.miniprac.security.token;
 import com.miniprac.user.domain.RefreshToken;
 import com.miniprac.user.domain.User;
 import com.miniprac.user.domain.repository.RefreshTokenRepository;
+import com.miniprac.user.domain.repository.UserRepository;
 import com.miniprac.user.dto.UserResponse;
 import com.miniprac.user.service.exception.RefreshTokenExpiredException;
 import com.miniprac.user.service.exception.RefreshTokenNotFoundException;
+import com.miniprac.user.service.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +18,11 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class RefreshTokenService {
+    private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenProvider tokenProvider;
 
-    public void createOrUpdateRefreshToken(User user){
+    public void createOrUpdateRefreshToken(User user) {
         Token createdRefreshToken = tokenProvider.generateRefreshToken();
         Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByUserId(user.getId());
 
@@ -31,8 +34,9 @@ public class RefreshTokenService {
         }
     }
 
-    public UserResponse.Login createAccessToken(User user){
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(user.getId()).orElseThrow(RefreshTokenNotFoundException::new);
+    public UserResponse.Login createAccessToken(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId).orElseThrow(RefreshTokenNotFoundException::new);
         if (!refreshToken.verifyExpiration()) {
             throw new RefreshTokenExpiredException();
         }

@@ -1,18 +1,13 @@
 package com.miniprac.user.web;
 
 import com.miniprac.security.token.RefreshTokenService;
-import com.miniprac.security.userdetails.CurrentUser;
-import com.miniprac.security.userdetails.CustomUserDetails;
 import com.miniprac.user.domain.User;
 import com.miniprac.user.dto.UserRequest;
 import com.miniprac.user.dto.UserResponse;
 import com.miniprac.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -37,8 +32,8 @@ public class UserController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/refreshtoken")
-    public UserResponse.Login refreshToken(@CurrentUser CustomUserDetails customUserDetails){
-        return refreshTokenService.createAccessToken(customUserDetails.getUser());
+    @PostMapping("/{userId}/refreshtoken")
+    public UserResponse.Login refreshToken(@PathVariable Long userId) {
+        return refreshTokenService.createAccessToken(userId);
     }
 }

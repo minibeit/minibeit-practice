@@ -20,7 +20,7 @@ client.log("Auth Token : " + client.global.get("authorizationToken"));
 %}
 
 ###
-POST {{apiUrl}}/user/refreshtoken
+POST {{apiUrl}}/user/1/refreshtoken
 Content-Type: application/json;charset=UTF-8
-Authorization: {{authorizationToken}}
+
 
