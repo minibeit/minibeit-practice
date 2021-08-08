@@ -1,12 +1,14 @@
 import React from "react";
 
+import { NavBar } from '../../components/Common'
+import { FeedView } from "../../components/FeedDetail";
+
 export default function FeedDetail({ match }) {
-  const {category, postPk} = match.params
+  const postId = match.params.postPk;
   return (
     <>
-      <div>feedDetail</div>
-      <div>category: {category}</div>
-      <div>postPk: {postPk}</div>
+    <NavBar/>
+      <FeedView postId={postId}/>
     </>
   );
 }

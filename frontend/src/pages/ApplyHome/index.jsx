@@ -9,9 +9,9 @@ export default function ApplyHome() {
     <>
       <NavBar/>
       <Link to='/feedList/survey'><p>설문 실험 지원하기</p></Link>
-      <Link to='/feedList/experi'><p>대면 실험 지원하기</p></Link>
+      <Link to='/feedList/experiment'><p>대면 실험 지원하기</p></Link>
       <Link to='/feedList/survey/feedNew'><p>설문 실험자 모집하기</p></Link>
-      <Link to='/feedList/experi/feedNew'><p>대면 실험자 모집하기</p></Link>
+      <Link to='/feedList/experiment/feedNew'><p>대면 실험자 모집하기</p></Link>
     </>
   );
 }

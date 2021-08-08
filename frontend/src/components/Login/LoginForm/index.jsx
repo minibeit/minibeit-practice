@@ -19,8 +19,6 @@ export default function LoginForm() {
       /* 받아온 엑세스 토큰을 로컬에 저장시킴. */
       localStorage.setItem("accessToken", res.data.accessToken)
       localStorage.setItem("accessTokenExpiredAt", res.data.accessTokenExpiredAt)
-      /* 리프레쉬 토큰 로컬에 저장시킴 */
-      
       /* 유저 상태 변경 */
       setLoginedUserState({
         isLogin: true,
@@ -30,7 +28,8 @@ export default function LoginForm() {
       history.push('/')
     }
     const fail = (err)=>{
-      alert(err)
+      console.log(err)
+      /* err == undefined면 유저가 없는것 */
     }
     onLogin(config, success, fail);
   }

@@ -7,16 +7,16 @@ import * as S from '../style';
 
 export default function PFeedCards(props) {
   const history = useHistory();
+  
+  const onClick = (e)=>{
+    history.push(`/feedList/${props.category}/${props.data.id}`)
+  }
   return (
-      <S.FeedCard onClick={()=>{
-        history.push(`/feedList/${props.category}/${props.data.id}`)
-      }}>
-        <h3>작성자 : {props.data.author}</h3>
-        <S.FeedImgBox/>
+      <S.FeedCard onClick={onClick}>
         <S.FeedInfo>
           <h3>제목 : {props.data.title}</h3>
-          <p>시간 : {props.data.time}</p>
-          <p>유형 : {props.data.category}</p>
+          <p>작성자 : {props.data.author}</p>
+          <p>날짜 : {props.data.dueDate}</p>
         </S.FeedInfo>
       </S.FeedCard>
   );
