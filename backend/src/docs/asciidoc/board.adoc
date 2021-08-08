@@ -16,8 +16,8 @@
 `POST /api/board`
 
 요청 HTTP
-include::{snippets}/board-create/http-request.adoc[]
-include::{snippets}/board-create/request-fields.adoc[]
+include::{snippets}/board-create/request-parts.adoc[]
+include::{snippets}/board-create/request-parameters.adoc[]
 
 성공 응답 HTTP
 include::{snippets}/board-create/http-response.adoc[]

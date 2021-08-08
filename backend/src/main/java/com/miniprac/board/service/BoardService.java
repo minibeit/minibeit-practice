@@ -3,6 +3,7 @@ package com.miniprac.board.service;
 import com.miniprac.board.domain.Board;
 import com.miniprac.board.domain.BoardCategory;
 import com.miniprac.board.domain.BoardCategoryType;
+import com.miniprac.board.domain.BoardFile;
 import com.miniprac.board.domain.repository.BoardCategoryRepository;
 import com.miniprac.board.domain.repository.BoardRepository;
 import com.miniprac.board.dto.BoardRequest;
@@ -10,11 +11,16 @@ import com.miniprac.board.service.exception.BoardCategoryNotFoundException;
 import com.miniprac.board.service.exception.BoardNotFoundException;
 import com.miniprac.common.dto.PageDto;
 import com.miniprac.common.exception.PermissionException;
+import com.miniprac.file.domain.File;
+import com.miniprac.file.service.FileService;
 import com.miniprac.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -22,10 +28,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardCategoryRepository boardCategoryRepository;
+    private final FileService fileService;
 
     public Board create(BoardRequest.Create request) {
         BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
-        Board board = Board.create(request, category);
+
+        List<File> files = fileService.uploadFiles(request.getFiles());
+        List<BoardFile> boardFiles = files.stream().map(BoardFile::create).collect(Collectors.toList());
+        Board board = Board.create(request, category, boardFiles);
 
         return boardRepository.save(board);
     }
@@ -41,30 +51,24 @@ public class BoardService {
         return boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
     }
 
-    public Board update(BoardRequest.Update request, Long boardId, User user){
-
+    public Board update(BoardRequest.Update request, Long boardId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
-
-        if(!user.getId().equals(board.getCreatedBy().getId())){
-            throw new PermissionException();
-        }
-       BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
-
+        permissionCheck(user, board);
+        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
         board.update(request, category);
+
         return board;
     }
 
-    public void deleteBoard(Long boardId, User user){
+    public void deleteBoard(Long boardId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
-        PermissionCheck(user, board);
+        permissionCheck(user, board);
         boardRepository.delete(board);
     }
 
-    private void PermissionCheck(User user, Board board) {
+    private void permissionCheck(User user, Board board) {
         if (!user.getId().equals(board.getCreatedBy().getId())) {
             throw new PermissionException();
         }
     }
-
-
 }

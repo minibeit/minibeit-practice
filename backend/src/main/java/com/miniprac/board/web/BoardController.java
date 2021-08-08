@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -27,16 +25,17 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public ResponseEntity<BoardResponse.OnlyId> create(@RequestBody BoardRequest.Create request) {
+    public ResponseEntity<BoardResponse.OnlyId> create(BoardRequest.Create request) {
         Board board = boardService.create(request);
+
         return ResponseEntity.created(URI.create("/api/board/" + board.getId())).body(BoardResponse.OnlyId.build(board));
     }
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardResponse.GetOne> getOne(@PathVariable Long boardId) {
+    public ResponseEntity<BoardResponse.GetOne> getOne(@PathVariable Long boardId, @CurrentUser CustomUserDetails customUserDetails) {
         Board board = boardService.getOne(boardId);
 
-        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board));
+        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board, customUserDetails.getUser()));
     }
 
     @GetMapping("/list")
@@ -59,7 +58,7 @@ public class BoardController {
 
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> delete(@PathVariable Long boardId,
-                                       @CurrentUser CustomUserDetails userDetails){
+                                       @CurrentUser CustomUserDetails userDetails) {
         boardService.deleteBoard(boardId, userDetails.getUser());
 
         return ResponseEntity.ok().build();
