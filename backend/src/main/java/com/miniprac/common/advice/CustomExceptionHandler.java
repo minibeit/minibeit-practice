@@ -1,6 +1,7 @@
 package com.miniprac.common.advice;
 
 import com.miniprac.common.exception.BusinessException;
+import com.miniprac.common.exception.PermissionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,14 +20,14 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(PermissionException.class)
     public ResponseEntity<ErrorResponse> runtimeExceptionHandler(RuntimeException ex){
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .status("400")
+                .status("401")
                 .error(ex.getClass().getSimpleName())
                 .message(ex.getMessage())
                 .build();
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 }
