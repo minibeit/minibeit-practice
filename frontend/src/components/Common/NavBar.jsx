@@ -1,11 +1,14 @@
 /*eslint-disable*/
 import React from "react";
 import { Link } from 'react-router-dom';
+import { userState } from "../../recoil/userState";
+import { useRecoilValue } from "recoil";
 
 /* style */
 import * as S from './style';
 
 export default function NavBar() {
+  console.log(useRecoilValue(userState))
   return (
     <S.NavBarContainer>
       <S.BrandLogoContainer>
