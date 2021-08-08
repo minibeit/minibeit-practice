@@ -100,6 +100,7 @@ class BoardControllerTest extends MvcTest {
     @Test
     @DisplayName("게시물 작성 문서화")
     public void create() throws Exception {
+
         BoardRequest.Create request = BoardRequest.Create.builder()
                 .title("피실험자 모집")
                 .content("피실험자 모집합니다~~")
@@ -110,6 +111,7 @@ class BoardControllerTest extends MvcTest {
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .build();
+
 
         given(boardService.create(any())).willReturn(board1);
 
@@ -220,7 +222,8 @@ class BoardControllerTest extends MvcTest {
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .build();
 
-        given(boardService.update(any(), any())).willReturn(board1);
+        given(boardService.update(any(), any(), any())).willReturn(board1);
+
 
         ResultActions results = mvc.perform(RestDocumentationRequestBuilders
                 .put("/api/board/{boardId}", 1)

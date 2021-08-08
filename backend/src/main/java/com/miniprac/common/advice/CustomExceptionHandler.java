@@ -18,4 +18,15 @@ public class CustomExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> runtimeExceptionHandler(RuntimeException ex){
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status("400")
+                .error(ex.getClass().getSimpleName())
+                .message(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }
