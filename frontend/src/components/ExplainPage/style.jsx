@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 export const ExplainContentWrapper = styled.div`
   display: flex;

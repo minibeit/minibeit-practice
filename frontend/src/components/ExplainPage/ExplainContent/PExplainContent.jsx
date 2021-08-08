@@ -1,8 +1,8 @@
 import React from "react";
 import * as S from "../style";
 
-function PExplainContent({ category, dummycontent }) {
-  const { id, explain, src } = dummycontent;
+function PExplainContent({ dummycontent }) {
+  const { explain, src } = dummycontent;
   console.log(explain);
   console.log(src);
   return (

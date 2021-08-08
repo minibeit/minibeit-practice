@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const feedlistApi = async (category) =>{
+const feedlistApi = async (category, page, size) =>{
     const accessToken = localStorage.getItem('accessToken');
     const result = await axios
-    .get(`http://3.36.95.15:8080/api/board/list?category=${category}`,{
+    .get(`http://3.36.95.15:8080/api/board/list?category=${category}&page=${page}&size=${size}`,{
         headers: {
             Authorization: `Bearer ${accessToken}`
         }
@@ -14,6 +14,12 @@ const feedlistApi = async (category) =>{
       .catch((err)=>{
         return false
       });
-      return result.data;
+      const data = {
+        post : result.data.content,
+        endpage : result.data.totalPages,
+        totalElement : result.data.totalElements,
+      }
+      
+      return data;
 }
 export default feedlistApi;
