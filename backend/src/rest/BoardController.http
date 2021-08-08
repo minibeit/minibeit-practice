@@ -50,7 +50,7 @@ GET {{apiUrl}}/board/list?category=experiment
 Authorization: {{authorizationToken}}
 
 ###
-GET {{apiUrl}}/board/9
+GET {{apiUrl}}/board/3
 Authorization: {{authorizationToken}}
 
 ###

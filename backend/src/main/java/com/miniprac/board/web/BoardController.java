@@ -4,6 +4,8 @@ import com.miniprac.board.domain.Board;
 import com.miniprac.board.dto.BoardRequest;
 import com.miniprac.board.dto.BoardResponse;
 import com.miniprac.board.service.BoardService;
+import com.miniprac.security.userdetails.CurrentUser;
+import com.miniprac.security.userdetails.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +29,10 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardResponse.GetOne> getOne(@PathVariable Long boardId) {
+    public ResponseEntity<BoardResponse.GetOne> getOne(@PathVariable Long boardId, @CurrentUser CustomUserDetails customUserDetails) {
         Board board = boardService.getOne(boardId);
 
-        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board));
+        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board,customUserDetails.getUser()));
     }
 
     @GetMapping("/list")

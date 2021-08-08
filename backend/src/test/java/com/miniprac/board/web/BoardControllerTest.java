@@ -4,8 +4,10 @@ import com.miniprac.MvcTest;
 import com.miniprac.board.domain.Board;
 import com.miniprac.board.domain.BoardCategory;
 import com.miniprac.board.domain.BoardCategoryType;
+import com.miniprac.board.domain.BoardFile;
 import com.miniprac.board.dto.BoardRequest;
 import com.miniprac.board.service.BoardService;
+import com.miniprac.file.domain.File;
 import com.miniprac.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +25,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -30,7 +33,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,6 +65,7 @@ class BoardControllerTest extends MvcTest {
                 .category(boardCategory)
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
+                .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
                 .build();
         board1.setCreatedBy(user);
         board2 = Board.builder()
@@ -74,6 +79,7 @@ class BoardControllerTest extends MvcTest {
                 .category(boardCategory)
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
+                .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
                 .build();
         board2.setCreatedBy(user);
         board3 = Board.builder()
@@ -87,6 +93,7 @@ class BoardControllerTest extends MvcTest {
                 .category(boardCategory)
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
+                .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
                 .build();
         board3.setCreatedBy(user);
 
@@ -109,15 +116,15 @@ class BoardControllerTest extends MvcTest {
                 multipart("/api/board")
                         .file(mockFile1)
                         .file(mockFile2)
-                        .param("title","피실험자 모집")
-                        .param("content","피실험자 모집합니다~~")
-                        .param("place","고려대 신공학관")
-                        .param("phoneNum","010-1234-5678")
-                        .param("category","SURVEY")
+                        .param("title", "피실험자 모집")
+                        .param("content", "피실험자 모집합니다~~")
+                        .param("place", "고려대 신공학관")
+                        .param("phoneNum", "010-1234-5678")
+                        .param("category", "SURVEY")
                         .param("pay", "20000")
-                        .param("time","20")
-                        .param("dueDate","2021-08-20")
-                        .param("doDate","2021-08-10T09:30:00")
+                        .param("time", "20")
+                        .param("dueDate", "2021-08-20")
+                        .param("doDate", "2021-08-10T09:30:00")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .characterEncoding("UTF-8")
         );
@@ -190,11 +197,14 @@ class BoardControllerTest extends MvcTest {
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
                                 fieldWithPath("content").type(JsonFieldType.STRING).description("내용"),
                                 fieldWithPath("place").type(JsonFieldType.STRING).description("장소"),
+                                fieldWithPath("contact").type(JsonFieldType.STRING).description("연락처"),
                                 fieldWithPath("author").type(JsonFieldType.STRING).description("게시물 작성자 이름"),
                                 fieldWithPath("pay").type(JsonFieldType.NUMBER).description("게시물 작성자 이름"),
                                 fieldWithPath("time").type(JsonFieldType.NUMBER).description("소요시간(분단위)"),
                                 fieldWithPath("dueDate").type(JsonFieldType.STRING).description("마감날짜"),
-                                fieldWithPath("doDate").type(JsonFieldType.STRING).description("실험/설문 날짜")
+                                fieldWithPath("doDate").type(JsonFieldType.STRING).description("실험/설문 날짜"),
+                                fieldWithPath("isMine").type(JsonFieldType.BOOLEAN).description("로그인 유저와 게시물 작성자가 같다면 true"),
+                                fieldWithPath("images[].url").type(JsonFieldType.STRING).description("이미지 url")
                         )
                 ));
     }
