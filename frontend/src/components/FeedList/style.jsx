@@ -13,4 +13,3 @@ export const FLSectionBottomWrapper = styled.div``;
 export const FLSectionAuthor = styled.div``;
 export const FLSectionDate = styled.div``;
 export const FLSectionTitle = styled.div``;
-export const FLSectionExplain = styled.div``;

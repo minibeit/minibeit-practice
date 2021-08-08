@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import * as S from "../style";
 
-function PLoginForm({ loginHandler }) {
+function PSignupForm({ signupHandler }) {
   const [inputs, setInputs] = useState({
+    username: "",
     useremail: "",
     password: "",
   });
-  const { useremail, password } = inputs;
+  const { username, useremail, password } = inputs;
   const onChange = (e) => {
     const { value, name } = e.target;
     console.log(name, value);
@@ -16,15 +17,22 @@ function PLoginForm({ loginHandler }) {
     });
   };
   return (
-    <S.FormContainer>
-      <S.LoginInput
+    <S.FormsignupContainer>
+      <S.SignupInput
+        value={username}
+        name="username"
+        type="text"
+        placeholder="아이디"
+        onChange={onChange}
+      />
+      <S.SignupInput
         value={useremail}
         name="useremail"
         type="email"
         placeholder="이메일"
         onChange={onChange}
       />
-      <S.LoginInput
+      <S.SignupInput
         value={password}
         name="password"
         type="password"
@@ -32,16 +40,16 @@ function PLoginForm({ loginHandler }) {
         onChange={onChange}
       />
 
-      <S.LoginButton
+      <S.SignupButton
         type="submit"
         onClick={async (e) => {
           e.preventDefault();
-          await loginHandler(useremail, password);
+          await signupHandler(username, useremail, password);
         }}
       >
-        로그인
-      </S.LoginButton>
-    </S.FormContainer>
+        회원가입
+      </S.SignupButton>
+    </S.FormsignupContainer>
   );
 }
-export default PLoginForm;
+export default PSignupForm;

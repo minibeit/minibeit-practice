@@ -2,8 +2,8 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import * as S from "../style";
 
-export default function PFeedListSection({ sectioncate, dummycontent }) {
-  const { id, title, explain, category, author, date } = dummycontent;
+export default function PFeedListSection({ sectioncate, post }) {
+  const { author, doDate, dueDate, id, place, title } = post;
   const history = useHistory();
   const detail = () => {
     history.push(`/feedList/${sectioncate}/${id}`);
@@ -15,16 +15,19 @@ export default function PFeedListSection({ sectioncate, dummycontent }) {
           <p>{author}</p>
         </S.FLSectionAuthor>
         <S.FLSectionDate>
-          <p>{date}</p>
+          <p>{doDate}</p>
+        </S.FLSectionDate>
+        <S.FLSectionDate>
+          <p>{dueDate}</p>
         </S.FLSectionDate>
       </S.FLSectionTopWrapper>
       <S.FLSectionBottomWrapper>
         <S.FLSectionTitle>
           <p>{title}</p>
         </S.FLSectionTitle>
-        <S.FLSectionExplain>
-          <p>{explain}</p>
-        </S.FLSectionExplain>
+        <S.FLSectionTitle>
+          <p>{place}</p>
+        </S.FLSectionTitle>
       </S.FLSectionBottomWrapper>
     </S.FLSectionWrapper>
   );

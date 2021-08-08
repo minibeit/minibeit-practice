@@ -1,2 +1,2 @@
-export { default as fetchApi } from "./fetch";
+export { default as feedlistApi } from "./feedlistApi";
 export * from "./auth";

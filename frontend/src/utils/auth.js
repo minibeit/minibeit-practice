@@ -1,36 +1,43 @@
+import axios from 'axios';
 import { API_URLS } from '../constants';
-import fetchApi from './fetch';
-
-const { TOKEN_OBTAIN, TOKEN_REFRESH, TOKEN_BLACKLIST } = API_URLS;
 
 
-export const obtainToken = async (username, password) => {
-    // obtain new access, refresh token with username, password info.
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
-  
-    const headers = { 'Content-Type': 'multipart/form-data' };
-    const config = {
-      url: TOKEN_OBTAIN,
-      method: 'POST',
-      headers,
-      data: formData,
-    };
-  
-    const [data, error] = await fetchApi(config);
-    if (data) {
-      // set access, refresh token on localStorage
-      localStorage.setItem('access-token', data.access);
-      localStorage.setItem('refresh-token', data.refresh);
-      localStorage.setItem('uuid', data.uuid);
-      return data;
+const { LOGIN, SIGNUP} = API_URLS;
+ 
+
+  export const obtainToken = async (useremail, password) => {
+    const data= {
+      email: useremail,
+      password: password,
     }
-    // localStorage.clear();
-    localStorage.removeItem('uuid');
-    localStorage.removeItem('access-token');
-    localStorage.removeItem('refresh-token');
-    // console.log('error', error);
-    return Promise.reject(error);
-  };
+  const result = await axios
+  .post(LOGIN,data)
+  .then((res)=>{
+    localStorage.setItem("accessToken", res.data.accessToken);
+    localStorage.setItem("accessTokenExpiredAt", res.data.accessTokenExpiredAt);
+    return true;
+  })
+  .catch((err)=>{
+    return false
+  });
+  return result;
+    };
+    
+
+  export const signUpfunc = async (username, useremail, password) => {
+    const data= {
+      name : username,
+      email: useremail,
+      password: password,
+    }
+  const result = await axios
+  .post(SIGNUP,data )
+  .then((res)=>{
+    return true;
+  })
+  .catch((err)=>{
+    return false
+  });
+  return result;
   
+  }

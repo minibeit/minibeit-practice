@@ -1,8 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import * as S from "./style";
 
 export default function NavBar() {
+  const history = useHistory();
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    window.alert("로그아웃이 되었습니다!");
+    history.push("/");
+  };
   return (
     <S.NavBarContainer>
       <S.NavBarLogoContainer>
@@ -25,6 +31,9 @@ export default function NavBar() {
           <Link to="/login">
             <p>로그인</p>
           </Link>
+        </S.NavBarAuth>
+        <S.NavBarAuth onClick={logout}>
+          <p>로그아웃</p>
         </S.NavBarAuth>
       </S.NavBarMenuContainer>
     </S.NavBarContainer>
