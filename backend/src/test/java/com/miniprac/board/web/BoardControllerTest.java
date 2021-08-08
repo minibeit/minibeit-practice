@@ -15,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -154,25 +157,36 @@ class BoardControllerTest extends MvcTest {
     @Test
     @DisplayName("게시물 목록 조회 문서화")
     public void getList() throws Exception {
-        given(boardService.getList(any())).willReturn(boardList);
+
+        Page<Board> boardPage = new PageImpl<>(boardList, PageRequest.of(1, 2), boardList.size());
+        given(boardService.getList(any(), any())).willReturn(boardPage);
 
         ResultActions results = mvc.perform(
                 get("/api/board/list")
-                        .param("category", "survey"));
+                        .param("category", "survey")
+                        .param("page", "1")
+                        .param("size", "2")
+        );
 
         results.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("board-getList",
                         requestParameters(
-                                parameterWithName("category").description("조회할 게시물 카테고리 SURVEY or EXPERIMENT")
+                                parameterWithName("category").description("조회할 게시물 카테고리 SURVEY or EXPERIMENT"),
+                                parameterWithName("page").description("조회할 페이지"),
+                                parameterWithName("size").description("조회할 사이즈")
                         ),
-                        responseFields(
-                                fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("게시물 식별자"),
-                                fieldWithPath("[].title").type(JsonFieldType.STRING).description("제목"),
-                                fieldWithPath("[].place").type(JsonFieldType.STRING).description("장소"),
-                                fieldWithPath("[].author").type(JsonFieldType.STRING).description("게시물 작성자 이름"),
-                                fieldWithPath("[].dueDate").type(JsonFieldType.STRING).description("마감날짜"),
-                                fieldWithPath("[].doDate").type(JsonFieldType.STRING).description("실험/설문 날짜")
+                        relaxedResponseFields(
+                                fieldWithPath("content[].id").type(JsonFieldType.NUMBER).description("게시물 식별자"),
+                                fieldWithPath("content[].title").type(JsonFieldType.STRING).description("제목"),
+                                fieldWithPath("content[].place").type(JsonFieldType.STRING).description("장소"),
+                                fieldWithPath("content[].contact").type(JsonFieldType.STRING).description("핸드폰 번호"),
+                                fieldWithPath("content[].author").type(JsonFieldType.STRING).description("게시물 작성자 이름"),
+                                fieldWithPath("content[].dueDate").type(JsonFieldType.STRING).description("마감날짜"),
+                                fieldWithPath("content[].doDate").type(JsonFieldType.STRING).description("실험/설문 날짜"),
+                                fieldWithPath("totalElements").description("전체 개수"),
+                                fieldWithPath("last").description("마지막 페이지인지 식별"),
+                                fieldWithPath("totalPages").description("전체 페이지")
                         )
                 ));
     }
@@ -223,7 +237,8 @@ class BoardControllerTest extends MvcTest {
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .build();
 
-        given(boardService.update(any(), any())).willReturn(board1);
+        given(boardService.update(any(), any(), any())).willReturn(board1);
+
 
         ResultActions results = mvc.perform(RestDocumentationRequestBuilders
                 .put("/api/board/{boardId}", 1)
