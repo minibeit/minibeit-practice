@@ -6,23 +6,24 @@ const { LOGIN, SIGNUP} = API_URLS;
  
 
   export const obtainToken = async (useremail, password) => {
+
     const data= {
       email: useremail,
       password: password,
     }
-  const result = await axios
-  .post(LOGIN,data)
-  .then((res)=>{
-    localStorage.setItem("accessToken", res.data.accessToken);
-    localStorage.setItem("accessTokenExpiredAt", res.data.accessTokenExpiredAt);
-    return true;
-  })
-  .catch((err)=>{
-    return false
-  });
-  return result;
-    };
-    
+    const result = await axios
+    .post(LOGIN,data)
+    .then((res)=>{
+      localStorage.setItem("accessToken", res.data.accessToken);
+      localStorage.setItem("accessTokenExpiredAt", res.data.accessTokenExpiredAt);
+      return res;
+    })
+    .catch((err)=>{
+      return false
+    });
+    return result;
+      };
+      
 
   export const signUpfunc = async (username, useremail, password) => {
     const data= {
@@ -33,11 +34,13 @@ const { LOGIN, SIGNUP} = API_URLS;
   const result = await axios
   .post(SIGNUP,data )
   .then((res)=>{
-    return true;
+    console.log(res)
+    return res;
   })
   .catch((err)=>{
-    return false
+    return err
   });
+  console.log(result)
   return result;
   
   }
