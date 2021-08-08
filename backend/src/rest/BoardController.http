@@ -1,18 +1,49 @@
 POST {{apiUrl}}/board
-Content-Type: application/json;charset=UTF-8
 Authorization: {{authorizationToken}}
+Content-Type: multipart/form-data; boundary=boundary
 
-{
-  "title": "피실험자 모집",
-  "content": "피실험자 모집합니다~~",
-  "place": "고려대 신공학관",
-  "phoneNum": "010-1234-5678",
-  "category": "SURVEY",
-  "pay": 20000,
-  "time": 20,
-  "dueDate": "2021-08-20",
-  "doDate": "2021-08-10T09:30:00"
-}
+--boundary
+Content-Disposition: form-data; name="title";
+
+피실험자 모집
+--boundary
+Content-Disposition: form-data; name="content";
+
+피실험자 모집합니다~~
+--boundary
+Content-Disposition: form-data; name="place";
+
+고려대 신공학관
+--boundary
+Content-Disposition: form-data; name="phoneNum";
+
+010-1234-5678
+--boundary
+Content-Disposition: form-data; name="category";
+
+SURVEY
+--boundary
+Content-Disposition: form-data; name="pay";
+
+20000
+--boundary
+Content-Disposition: form-data; name="time";
+
+20
+
+--boundary
+Content-Disposition: form-data; name="dueDate";
+
+2021-08-20
+
+--boundary
+Content-Disposition: form-data; name="doDate";
+
+2021-08-10T09:30:00
+--boundary
+Content-Disposition: form-data; name="files"; filename="enjoy.png"
+
+< ./../main/resources/mock/images/enjoy.png
 
 ###
 GET {{apiUrl}}/board/list?category=experiment

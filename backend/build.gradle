@@ -50,6 +50,12 @@ dependencies {
     implementation "org.flywaydb:flyway-core"
 
     /**
+     * Aws
+     */
+    implementation platform('software.amazon.awssdk:bom:2.13.33')
+    implementation 'software.amazon.awssdk:s3'
+    
+    /**
      * Test Dependencies
      */
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

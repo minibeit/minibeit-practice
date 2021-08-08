@@ -19,6 +19,10 @@ spring:
             client-secret: 비밀키
             scope: profile, email
 
+storage:
+  s3Bucket: 버킷 이름
+  s3Public: 퍼블릭 url
+
 logging.level:
   org.hibernate.SQL: debug
 

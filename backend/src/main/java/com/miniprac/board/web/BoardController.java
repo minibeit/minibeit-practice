@@ -20,8 +20,9 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public ResponseEntity<BoardResponse.OnlyId> create(@RequestBody BoardRequest.Create request) {
+    public ResponseEntity<BoardResponse.OnlyId> create(BoardRequest.Create request) {
         Board board = boardService.create(request);
+
         return ResponseEntity.created(URI.create("/api/board/" + board.getId())).body(BoardResponse.OnlyId.build(board));
     }
 
