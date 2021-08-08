@@ -16,7 +16,6 @@ export default function LoginForm() {
       data: userData
     }
     const success = (res)=>{
-      console.log(res.data)
       /* 받아온 엑세스 토큰을 로컬에 저장시킴. */
       localStorage.setItem("accessToken", res.data.accessToken)
       localStorage.setItem("accessTokenExpiredAt", res.data.accessTokenExpiredAt)

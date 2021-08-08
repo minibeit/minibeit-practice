@@ -1,14 +1,20 @@
 /*eslint-disable*/
 import React from "react";
 import { Link } from 'react-router-dom';
-import { userState } from "../../recoil/userState";
-import { useRecoilValue } from "recoil";
+import { useHistory } from "react-router";
+import { userState } from '../../../recoil/userState';
+import { useRecoilValue, useResetRecoilState } from "recoil";
 
 /* style */
-import * as S from './style';
+import * as S from '../style';
 
-export default function NavBar() {
-  console.log(useRecoilValue(userState))
+export default function PNavBar() {
+    const history = useHistory();
+    const logoutFuc = (e)=>{
+        localStorage.clear();
+        window.location.href = '/'
+    }
+
   return (
     <S.NavBarContainer>
       <S.BrandLogoContainer>
@@ -22,7 +28,11 @@ export default function NavBar() {
           <Link to='/explainPage/apply'><p>실험자 지원 설명</p></Link>
         </S.NavItem>
         <S.NavItem>
-          <Link to='/login'><p>로그인</p></Link>
+          {
+            useRecoilValue(userState).isLogin
+            ? <p onClick={logoutFuc}>{useRecoilValue(userState).name} 로그아웃</p>
+            : <Link to='/login'><p>로그인</p></Link>
+          }
         </S.NavItem>
       </S.NavItemsContainer>
     </S.NavBarContainer>
