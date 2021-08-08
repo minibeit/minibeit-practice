@@ -40,7 +40,7 @@ include::{snippets}/user-login/response-fields.adoc[]
 `Redirect /oauth2/authorization/google`
 
 - 해당 url 리다이렉트
-- http://localhost:3000?token=accessToken 반환
+- http://localhost:3000/token=accessToken 반환
 
 === Refresh Token 으로 accessToken 받기
 
