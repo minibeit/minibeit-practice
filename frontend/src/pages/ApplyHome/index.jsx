@@ -9,13 +9,13 @@ export default function ApplyHome() {
       <Link to="/feedList/survey">
         <p>설문조사 하러가기</p>
       </Link>
-      <Link to="/feedList/experi">
+      <Link to="/feedList/experiment">
         <p>대면실험 하러가기</p>
       </Link>
       <Link to="/feedList/survey/feedNew">
         <p>설문조사 모집하기</p>
       </Link>
-      <Link to="/feedList/experi/feedNew">
+      <Link to="/feedList/experiment/feedNew">
         <p>대면실험 모집하기</p>
       </Link>
     </>

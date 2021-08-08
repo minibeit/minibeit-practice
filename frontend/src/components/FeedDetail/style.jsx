@@ -11,6 +11,9 @@ export const FDBTitle = styled.div`
 export const FDType = styled.div`
   border: 1px solid black;
 `;
+export const FDauthor = styled.div`
+  border: 1px solid black;
+`;
 export const FDdueDate = styled.div`
   border: 1px solid black;
 `;

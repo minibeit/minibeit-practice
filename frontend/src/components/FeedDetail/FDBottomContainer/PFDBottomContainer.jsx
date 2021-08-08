@@ -1,18 +1,19 @@
 import React from "react";
 import * as S from "../style";
 
-function PFDBottomContainer({ dummydetail }) {
+function PFDBottomContainer({ post }) {
   const {
-    title,
+    author,
     category,
-    dueDate,
+    content,
     doDate,
+    dueDate,
+    id,
     pay,
-    time,
     place,
-    contact,
-    detailInfo,
-  } = dummydetail;
+    time,
+    title,
+  } = post;
 
   return (
     <S.FDBottomWrapper>
@@ -22,6 +23,9 @@ function PFDBottomContainer({ dummydetail }) {
       <S.FDType>
         <p>{category}</p>
       </S.FDType>
+      <S.FDauthor>
+        <p>{author}</p>
+      </S.FDauthor>
       <S.FDdueDate>
         <p>{dueDate}</p>
       </S.FDdueDate>
@@ -37,11 +41,9 @@ function PFDBottomContainer({ dummydetail }) {
       <S.FDplace>
         <p>{place}</p>
       </S.FDplace>
-      <S.FDcontact>
-        <p>{contact}</p>
-      </S.FDcontact>
+      <S.FDcontact></S.FDcontact>
       <S.FDdetailInfo>
-        <p>{detailInfo}</p>
+        <p>{content}</p>
       </S.FDdetailInfo>
     </S.FDBottomWrapper>
   );
