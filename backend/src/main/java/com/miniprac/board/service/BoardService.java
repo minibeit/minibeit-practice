@@ -45,10 +45,8 @@ public class BoardService {
 
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
 
-        if(!user.getId().equals(board.getCreatedBy().getId())){
-            throw new PermissionException();
-        }
-       BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
+        PermissionCheck(user, board);
+        BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
 
         board.update(request, category);
         return board;
@@ -56,10 +54,14 @@ public class BoardService {
 
     public void deleteBoard(Long boardId, User user){
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
-        if(!user.getId().equals(board.getCreatedBy().getId())){
+        PermissionCheck(user, board);
+        boardRepository.delete(board);
+    }
+
+    private void PermissionCheck(User user, Board board) {
+        if (!user.getId().equals(board.getCreatedBy().getId())) {
             throw new PermissionException();
         }
-        boardRepository.delete(board);
     }
 
 

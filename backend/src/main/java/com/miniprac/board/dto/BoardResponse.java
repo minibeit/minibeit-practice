@@ -29,6 +29,7 @@ public class BoardResponse {
         private String title;
         private String place;
         private String author;
+        private String contact;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate dueDate;
@@ -43,6 +44,7 @@ public class BoardResponse {
                     .author(board.getCreatedBy().getName())
                     .dueDate(board.getDueDate())
                     .doDate(board.getDoDate())
+                    .contact(board.getPhoneNum())
                     .build();
         }
     }

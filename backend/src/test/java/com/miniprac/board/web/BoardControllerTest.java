@@ -168,6 +168,7 @@ class BoardControllerTest extends MvcTest {
                                 fieldWithPath("content[].id").type(JsonFieldType.NUMBER).description("게시물 식별자"),
                                 fieldWithPath("content[].title").type(JsonFieldType.STRING).description("제목"),
                                 fieldWithPath("content[].place").type(JsonFieldType.STRING).description("장소"),
+                                fieldWithPath("content[].contact").type(JsonFieldType.STRING).description("핸드폰 번호"),
                                 fieldWithPath("content[].author").type(JsonFieldType.STRING).description("게시물 작성자 이름"),
                                 fieldWithPath("content[].dueDate").type(JsonFieldType.STRING).description("마감날짜"),
                                 fieldWithPath("content[].doDate").type(JsonFieldType.STRING).description("실험/설문 날짜"),
