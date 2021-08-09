@@ -55,20 +55,57 @@ Authorization: {{authorizationToken}}
 
 ###
 PUT {{apiUrl}}/board/1
-Content-Type: application/json;charset=UTF-8
 Authorization: {{authorizationToken}}
+Content-Type: multipart/form-data; boundary=boundary
 
-{
-  "title": "피실험자 모집2",
-  "content": "피실험자 모집합니다~~2",
-  "place": "고려대 신공학관2",
-  "phoneNum": "010-1234-1234",
-  "category": "EXPERIMENT",
-  "pay": 50000,
-  "time": 100,
-  "dueDate": "2021-08-21",
-  "doDate": "2021-08-11T09:30:00"
-}
+--boundary
+Content-Disposition: form-data; name="title";
+
+피실험자 모집 수정
+--boundary
+Content-Disposition: form-data; name="content";
+
+피실험자 모집합니다 수정~~
+--boundary
+Content-Disposition: form-data; name="place";
+
+고려대 신공학관 수정
+--boundary
+Content-Disposition: form-data; name="phoneNum";
+
+010-1234-1234
+--boundary
+Content-Disposition: form-data; name="category";
+
+EXPERIMENT
+--boundary
+Content-Disposition: form-data; name="pay";
+
+50000
+--boundary
+Content-Disposition: form-data; name="time";
+
+120
+--boundary
+Content-Disposition: form-data; name="dueDate";
+
+2021-08-21
+--boundary
+Content-Disposition: form-data; name="doDate";
+
+2021-08-25T09:30:00
+--boundary
+Content-Disposition: form-data; name="fileChanged";
+
+true
+--boundary
+Content-Disposition: form-data; name="files"; filename="enjoy.png"
+
+< ./../main/resources/mock/images/enjoy.png
+--boundary
+Content-Disposition: form-data; name="files"; filename="enjoy2.png"
+
+< ./../main/resources/mock/images/enjoy2.png
 
 ###
 DELETE {{apiUrl}}/board/1

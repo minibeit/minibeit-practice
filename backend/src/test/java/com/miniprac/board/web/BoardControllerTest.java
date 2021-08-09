@@ -144,8 +144,8 @@ class BoardControllerTest extends MvcTest {
                                 parameterWithName("phoneNum").description("연락처"),
                                 parameterWithName("category").description("카테고리 SURVEY or EXPERIMENT"),
                                 parameterWithName("dueDate").description("마감날짜"),
-                                parameterWithName("doDate").description("실험/설문 날짜")
-                        ), requestParts(
+                                parameterWithName("doDate").description("실험/설문 날짜")),
+                        requestParts(
                                 partWithName("files").description("게시물에 추가할 파일")
                         ),
                         responseFields(
@@ -225,26 +225,27 @@ class BoardControllerTest extends MvcTest {
 
     @Test
     @DisplayName("게시물 수정 문서화")
-    public void edit() throws Exception {
-        BoardRequest.Update request = BoardRequest.Update.builder()
-                .title("피실험자 모집 수정 버전")
-                .content("피실험자 모집합니다~~ (수정했습니다!!)")
-                .place("고려대 신공학관")
-                .pay(50000)
-                .phoneNum("010-1234-5678")
-                .category("SURVEY")
-                .dueDate(LocalDate.of(2021, 8, 20))
-                .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
-                .build();
+    public void update() throws Exception {
+        InputStream is1 = new ClassPathResource("mock/images/enjoy.png").getInputStream();
+        MockMultipartFile mockFile1 = new MockMultipartFile("files", "mock_file1.jpg", "image/jpg", is1.readAllBytes());
 
         given(boardService.update(any(), any(), any())).willReturn(board1);
 
-
         ResultActions results = mvc.perform(RestDocumentationRequestBuilders
-                .put("/api/board/{boardId}", 1)
+                .fileUpload("/api/board/{boardId}", 1)
+                .file(mockFile1)
+                .param("title", "피실험자 모집 수정!!!")
+                .param("content", "모집 수정완료")
+                .param("place", "고려대 신공학관")
+                .param("phoneNum", "010-1234-1234")
+                .param("category", "EXPERIMENT")
+                .param("pay", "33000")
+                .param("time", "60")
+                .param("dueDate", "2021-08-21")
+                .param("doDate", "2021-08-25T09:30:00")
+                .param("fileChanged", "true")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
-                .content(objectMapper.writeValueAsString(request))
         );
 
         results.andExpect(status().isOk())
@@ -253,16 +254,19 @@ class BoardControllerTest extends MvcTest {
                         pathParameters(
                                 parameterWithName("boardId").description("수정할 게시물 식별자")
                         ),
-                        requestFields(
-                                fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
-                                fieldWithPath("content").type(JsonFieldType.STRING).description("내용"),
-                                fieldWithPath("place").type(JsonFieldType.STRING).description("장소"),
-                                fieldWithPath("pay").type(JsonFieldType.NUMBER).description("급여"),
-                                fieldWithPath("time").type(JsonFieldType.NUMBER).description("소요 시간"),
-                                fieldWithPath("phoneNum").type(JsonFieldType.STRING).description("연락처"),
-                                fieldWithPath("category").type(JsonFieldType.STRING).description("카테고리 SURVEY or EXPERIMENT"),
-                                fieldWithPath("dueDate").type(JsonFieldType.STRING).description("마감날짜"),
-                                fieldWithPath("doDate").type(JsonFieldType.STRING).description("실험/설문 날짜")
+                        requestParameters(
+                                parameterWithName("title").description("제목"),
+                                parameterWithName("content").description("내용"),
+                                parameterWithName("place").description("장소"),
+                                parameterWithName("pay").description("급여"),
+                                parameterWithName("time").description("소요시간(분단위)"),
+                                parameterWithName("phoneNum").description("연락처"),
+                                parameterWithName("category").description("카테고리 SURVEY or EXPERIMENT"),
+                                parameterWithName("fileChanged").description("첨부파일이나 이미지가 수정되었다면 true 그렇지 않다면 false"),
+                                parameterWithName("dueDate").description("마감날짜"),
+                                parameterWithName("doDate").description("실험/설문 날짜")),
+                        requestParts(
+                                partWithName("files").description("게시물에 추가할 파일")
                         ),
                         responseFields(
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("수정된 게시물 식별자")
@@ -272,7 +276,7 @@ class BoardControllerTest extends MvcTest {
 
     @Test
     @DisplayName("게시글 삭제 문서화")
-    public void deleteBoard() throws Exception {
+    public void delete() throws Exception {
         ResultActions results = mvc.perform(RestDocumentationRequestBuilders
                 .delete("/api/board/{boardId}", 1));
 

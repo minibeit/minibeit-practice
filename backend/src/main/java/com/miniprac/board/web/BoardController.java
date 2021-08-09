@@ -46,19 +46,15 @@ public class BoardController {
         return new PageImpl<>(response, pageDto.of(), list.getTotalElements());
     }
 
-    @PutMapping("/{boardId}")
-    public ResponseEntity<BoardResponse.OnlyId> update(@PathVariable Long boardId,
-                                                       @RequestBody BoardRequest.Update request,
-                                                       @CurrentUser CustomUserDetails userDetails) {
-
+    @PostMapping("/{boardId}")
+    public ResponseEntity<BoardResponse.OnlyId> update(@PathVariable Long boardId, BoardRequest.Update request, @CurrentUser CustomUserDetails userDetails) {
         Board board = boardService.update(request, boardId, userDetails.getUser());
 
         return ResponseEntity.ok().body(BoardResponse.OnlyId.build(board));
     }
 
     @DeleteMapping("/{boardId}")
-    public ResponseEntity<Void> delete(@PathVariable Long boardId,
-                                       @CurrentUser CustomUserDetails userDetails) {
+    public ResponseEntity<Void> delete(@PathVariable Long boardId, @CurrentUser CustomUserDetails userDetails) {
         boardService.deleteBoard(boardId, userDetails.getUser());
 
         return ResponseEntity.ok().build();

@@ -49,12 +49,13 @@ include::{snippets}/board-getList/response-fields.adoc[]
 
 === 게시물 수정
 
-`PUT /api/board/{boardId}`
+`POST /api/board/{boardId}`
 
 요청 HTTP
-include::{snippets}/board-update/http-request.adoc[]
+
 include::{snippets}/board-update/path-parameters.adoc[]
-include::{snippets}/board-update/request-fields.adoc[]
+include::{snippets}/board-update/request-parameters.adoc[]
+include::{snippets}/board-update/request-parts.adoc[]
 
 성공 응답 HTTP
 include::{snippets}/board-update/http-response.adoc[]

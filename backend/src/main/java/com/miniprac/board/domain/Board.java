@@ -46,7 +46,7 @@ public class Board extends BaseEntity {
     @Column(name = "do_date")
     private LocalDateTime doDate;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<BoardFile> boardFileList = new ArrayList<>();
 
