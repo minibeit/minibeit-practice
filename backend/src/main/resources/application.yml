@@ -1,9 +1,12 @@
 spring:
   profiles:
     group:
-      dev: dev
+      dev:
+        - dev
+        - aws
       prod:
         - prod
+        - aws
   jpa:
     hibernate:
       ddl-auto: validate
@@ -18,10 +21,6 @@ spring:
             client-id: 클라이언트키
             client-secret: 비밀키
             scope: profile, email
-
-storage:
-  s3Bucket: 버킷 이름
-  s3Public: 퍼블릭 url
 
 logging.level:
   org.hibernate.SQL: debug
