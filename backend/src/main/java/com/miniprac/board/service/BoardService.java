@@ -5,6 +5,7 @@ import com.miniprac.board.domain.BoardCategory;
 import com.miniprac.board.domain.BoardCategoryType;
 import com.miniprac.board.domain.BoardFile;
 import com.miniprac.board.domain.repository.BoardCategoryRepository;
+import com.miniprac.board.domain.repository.BoardFileRepository;
 import com.miniprac.board.domain.repository.BoardRepository;
 import com.miniprac.board.dto.BoardRequest;
 import com.miniprac.board.service.exception.BoardCategoryNotFoundException;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final BoardFileRepository boardFileRepository;
     private final BoardCategoryRepository boardCategoryRepository;
     private final FileService fileService;
 
@@ -55,6 +57,17 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
         permissionCheck(user, board);
         BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
+        if (request.isFileChanged()) {
+            boardFileDelete(board);
+            if (request.getFiles() != null) {
+                List<File> fileList = fileService.uploadFiles(request.getFiles());
+
+                List<BoardFile> routeReviewFiles = fileList.stream()
+                        .map(f -> BoardFile.builder().file(f).board(board).build())
+                        .collect(Collectors.toList());
+                boardFileRepository.saveAll(routeReviewFiles);
+            }
+        }
         board.update(request, category);
 
         return board;
@@ -70,5 +83,15 @@ public class BoardService {
         if (!user.getId().equals(board.getCreatedBy().getId())) {
             throw new PermissionException();
         }
+    }
+
+    private void boardFileDelete(Board board) {
+        List<Long> fileIdList = board.getBoardFileList().stream()
+                .map(boardFile -> boardFile.getFile().getId())
+                .collect(Collectors.toList());
+        // 엔티티 하나하나 삭제하며 delete 쿼리가 나가는 것을 방지하기 위해 in 쿼리사용
+        boardFileRepository.deleteAllByFileIds(fileIdList);
+        //softdelete @SQLDelete 를 적용시키기 위해 in 쿼리 대신 건당 삭제하도록 수정
+        fileIdList.forEach(fileService::deleteById);
     }
 }
