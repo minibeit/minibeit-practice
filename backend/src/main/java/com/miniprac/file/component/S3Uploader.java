@@ -10,7 +10,6 @@ import com.miniprac.file.service.exception.S3FileUploadException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -32,7 +31,6 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.public}")
     private String s3Public;
 
-
     public List<SavedFile> uploadFileList(List<MultipartFile> files) {
         return files.stream().map(this::upload).collect(Collectors.toList());
     }
@@ -50,7 +48,7 @@ public class S3Uploader {
         Integer width = null;
         Integer height = null;
         try {
-            File uploadFile = convert(file).orElseThrow();
+            File uploadFile = convert(file);
             upload(uploadFile, s3FileName);
             if (isImage) {
                 BufferedImage image = ImageIO.read(file.getInputStream());
@@ -95,15 +93,12 @@ public class S3Uploader {
                 .orElse(false);
     }
 
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
-        if (convertFile.createNewFile()) {
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(file.getBytes());
-            }
-            return Optional.of(convertFile);
-        }
+    private File convert(MultipartFile file) throws IOException {
+        File uploadFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+        FileOutputStream fos = new FileOutputStream(uploadFile);
+        fos.write(file.getBytes());
+        fos.close();
 
-        return Optional.empty();
+        return uploadFile;
     }
 }

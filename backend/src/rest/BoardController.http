@@ -46,7 +46,7 @@ Content-Disposition: form-data; name="files"; filename="enjoy.png"
 < ./../main/resources/mock/images/enjoy.png
 
 ###
-GET {{apiUrl}}/board/list?category=experiment
+GET {{apiUrl}}/board/list?page=1&size=10&category=experiment
 Authorization: {{authorizationToken}}
 
 ###
@@ -54,7 +54,7 @@ GET {{apiUrl}}/board/3
 Authorization: {{authorizationToken}}
 
 ###
-PUT {{apiUrl}}/board/1
+POST {{apiUrl}}/board/4
 Authorization: {{authorizationToken}}
 Content-Type: multipart/form-data; boundary=boundary
 
