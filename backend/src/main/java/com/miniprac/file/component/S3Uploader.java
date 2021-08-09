@@ -14,11 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -48,8 +45,7 @@ public class S3Uploader {
         Integer width = null;
         Integer height = null;
         try {
-            File uploadFile = convert(file);
-            upload(uploadFile, s3FileName);
+            putS3(file, s3FileName);
             if (isImage) {
                 BufferedImage image = ImageIO.read(file.getInputStream());
                 width = image.getWidth();
@@ -74,31 +70,13 @@ public class S3Uploader {
         return savedFileBuilder.fileType(FileType.FILE).build();
     }
 
-    private void upload(File uploadFile, String fileName) {
-        putS3(uploadFile, fileName);
-        removeNewFile(uploadFile);
-    }
-
-    private void putS3(File uploadFile, String fileName) {
-        s3Client.putObject(new PutObjectRequest(s3Bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-    }
-
-    private void removeNewFile(File targetFile) {
-        targetFile.delete();
+    private void putS3(MultipartFile uploadFile, String fileName) throws IOException {
+        s3Client.putObject(new PutObjectRequest(s3Bucket, fileName, uploadFile.getInputStream(), null).withCannedAcl(CannedAccessControlList.PublicRead));
     }
 
     private boolean isImage(String extension) {
         return Optional.ofNullable(extension)
                 .map(s -> s.toLowerCase().matches("png|jpeg|jpg|bmp|gif|svg"))
                 .orElse(false);
-    }
-
-    private File convert(MultipartFile file) throws IOException {
-        File uploadFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
-        FileOutputStream fos = new FileOutputStream(uploadFile);
-        fos.write(file.getBytes());
-        fos.close();
-
-        return uploadFile;
     }
 }
