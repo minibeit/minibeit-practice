@@ -76,6 +76,7 @@ public class BoardService {
     public void deleteBoard(Long boardId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
         permissionCheck(user, board);
+        boardFileDelete(board);
         boardRepository.delete(board);
     }
 
@@ -89,9 +90,7 @@ public class BoardService {
         List<Long> fileIdList = board.getBoardFileList().stream()
                 .map(boardFile -> boardFile.getFile().getId())
                 .collect(Collectors.toList());
-        // 엔티티 하나하나 삭제하며 delete 쿼리가 나가는 것을 방지하기 위해 in 쿼리사용
         boardFileRepository.deleteAllByFileIds(fileIdList);
-        //softdelete @SQLDelete 를 적용시키기 위해 in 쿼리 대신 건당 삭제하도록 수정
         fileIdList.forEach(fileService::deleteById);
     }
 }

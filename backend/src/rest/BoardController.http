@@ -106,6 +106,7 @@ Content-Disposition: form-data; name="files"; filename="enjoy.png"
 Content-Disposition: form-data; name="files"; filename="enjoy2.png"
 
 < ./../main/resources/mock/images/enjoy2.png
+
 ###
 DELETE {{apiUrl}}/board/1
 Authorization: {{authorizationToken}}
