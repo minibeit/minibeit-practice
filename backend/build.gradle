@@ -52,8 +52,7 @@ dependencies {
     /**
      * Aws
      */
-    implementation platform('software.amazon.awssdk:bom:2.13.33')
-    implementation 'software.amazon.awssdk:s3'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
     
     /**
      * Test Dependencies
