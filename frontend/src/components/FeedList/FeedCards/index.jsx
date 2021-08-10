@@ -15,7 +15,7 @@ export default function FeedCards(props) {
 
   const config = {
     method: 'get',
-    url: `http://3.36.95.15:8080/api/board/list?category=${category}&page=1&size=5`,
+    url: `http://3.36.95.15:8080/api/board/list?category=${category}&page=1&size=40`,
     headers: {
       Authorization: `Bearer ${accessToken}`
     }

@@ -7,8 +7,11 @@ import * as S from '../style';
 
 export default function PPageButton() {
   return (
-    <>
-    페이징 버튼 작업 전
-    </>
+    <S.ButtonContainer>
+      <S.PageButton>1</S.PageButton>
+      <S.PageButton>1</S.PageButton>
+      <S.PageButton>1</S.PageButton>
+      버튼 미구현
+    </S.ButtonContainer>
   );
 }

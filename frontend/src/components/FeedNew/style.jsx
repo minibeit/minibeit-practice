@@ -29,3 +29,6 @@ export const DueDateInput = styled.input`
 export const DoDateInput = styled.input`
     display: block;
 `;
+export const FileInput = styled.input`
+    display: block;
+`;
