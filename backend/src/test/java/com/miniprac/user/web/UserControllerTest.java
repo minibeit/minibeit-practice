@@ -3,6 +3,7 @@ package com.miniprac.user.web;
 import com.miniprac.MvcTest;
 import com.miniprac.security.token.RefreshTokenService;
 import com.miniprac.security.token.Token;
+import com.miniprac.security.token.TokenProvider;
 import com.miniprac.user.domain.User;
 import com.miniprac.user.dto.UserRequest;
 import com.miniprac.user.dto.UserResponse;
@@ -20,10 +21,10 @@ import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,6 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends MvcTest {
     @MockBean
     private UserService userService;
+    @MockBean
+    private TokenProvider tokenProvider;
     @MockBean
     private RefreshTokenService refreshTokenService;
 
@@ -71,7 +74,9 @@ class UserControllerTest extends MvcTest {
     @DisplayName("로그인 테스트")
     public void login() throws Exception {
         UserRequest.Login request = UserRequest.Login.builder().email("test@test.com").password("1234").build();
-        UserResponse.Login response = UserResponse.Login.build(1L, "테스터", Token.builder().token("accessToken").expiredAt(LocalDateTime.now()).build());
+        UserResponse.Login response = UserResponse.Login.build(1L, "테스터",
+                Token.builder().token("accessToken").expiredAt(LocalDateTime.now()).build(),
+                Token.builder().token("accessToken").expiredAt(LocalDateTime.now().plusDays(10)).build());
 
         given(userService.login(any())).willReturn(response);
 
@@ -93,7 +98,7 @@ class UserControllerTest extends MvcTest {
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("로그인한 유저 식별자"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("로그인한 유저 식별자"),
                                 fieldWithPath("accessToken").type(JsonFieldType.STRING).description("accessToken"),
-                                fieldWithPath("accessTokenExpiredAt").type(JsonFieldType.STRING).description("accessToken 만료일")
+                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("refreshToken")
                         )
                 ));
     }
@@ -101,24 +106,29 @@ class UserControllerTest extends MvcTest {
     @Test
     @DisplayName("refresh token 테스트")
     public void refreshToken() throws Exception {
-        UserResponse.Login response = UserResponse.Login.build(1L, "테스터", Token.builder().token("accessToken").expiredAt(LocalDateTime.now()).build());
+        UserResponse.Login response = UserResponse.Login.build(1L, "테스터",
+                Token.builder().token("accessToken").expiredAt(LocalDateTime.now()).build(),
+                Token.builder().token("accessToken").expiredAt(LocalDateTime.now().plusDays(10)).build());
 
         given(refreshTokenService.createAccessToken(any())).willReturn(response);
+        given(tokenProvider.isValidToken(any())).willReturn(true);
+
         ResultActions results = mvc.perform(RestDocumentationRequestBuilders
-                .post("/api/user/{userId}/refreshtoken", 1)
+                .post("/api/user/refreshtoken")
+                .header("refresh_token", "refreshToken")
         );
 
         results.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("user-refresh-token",
-                        pathParameters(
-                                parameterWithName("userId").description("유저 식별자")
+                        requestHeaders(
+                                headerWithName("refresh_token").description("refreshToken")
                         ),
                         responseFields(
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("로그인한 유저 식별자"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("로그인한 유저 식별자"),
                                 fieldWithPath("accessToken").type(JsonFieldType.STRING).description("accessToken"),
-                                fieldWithPath("accessTokenExpiredAt").type(JsonFieldType.STRING).description("accessToken 만료일")
+                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("refreshToken")
                         )
                 ));
     }

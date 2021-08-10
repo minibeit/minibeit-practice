@@ -7,31 +7,34 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.UUID;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 public class TokenProvider {
     private final JwtProps jwtProps;
 
     public Token generateAccessToken(User user) {
-        return generateAccessToken(user, jwtProps.getAccessTokenProps());
+        return generateToken(user, jwtProps.getAccessTokenProps());
     }
 
-    public Token generateRefreshToken() {
-        return generateRefreshToken(jwtProps.getRefreshTokenProps());
+    public Token generateRefreshToken(User user) {
+        return generateToken(user, jwtProps.getRefreshTokenProps());
     }
 
     public Long getUserIdFromAccessToken(String token) {
         return Long.valueOf(getClaims(token, jwtProps.getAccessTokenProps()).getBody().getSubject());
     }
 
-    private Token generateAccessToken(User user, JwtProps.TokenProps tokenProps) {
+    public Long getUserIdFromRefreshToken(String token) {
+        return Long.valueOf(getClaims(token, jwtProps.getRefreshTokenProps()).getBody().getSubject());
+    }
+
+    private Token generateToken(User user, JwtProps.TokenProps tokenProps) {
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(tokenProps.getSecret()));
 
         Date exp = new Date((new Date()).getTime() + tokenProps.getExpirationTimeMilliSec());
@@ -41,13 +44,6 @@ public class TokenProvider {
                 .setExpiration(exp)
                 .signWith(key)
                 .compact();
-
-        return Token.create(token, exp);
-    }
-
-    private Token generateRefreshToken(JwtProps.TokenProps tokenProps) {
-        String token = UUID.randomUUID().toString();
-        Date exp = new Date((new Date()).getTime() + tokenProps.getExpirationTimeMilliSec());
 
         return Token.create(token, exp);
     }
@@ -72,5 +68,26 @@ public class TokenProvider {
         }
 
         return claims;
+    }
+
+    public boolean isValidToken(String token) {
+        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProps.getRefreshTokenProps().getSecret()));
+        Jws<Claims> claims = null;
+        try {
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException exception) {
+            log.error("Token Expired");
+            return false;
+        } catch (JwtException exception) {
+            log.error("Token Tampered");
+            return false;
+        } catch (NullPointerException exception) {
+            log.error("Token is null");
+            return false;
+        }
     }
 }

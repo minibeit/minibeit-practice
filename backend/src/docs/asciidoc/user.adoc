@@ -48,6 +48,8 @@ include::{snippets}/user-login/response-fields.adoc[]
 
 요청 HTTP
 include::{snippets}/user-refresh-token/http-request.adoc[]
+요청 Header
+include::{snippets}/user-refresh-token/request-headers.adoc[]
 
 성공 응답 HTTP
 include::{snippets}/user-refresh-token/http-response.adoc[]

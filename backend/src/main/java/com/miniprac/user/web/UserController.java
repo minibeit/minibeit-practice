@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,8 +33,10 @@ public class UserController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/{userId}/refreshtoken")
-    public UserResponse.Login refreshToken(@PathVariable Long userId) {
-        return refreshTokenService.createAccessToken(userId);
+    @PostMapping("/refreshtoken")
+    public UserResponse.Login refreshToken(@RequestHeader Map<String, Object> requestHeader) {
+        String refresh_token = requestHeader.get("refresh_token").toString();
+
+        return refreshTokenService.createAccessToken(refresh_token);
     }
 }
