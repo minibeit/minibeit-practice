@@ -1,6 +1,7 @@
 package com.miniprac.user.service;
 
 import com.miniprac.security.token.RefreshTokenService;
+import com.miniprac.security.token.Token;
 import com.miniprac.security.token.TokenProvider;
 import com.miniprac.user.domain.User;
 import com.miniprac.user.domain.repository.UserRepository;
@@ -35,8 +36,8 @@ public class UserService {
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new PasswordWrongException();
         }
-        refreshTokenService.createOrUpdateRefreshToken(user);
+        Token refreshToken = refreshTokenService.createOrUpdateRefreshToken(user);
 
-        return UserResponse.Login.build(user.getId(), user.getName(), tokenProvider.generateAccessToken(user));
+        return UserResponse.Login.build(user.getId(), user.getName(), tokenProvider.generateAccessToken(user), refreshToken);
     }
 }

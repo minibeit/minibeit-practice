@@ -1,5 +1,6 @@
 package com.miniprac.security.oauth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.miniprac.security.token.RefreshTokenService;
 import com.miniprac.security.token.Token;
 import com.miniprac.security.token.TokenProvider;
@@ -8,6 +9,7 @@ import com.miniprac.user.domain.repository.UserRepository;
 import com.miniprac.user.service.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -17,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Transactional
@@ -25,8 +29,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
     private final RefreshTokenService refreshTokenService;
-    @Value("${oauth2.success.redirect.url}")
-    private String url;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -40,8 +42,17 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         User user = userRepository.findByOauthId(oAuthId).orElseThrow(UserNotFoundException::new);
 
         Token token = tokenProvider.generateAccessToken(user);
-        refreshTokenService.createOrUpdateRefreshToken(user);
+        Token refreshToken = refreshTokenService.createOrUpdateRefreshToken(user);
 
-        response.sendRedirect(url + token.getToken());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("id", user.getOauthId());
+        body.put("name", user.getName());
+        body.put("accessToken", token.getToken());
+        body.put("refreshToken", refreshToken.getToken());
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(response.getOutputStream(), body);
     }
 }
