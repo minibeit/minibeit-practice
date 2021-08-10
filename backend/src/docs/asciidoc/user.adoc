@@ -39,8 +39,30 @@ include::{snippets}/user-login/response-fields.adoc[]
 
 `Redirect /oauth2/authorization/google`
 
-- 해당 url 리다이렉트
-- http://localhost:3000/token=accessToken 반환
+- 해당 url 리다이렉트 성공 응답은 유저 로그인 Api Response Data 와 동일
+
+성공 응답 HTTP
+
+[source]
+----
+{
+  "id" : 1,
+  "name" : "테스터",
+  "accessToken" : "accessToken",
+  "refreshToken" : "accessToken"
+}
+----
+[cols=2*]
+|===
+|id
+|소셜 로그인 유저 식별자
+|name
+|이름
+|accessToken
+|accessToken
+|refreshToken
+|refreshToken
+|===
 
 === Refresh Token 으로 accessToken 받기
 
