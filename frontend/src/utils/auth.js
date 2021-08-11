@@ -2,7 +2,7 @@ import axios from 'axios';
 import { API_URLS } from '../constants';
 
 
-const { LOGIN, SIGNUP} = API_URLS;
+const { LOGIN,LOGOUT, SIGNUP} = API_URLS;
  
 
   export const obtainToken = async (useremail, password) => {
@@ -15,7 +15,7 @@ const { LOGIN, SIGNUP} = API_URLS;
     .post(LOGIN,data)
     .then((res)=>{
       localStorage.setItem("accessToken", res.data.accessToken);
- 
+      localStorage.setItem("accessTokenExpiredAt", res.data.accessTokenExpiredAt);
       return res;
     })
     .catch((err)=>{
@@ -33,6 +33,26 @@ const { LOGIN, SIGNUP} = API_URLS;
     }
   const result = await axios
   .post(SIGNUP,data )
+  .then((res)=>{
+    return res;
+  })
+  .catch((err)=>{
+    return err
+  });
+  console.log(result)
+  return result;
+  
+  }
+
+  export const logoutFunc = async () => {
+  const accessToken = localStorage.getItem('accessToken');
+  console.log(accessToken)
+  const result = await axios
+  .post(LOGOUT,{}, {
+    headers: {
+        Authorization: `Bearer ${accessToken}`
+    }
+})
   .then((res)=>{
     return res;
   })

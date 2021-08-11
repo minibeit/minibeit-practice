@@ -1,6 +1,6 @@
 const API_URLS = {
     ///백엔드 맞추기!!! 수정전
-    USERS: '/account/users/',
+    LOGOUT: 'http://3.36.95.15:8080/api/user/logout',
     PROFILES: '/account/profiles/',
     USERINFO: '/account/userinfo/',
     SIGNUP: 'http://3.36.95.15:8080/api/user/signup',

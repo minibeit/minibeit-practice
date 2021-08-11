@@ -18,7 +18,7 @@ axiosInstance.interceptors.response.use(
         const preAccessToken = localStorage.getItem("accessToken");
         // token refresh 요청
         const { data } = await axios.post(
-          'http://3.36.95.15:8080/api/user/refreshtoken', // token refresh api
+          'http://3.36.95.15:8080/api/user/refreshtoken',{}, // token refresh api
           {
               headers: {
                   Authorization: `Bearer ${preAccessToken}`
@@ -27,8 +27,10 @@ axiosInstance.interceptors.response.use(
         // 새로운 토큰 저장
         const {
           accessToken: newAccessToken,
+          accessTokenExpiredAt: newAccessTokenExpiredAt,
         } = data;
         localStorage.setItem("accessToken", newAccessToken);
+        localStorage.setItem("accessTokenExpiredAt", newAccessTokenExpiredAt);
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         // 401로 요청 실패했던 요청 새로운 accessToken으로 재요청
         return axios(originalRequest);

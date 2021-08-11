@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../recoil/userState";
+import { logoutFunc } from "../../utils/auth";
 import * as S from "./style";
 
 export default function NavBar() {
@@ -9,10 +10,19 @@ export default function NavBar() {
   const loginState = data.isLogin;
   const username = data.name;
 
-  const logout = () => {
-    localStorage.clear();
-    window.alert("로그아웃이 되었습니다!");
-    window.location.replace("/");
+  const logout = async () => {
+    try {
+      const result = await logoutFunc();
+      if (result) {
+        console.log(result);
+        window.alert("로그아웃이 되었습니다!");
+        window.location.replace("/");
+        localStorage.clear();
+      }
+    } catch (e) {
+      console.log(e.response.data.error.msg);
+      alert(e.response.data.error.msg);
+    }
   };
   return (
     <S.NavBarContainer>
