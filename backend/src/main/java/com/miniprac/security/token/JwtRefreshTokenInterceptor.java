@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,7 +19,13 @@ public class JwtRefreshTokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        String refreshToken = request.getHeader("refresh_token");
+        String refreshToken = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("refresh_token")) {
+                refreshToken = cookie.getValue();
+            }
+        }
 
         if (refreshToken != null) {
             if (tokenProvider.isValidToken(refreshToken)) {
@@ -26,13 +33,13 @@ public class JwtRefreshTokenInterceptor implements HandlerInterceptor {
             }
         }
 
-        final Map<String, Object> body = new HashMap<>();
+        Map<String, Object> body = new HashMap<>();
         body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
         body.put("error", "Unauthorized");
         body.put("message", "check the token");
         body.put("path", request.getServletPath());
 
-        final ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
         return false;
     }

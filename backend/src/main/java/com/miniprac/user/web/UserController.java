@@ -9,8 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,16 +28,25 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse.Login> login(@RequestBody UserRequest.Login request) {
-        UserResponse.Login response = userService.login(request);
+    public ResponseEntity<UserResponse.Login> login(@RequestBody UserRequest.Login request, HttpServletResponse response) {
+        UserResponse.Login loginResponse = userService.login(request);
+        createCookie(response, loginResponse.getRefreshToken());
 
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(loginResponse);
     }
 
     @PostMapping("/refreshtoken")
-    public UserResponse.Login refreshToken(@RequestHeader Map<String, Object> requestHeader) {
-        String refresh_token = requestHeader.get("refresh_token").toString();
+    public ResponseEntity<UserResponse.Login> refreshToken(@CookieValue("refresh_token") String refreshToken, HttpServletResponse response) {
+        UserResponse.Login loginResponse = refreshTokenService.createAccessToken(refreshToken);
+        createCookie(response, loginResponse.getRefreshToken());
 
-        return refreshTokenService.createAccessToken(refresh_token);
+        return ResponseEntity.ok().body(loginResponse);
+    }
+
+    private void createCookie(HttpServletResponse response, String refreshToken) {
+        Cookie cookie = new Cookie("refresh_token", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(14 * 24 * 60 * 60);
+        response.addCookie(cookie);
     }
 }

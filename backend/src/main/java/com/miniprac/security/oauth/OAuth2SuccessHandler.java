@@ -8,13 +8,13 @@ import com.miniprac.user.domain.User;
 import com.miniprac.user.domain.repository.UserRepository;
 import com.miniprac.user.service.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -50,7 +50,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         body.put("id", user.getOauthId());
         body.put("name", user.getName());
         body.put("accessToken", token.getToken());
-        body.put("refreshToken", refreshToken.getToken());
+        body.put("accessTokenExpiredAt", token.getExpiredAt());
+
+        Cookie cookie = new Cookie("refresh_token", refreshToken.getToken());
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(14 * 24 * 60 * 60);
+        response.addCookie(cookie);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
