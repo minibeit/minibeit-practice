@@ -1,5 +1,13 @@
 import React from "react";
 
+import { NavBar } from '../../components/Common';
+import { EditFeedForm } from "../../components/FeedEdit";
+
 export default function FeedEdit() {
-  return <div>feededit</div>;
+  return (
+    <>
+      <NavBar/>
+      <EditFeedForm/>
+    </>
+  );
 }

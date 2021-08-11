@@ -1,13 +1,18 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import * as S from '../style';
 
 export default function PFeedView(props){
+    const history = useHistory();
+    console.log(props)
+    const postId = props.postId
+    const accessToken = props.accessToken
     const isMine = props.data.isMine;
     const deleteFuc = ()=>{
         var result = window.confirm('삭제하시겠습니까?')
         if(result == true){
-            props.deleteFeed(props.postId, props.accessToken)
+            props.deleteFeed(postId, accessToken)
         }
     }
     
@@ -15,6 +20,13 @@ export default function PFeedView(props){
         <S.FeedContainer>
             <S.FeedTitle>제목 - {props.data.title}</S.FeedTitle>
             <S.FeedAuthor>작성자 - {props.data.author}</S.FeedAuthor>
+            {
+                isMine === true
+                ? <button onClick={(e)=>{
+                    history.push(`/feedList/${props.data.category}/${postId}/feedEdit`)
+                }}>수정</button>
+                : null
+            }
             {
                 isMine === true
                 ? <button onClick={deleteFuc}>삭제</button>
