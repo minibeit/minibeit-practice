@@ -40,4 +40,8 @@ public class UserService {
 
         return UserResponse.Login.build(user.getId(), user.getName(), tokenProvider.generateAccessToken(user), refreshToken);
     }
+
+    public void logout(User user) {
+        refreshTokenService.deleteRefreshTokenByUser(user);
+    }
 }

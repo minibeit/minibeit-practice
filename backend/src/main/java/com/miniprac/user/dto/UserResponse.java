@@ -1,7 +1,11 @@
 package com.miniprac.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.miniprac.security.token.Token;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 public class UserResponse {
     @Getter
@@ -20,14 +24,18 @@ public class UserResponse {
         private Long id;
         private String name;
         private String accessToken;
+        @JsonIgnore
         private String refreshToken;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        private LocalDateTime accessTokenExpiredAt;
 
-        public static Login build(Long id, String name, Token accessToken,Token refreshToken) {
+        public static Login build(Long id, String name, Token accessToken, Token refreshToken) {
             return Login.builder()
                     .id(id)
                     .name(name)
                     .accessToken(accessToken.getToken())
                     .refreshToken(refreshToken.getToken())
+                    .accessTokenExpiredAt(accessToken.getExpiredAt())
                     .build();
         }
     }

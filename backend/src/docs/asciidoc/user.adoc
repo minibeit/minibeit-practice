@@ -49,9 +49,10 @@ include::{snippets}/user-login/response-fields.adoc[]
   "id" : 1,
   "name" : "테스터",
   "accessToken" : "accessToken",
-  "refreshToken" : "accessToken"
+  "accessTokenExpiredAt":"2021-08-11 12:59:37"
 }
 ----
+
 [cols=2*]
 |===
 |id
@@ -60,8 +61,8 @@ include::{snippets}/user-login/response-fields.adoc[]
 |이름
 |accessToken
 |accessToken
-|refreshToken
-|refreshToken
+|accessTokenExpiredAt
+|accessToken 만료일
 |===
 
 === Refresh Token 으로 accessToken 받기
@@ -70,9 +71,17 @@ include::{snippets}/user-login/response-fields.adoc[]
 
 요청 HTTP
 include::{snippets}/user-refresh-token/http-request.adoc[]
-요청 Header
-include::{snippets}/user-refresh-token/request-headers.adoc[]
 
 성공 응답 HTTP
 include::{snippets}/user-refresh-token/http-response.adoc[]
 include::{snippets}/user-refresh-token/response-fields.adoc[]
+
+=== 로그아웃
+
+`POST /api/user/logout`
+
+요청 HTTP
+include::{snippets}/user-logout/http-request.adoc[]
+
+성공 응답 HTTP
+include::{snippets}/user-logout/http-response.adoc[]

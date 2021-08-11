@@ -17,12 +17,11 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import javax.servlet.http.Cookie;
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -71,12 +70,12 @@ class UserControllerTest extends MvcTest {
     }
 
     @Test
-    @DisplayName("로그인 테스트")
+    @DisplayName("로그인 문서화")
     public void login() throws Exception {
         UserRequest.Login request = UserRequest.Login.builder().email("test@test.com").password("1234").build();
         UserResponse.Login response = UserResponse.Login.build(1L, "테스터",
                 Token.builder().token("accessToken").expiredAt(LocalDateTime.now()).build(),
-                Token.builder().token("accessToken").expiredAt(LocalDateTime.now().plusDays(10)).build());
+                Token.builder().token("refreshToken").expiredAt(LocalDateTime.now().plusDays(10)).build());
 
         given(userService.login(any())).willReturn(response);
 
@@ -98,38 +97,51 @@ class UserControllerTest extends MvcTest {
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("로그인한 유저 식별자"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("로그인한 유저 식별자"),
                                 fieldWithPath("accessToken").type(JsonFieldType.STRING).description("accessToken"),
-                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("refreshToken")
+                                fieldWithPath("accessTokenExpiredAt").type(JsonFieldType.STRING).description("accessToken 만료일")
                         )
                 ));
     }
 
     @Test
-    @DisplayName("refresh token 테스트")
+    @DisplayName("refresh token 문서화")
     public void refreshToken() throws Exception {
         UserResponse.Login response = UserResponse.Login.build(1L, "테스터",
                 Token.builder().token("accessToken").expiredAt(LocalDateTime.now()).build(),
-                Token.builder().token("accessToken").expiredAt(LocalDateTime.now().plusDays(10)).build());
+                Token.builder().token("refreshToken").expiredAt(LocalDateTime.now().plusDays(10)).build());
+
+        Cookie cookie = new Cookie("refresh_token", "refreshToken");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(14 * 24 * 60 * 60);
 
         given(refreshTokenService.createAccessToken(any())).willReturn(response);
         given(tokenProvider.isValidToken(any())).willReturn(true);
 
         ResultActions results = mvc.perform(RestDocumentationRequestBuilders
                 .post("/api/user/refreshtoken")
-                .header("refresh_token", "refreshToken")
+                .cookie(cookie)
         );
 
         results.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("user-refresh-token",
-                        requestHeaders(
-                                headerWithName("refresh_token").description("refreshToken")
-                        ),
                         responseFields(
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("로그인한 유저 식별자"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("로그인한 유저 식별자"),
                                 fieldWithPath("accessToken").type(JsonFieldType.STRING).description("accessToken"),
-                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("refreshToken")
+                                fieldWithPath("accessTokenExpiredAt").type(JsonFieldType.STRING).description("accessToken 만료일")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("logout 문서화")
+    public void logout() throws Exception {
+        ResultActions results = mvc.perform(RestDocumentationRequestBuilders
+                .post("/api/user/logout")
+        );
+
+        results.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("user-logout"));
     }
 }
