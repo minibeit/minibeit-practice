@@ -29,6 +29,10 @@ public class RefreshToken {
         this.expiryDate = expiryDate;
     }
 
+    public boolean isSame(String refreshToken) {
+        return this.token.equals(refreshToken);
+    }
+
     public static RefreshToken create(String token, LocalDateTime expiredAt, User user) {
         return RefreshToken.builder().token(token).expiryDate(expiredAt).user(user).build();
     }

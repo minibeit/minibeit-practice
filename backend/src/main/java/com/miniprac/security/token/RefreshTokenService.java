@@ -1,11 +1,12 @@
 package com.miniprac.security.token;
 
+import com.miniprac.security.exception.InvalidRefreshTokenException;
 import com.miniprac.user.domain.RefreshToken;
 import com.miniprac.user.domain.User;
 import com.miniprac.user.domain.repository.RefreshTokenRepository;
 import com.miniprac.user.domain.repository.UserRepository;
 import com.miniprac.user.dto.UserResponse;
-import com.miniprac.user.service.exception.RefreshTokenNotFoundException;
+import com.miniprac.security.exception.RefreshTokenNotFoundException;
 import com.miniprac.user.service.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,12 +40,21 @@ public class RefreshTokenService {
         Long userId = tokenProvider.getUserIdFromRefreshToken(refreshToken);
 
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        RefreshToken findRefreshToken = refreshTokenRepository.findByUserId(userId).orElseThrow(RefreshTokenNotFoundException::new);
 
+        //db의 refresh 토큰과 일치하는 지 검사
+        RefreshToken findRefreshToken = refreshTokenRepository.findByUserId(userId).orElseThrow(RefreshTokenNotFoundException::new);
+        if(!findRefreshToken.isSame(refreshToken)){
+            throw new InvalidRefreshTokenException();
+        }
         //refresh token 업데이트
         Token createdRefreshToken = tokenProvider.generateRefreshToken(user);
         findRefreshToken.update(createdRefreshToken.getToken(), createdRefreshToken.getExpiredAt());
 
         return UserResponse.Login.build(user.getId(), user.getName(), tokenProvider.generateAccessToken(user), createdRefreshToken);
+    }
+
+
+    public void deleteRefreshTokenByUser(User user) {
+        refreshTokenRepository.deleteByUserId(user.getId());
     }
 }

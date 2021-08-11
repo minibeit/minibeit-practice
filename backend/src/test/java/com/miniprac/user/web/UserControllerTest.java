@@ -132,4 +132,16 @@ class UserControllerTest extends MvcTest {
                         )
                 ));
     }
+
+    @Test
+    @DisplayName("logout 문서화")
+    public void logout() throws Exception {
+        ResultActions results = mvc.perform(RestDocumentationRequestBuilders
+                .post("/api/user/logout")
+        );
+
+        results.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("user-logout"));
+    }
 }

@@ -1,6 +1,8 @@
 package com.miniprac.user.web;
 
 import com.miniprac.security.token.RefreshTokenService;
+import com.miniprac.security.userdetails.CurrentUser;
+import com.miniprac.security.userdetails.CustomUserDetails;
 import com.miniprac.user.domain.User;
 import com.miniprac.user.dto.UserRequest;
 import com.miniprac.user.dto.UserResponse;
@@ -19,6 +21,7 @@ import java.net.URI;
 public class UserController {
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
+    private static final String REFRESH_TOKEN="refresh_token";
 
     @PostMapping("/signup")
     public ResponseEntity<UserResponse.OnlyId> signup(@RequestBody UserRequest.Signup request) {
@@ -43,10 +46,24 @@ public class UserController {
         return ResponseEntity.ok().body(loginResponse);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@CurrentUser CustomUserDetails customUserDetails, HttpServletResponse response) {
+        userService.logout(customUserDetails.getUser());
+        deleteCookie(response);
+
+        return ResponseEntity.ok().build();
+    }
+
     private void createCookie(HttpServletResponse response, String refreshToken) {
-        Cookie cookie = new Cookie("refresh_token", refreshToken);
+        Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
         cookie.setHttpOnly(true);
         cookie.setMaxAge(14 * 24 * 60 * 60);
+        response.addCookie(cookie);
+    }
+
+    private void deleteCookie(HttpServletResponse response) {
+        Cookie cookie=new Cookie(REFRESH_TOKEN,null);
+        cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
 }
