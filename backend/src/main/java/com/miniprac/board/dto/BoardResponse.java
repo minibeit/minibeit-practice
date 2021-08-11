@@ -2,6 +2,7 @@ package com.miniprac.board.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.miniprac.board.domain.Board;
+import com.miniprac.board.domain.BoardLike;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -30,13 +31,14 @@ public class BoardResponse {
         private String place;
         private String author;
         private String contact;
+        private int likes;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate dueDate;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime doDate;
 
-        public static BoardResponse.GetList build(Board board) {
+        public static BoardResponse.GetList build(Board board, int like) {
             return GetList.builder()
                     .id(board.getId())
                     .title(board.getTitle())
@@ -45,6 +47,7 @@ public class BoardResponse {
                     .dueDate(board.getDueDate())
                     .doDate(board.getDoDate())
                     .contact(board.getPhoneNum())
+                    .likes(like)
                     .build();
         }
     }
@@ -62,13 +65,14 @@ public class BoardResponse {
         private String author;
         private Integer pay;
         private Integer time;
+        private Integer likes;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate dueDate;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime doDate;
 
-        public static BoardResponse.GetOne build(Board board) {
+        public static BoardResponse.GetOne build(Board board, int likes) {
             return GetOne.builder()
                     .id(board.getId())
                     .category(board.getCategory().getType().name())
@@ -80,6 +84,7 @@ public class BoardResponse {
                     .time(board.getTime())
                     .dueDate(board.getDueDate())
                     .doDate(board.getDoDate())
+                    .likes(likes)
                     .build();
         }
     }

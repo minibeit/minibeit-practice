@@ -42,3 +42,8 @@ Authorization: {{authorizationToken}}
 ###
 DELETE {{apiUrl}}/board/1
 Authorization: {{authorizationToken}}
+
+###
+POST {{apiUrl}}/board/like/2
+Authorization: {{authorizationToken}}
+
