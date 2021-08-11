@@ -1,16 +1,6 @@
 import axios from "axios";
 
-export const getFeedData = (config, success, fail)=>{
-    axios(config)
-    .then(async(res)=>{
-        await success(res)
-    })
-    .catch((err=>{
-        fail(err)
-    }))
-}
-
-export const sendFeedData = (config, success, fail)=>{
+export const sendData = (config, success, fail)=>{
     axios(config)
     .then(async(res)=>{
         await success(res)

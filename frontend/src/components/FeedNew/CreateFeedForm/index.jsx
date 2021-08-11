@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import PCreateFeedForm from './PCreateFeedForm';
-import { sendFeedData } from '../../../api/feedDataAPI';
+import { sendData } from '../../../api/feedDataAPI';
 
 export default function CreateFeedForm(){
     const history = useHistory();
@@ -22,7 +22,7 @@ export default function CreateFeedForm(){
         const fail = (err)=>{
             console.log(err)
         }
-        sendFeedData(config, success, fail);
+        sendData(config, success, fail);
     }
 
     return <PCreateFeedForm createFeedHandler={createFeedHandler}/>

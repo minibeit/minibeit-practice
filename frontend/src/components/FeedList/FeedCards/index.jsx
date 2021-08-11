@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 
 import PFeedCards from "./PFeedCards";
 import PPageButton from "./PPageButton";
-import { getFeedData } from "../../../api/feedDataAPI";
+import { getFeedData, sendData } from "../../../api/feedDataAPI";
 
 export default function FeedCards(props) {
   const history = useHistory();
@@ -32,7 +32,7 @@ export default function FeedCards(props) {
   }
 
   useEffect(()=>{
-      return getFeedData(config, success, fail)
+      return sendData(config, success, fail)
   },[page])
 
   return (
