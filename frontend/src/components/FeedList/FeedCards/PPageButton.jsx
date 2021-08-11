@@ -5,13 +5,18 @@ import { useHistory } from 'react-router-dom';
 /* style */
 import * as S from '../style';
 
-export default function PPageButton() {
+export default function PPageButton(props) {
+  const onClick = (e)=>{
+    props.setPage(e.target.value);
+  }
+
   return (
     <S.ButtonContainer>
-      <S.PageButton>1</S.PageButton>
-      <S.PageButton>1</S.PageButton>
-      <S.PageButton>1</S.PageButton>
-      버튼 미구현
+      {
+        [...Array(props.btnCount)].map((a,i)=>{
+          return <S.PageButton key={i} onClick={onClick} value={i+1}>{i+1}</S.PageButton>
+        })
+      }
     </S.ButtonContainer>
   );
 }

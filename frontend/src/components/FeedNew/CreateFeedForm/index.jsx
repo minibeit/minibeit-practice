@@ -1,9 +1,11 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import PCreateFeedForm from './PCreateFeedForm';
 import { sendFeedData } from '../../../api/feedDataAPI';
 
 export default function CreateFeedForm(){
+    const history = useHistory();
     const accessToken = localStorage.getItem('accessToken');
     function createFeedHandler(data){
         const config = {
@@ -15,7 +17,7 @@ export default function CreateFeedForm(){
             }
         }
         const success = (res)=>{
-            console.log(res.data)
+            history.push('/')
         }
         const fail = (err)=>{
             console.log(err)
