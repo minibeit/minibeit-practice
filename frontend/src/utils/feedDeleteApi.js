@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from './refresh';
 
 const feedDeleteApi = async (postId) =>{
     const accessToken = localStorage.getItem('accessToken');

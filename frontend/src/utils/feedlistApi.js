@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from './refresh';
 
 const feedlistApi = async (category, page, size) =>{
     const accessToken = localStorage.getItem('accessToken');
@@ -12,7 +12,7 @@ const feedlistApi = async (category, page, size) =>{
         return res;
       })
       .catch((err)=>{
-        return false
+        return err
       });
       const data = {
         post : result.data.content,

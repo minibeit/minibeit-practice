@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from './refresh';
 
 const feedDetailApi = async (postId) =>{
     const accessToken = localStorage.getItem('accessToken');
@@ -14,6 +14,7 @@ const feedDetailApi = async (postId) =>{
       .catch((err)=>{
         return false
       });
+      console.log(result)
       return result.data;
 }
 export default feedDetailApi;

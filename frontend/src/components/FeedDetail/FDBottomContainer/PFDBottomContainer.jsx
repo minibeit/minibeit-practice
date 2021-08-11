@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 import { feedDeleteApi } from "../../../utils";
 import * as S from "../style";
 
@@ -7,7 +8,6 @@ function PFDBottomContainer({ post }) {
   const history = useHistory();
   const {
     author,
-    category,
     content,
     doDate,
     dueDate,
@@ -18,7 +18,15 @@ function PFDBottomContainer({ post }) {
     place,
     time,
     title,
+    images,
   } = post;
+  let { category } = post;
+  console.log(images);
+  if (category === "SURVEY") {
+    category = "survey";
+  } else {
+    category = "experiment";
+  }
   const deleteFeed = async () => {
     try {
       const result = await feedDeleteApi(id);
@@ -36,7 +44,15 @@ function PFDBottomContainer({ post }) {
       {isMine ? (
         <>
           <S.FDdeletebutton onClick={deleteFeed}>삭제하기</S.FDdeletebutton>
-          <S.FDeditbutton>수정하기</S.FDeditbutton>
+          <S.FDeditbutton
+            onClick={() => {
+              history.push({
+                pathname: `/feedList/${category}/${id}/feedEdit`,
+              });
+            }}
+          >
+            수정하기
+          </S.FDeditbutton>
         </>
       ) : null}
 

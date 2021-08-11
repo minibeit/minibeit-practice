@@ -15,7 +15,7 @@ const { LOGIN, SIGNUP} = API_URLS;
     .post(LOGIN,data)
     .then((res)=>{
       localStorage.setItem("accessToken", res.data.accessToken);
-      localStorage.setItem("accessTokenExpiredAt", res.data.accessTokenExpiredAt);
+ 
       return res;
     })
     .catch((err)=>{
@@ -34,7 +34,6 @@ const { LOGIN, SIGNUP} = API_URLS;
   const result = await axios
   .post(SIGNUP,data )
   .then((res)=>{
-    console.log(res)
     return res;
   })
   .catch((err)=>{

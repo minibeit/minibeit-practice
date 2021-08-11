@@ -1,9 +1,6 @@
 import axios from './refresh';
-import { API_URLS } from '../constants';
 
-const { FEED_NEW } = API_URLS;
-
-const feedCreateApi = async ( 
+const feedEditApi = async ( 
     title,
     dueDate,
     doDate,
@@ -13,7 +10,8 @@ const feedCreateApi = async (
     content,
    phoneNum,
     files,
-    category) =>{
+    category,
+    postId) =>{
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
@@ -40,7 +38,7 @@ const feedCreateApi = async (
     const accessToken = localStorage.getItem('accessToken');  
     console.log(accessToken) 
     const result = await axios.post(
-        FEED_NEW,formData,{
+        `http://3.36.95.15:8080/api/board/${postId}`,formData,{
             headers:{
                 Authorization: `Bearer ${accessToken}`,
             }
@@ -55,4 +53,4 @@ const feedCreateApi = async (
       console.log(result)
       return result.data;
 }
-export default feedCreateApi;
+export default feedEditApi;

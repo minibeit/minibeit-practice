@@ -9,7 +9,8 @@ function FDBottomContainer({ postId }) {
     try {
       const result = await feedDetailApi(postId);
       if (result) {
-        setPost(result);
+        await setPost(result);
+        console.log(result);
       }
     } catch (e) {
       console.log(e.response.data.error.msg);
