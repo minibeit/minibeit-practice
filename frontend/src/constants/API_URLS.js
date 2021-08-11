@@ -8,8 +8,7 @@ const API_URLS = {
     TOKEN_OBTAIN: '/account/token/obtain/',
     TOKEN_REFRESH: '/account/token/refresh/',
     TOKEN_BLACKLIST: '/account/token/blacklist/',
-    NOTICE: '/feed/notice/',
-    STORY: '/feed/story/',
+    FEED_NEW : 'http://3.36.95.15:8080/api/board',
   };
   
   export default API_URLS;
