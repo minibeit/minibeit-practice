@@ -7,6 +7,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -44,8 +46,19 @@ public class Board extends BaseEntity {
     @Column(name = "do_date")
     private LocalDateTime doDate;
 
-    public static Board create(BoardRequest.Create request, BoardCategory category) {
-        return Board.builder()
+    @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST)
+    @Builder.Default
+    private List<BoardFile> boardFileList = new ArrayList<>();
+
+    private void addFiles(List<BoardFile> boardFiles) {
+        boardFiles.forEach(boardFile -> {
+            this.boardFileList.add(boardFile);
+            boardFile.setBoard(this);
+        });
+    }
+
+    public static Board create(BoardRequest.Create request, BoardCategory category, List<BoardFile> boardFiles) {
+        Board board = Board.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .place(request.getPlace())
@@ -56,17 +69,20 @@ public class Board extends BaseEntity {
                 .doDate(request.getDoDate())
                 .category(category)
                 .build();
+        board.addFiles(boardFiles);
+
+        return board;
     }
 
     public void update(BoardRequest.Update request, BoardCategory category) {
-       this.title= request.getTitle();
-       this.content=request.getContent();
-       this.place=request.getPlace();
-       this.phoneNum=request.getPhoneNum();
-       this.pay= request.getPay();
-       this.time=request.getTime();
-       this.doDate=request.getDoDate();
-       this.dueDate=request.getDueDate();
-       this.category=category;
+        this.title = request.getTitle();
+        this.content = request.getContent();
+        this.place = request.getPlace();
+        this.phoneNum = request.getPhoneNum();
+        this.pay = request.getPay();
+        this.time = request.getTime();
+        this.doDate = request.getDoDate();
+        this.dueDate = request.getDueDate();
+        this.category = category;
     }
 }

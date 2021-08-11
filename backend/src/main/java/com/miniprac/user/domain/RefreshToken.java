@@ -24,10 +24,6 @@ public class RefreshToken {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public boolean verifyExpiration() {
-        return expiryDate.isAfter(LocalDateTime.now());
-    }
-
     public void update(String token, LocalDateTime expiryDate) {
         this.token = token;
         this.expiryDate = expiryDate;

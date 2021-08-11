@@ -27,17 +27,18 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public ResponseEntity<BoardResponse.OnlyId> create(@RequestBody BoardRequest.Create request) {
+    public ResponseEntity<BoardResponse.OnlyId> create(BoardRequest.Create request) {
         Board board = boardService.create(request);
+
         return ResponseEntity.created(URI.create("/api/board/" + board.getId())).body(BoardResponse.OnlyId.build(board));
     }
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardResponse.GetOne> getOne(@PathVariable Long boardId) {
+    public ResponseEntity<BoardResponse.GetOne> getOne(@PathVariable Long boardId, @CurrentUser CustomUserDetails customUserDetails) {
         Board board = boardService.getOne(boardId);
         int count = boardService.likesCount(boardId);
 
-        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board,count));
+        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board, customUserDetails.getUser(), count));
     }
 
     @GetMapping("/list")
@@ -55,19 +56,15 @@ public class BoardController {
         return new PageImpl<>(response, pageDto.of(), list.getTotalElements());
     }
 
-    @PutMapping("/{boardId}")
-    public ResponseEntity<BoardResponse.OnlyId> update(@PathVariable Long boardId,
-                                                       @RequestBody BoardRequest.Update request,
-                                                       @CurrentUser CustomUserDetails userDetails) {
-
+    @PostMapping("/{boardId}")
+    public ResponseEntity<BoardResponse.OnlyId> update(@PathVariable Long boardId, BoardRequest.Update request, @CurrentUser CustomUserDetails userDetails) {
         Board board = boardService.update(request, boardId, userDetails.getUser());
 
         return ResponseEntity.ok().body(BoardResponse.OnlyId.build(board));
     }
 
     @DeleteMapping("/{boardId}")
-    public ResponseEntity<Void> delete(@PathVariable Long boardId,
-                                       @CurrentUser CustomUserDetails userDetails){
+    public ResponseEntity<Void> delete(@PathVariable Long boardId, @CurrentUser CustomUserDetails userDetails) {
         boardService.deleteBoard(boardId, userDetails.getUser());
 
         return ResponseEntity.ok().build();

@@ -6,12 +6,16 @@ import com.miniprac.board.domain.BoardCategoryType;
 import com.miniprac.board.domain.BoardLike;
 import com.miniprac.board.domain.repository.BoardCategoryRepository;
 import com.miniprac.board.domain.repository.BoardLikeRepository;
+import com.miniprac.board.domain.BoardFile;
+import com.miniprac.board.domain.repository.BoardFileRepository;
 import com.miniprac.board.domain.repository.BoardRepository;
 import com.miniprac.board.dto.BoardRequest;
 import com.miniprac.board.service.exception.BoardCategoryNotFoundException;
 import com.miniprac.board.service.exception.BoardNotFoundException;
 import com.miniprac.common.dto.PageDto;
 import com.miniprac.common.exception.PermissionException;
+import com.miniprac.file.domain.File;
+import com.miniprac.file.service.FileService;
 import com.miniprac.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,18 +23,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final BoardFileRepository boardFileRepository;
     private final BoardCategoryRepository boardCategoryRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final FileService fileService;
 
     public Board create(BoardRequest.Create request) {
         BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
-        Board board = Board.create(request, category);
+
+        List<File> files = fileService.uploadFiles(request.getFiles());
+        List<BoardFile> boardFiles = files.stream().map(BoardFile::create).collect(Collectors.toList());
+        Board board = Board.create(request, category, boardFiles);
 
         return boardRepository.save(board);
     }
@@ -51,20 +62,33 @@ public class BoardService {
         return boardLikeRepository.findAllByBoardId(boardId).size();
     }
 
-    public Board update(BoardRequest.Update request, Long boardId, User user){
-
+    public Board update(BoardRequest.Update request, Long boardId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
-
         permissionCheck(user, board);
         BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
+        if (request.isFileChanged()) {
+            boardFileDelete(board);
+            if (request.getFiles() != null) {
+                List<File> fileList = fileService.uploadFiles(request.getFiles());
 
+        permissionCheck(user, board);
+                category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
+
+                List<BoardFile> routeReviewFiles = fileList.stream()
+                        .map(f -> BoardFile.builder().file(f).board(board).build())
+                        .collect(Collectors.toList());
+                boardFileRepository.saveAll(routeReviewFiles);
+            }
+        }
         board.update(request, category);
+
         return board;
     }
 
-    public void deleteBoard(Long boardId, User user){
+    public void deleteBoard(Long boardId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
         permissionCheck(user, board);
+        boardFileDelete(board);
         boardRepository.delete(board);
     }
 
@@ -87,5 +111,11 @@ public class BoardService {
         }
     }
 
-
+    private void boardFileDelete(Board board) {
+        List<Long> fileIdList = board.getBoardFileList().stream()
+                .map(boardFile -> boardFile.getFile().getId())
+                .collect(Collectors.toList());
+        boardFileRepository.deleteAllByFileIds(fileIdList);
+        fileIdList.forEach(fileService::deleteById);
+    }
 }

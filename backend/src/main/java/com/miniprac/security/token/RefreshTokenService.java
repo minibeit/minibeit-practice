@@ -3,9 +3,10 @@ package com.miniprac.security.token;
 import com.miniprac.user.domain.RefreshToken;
 import com.miniprac.user.domain.User;
 import com.miniprac.user.domain.repository.RefreshTokenRepository;
+import com.miniprac.user.domain.repository.UserRepository;
 import com.miniprac.user.dto.UserResponse;
-import com.miniprac.user.service.exception.RefreshTokenExpiredException;
 import com.miniprac.user.service.exception.RefreshTokenNotFoundException;
+import com.miniprac.user.service.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,12 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class RefreshTokenService {
+    private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenProvider tokenProvider;
 
-    public void createOrUpdateRefreshToken(User user){
-        Token createdRefreshToken = tokenProvider.generateRefreshToken();
+    public Token createOrUpdateRefreshToken(User user) {
+        Token createdRefreshToken = tokenProvider.generateRefreshToken(user);
         Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByUserId(user.getId());
 
         if (optionalRefreshToken.isPresent()) {
@@ -29,16 +31,20 @@ public class RefreshTokenService {
             RefreshToken refreshToken = RefreshToken.create(createdRefreshToken.getToken(), createdRefreshToken.getExpiredAt(), user);
             refreshTokenRepository.save(refreshToken);
         }
+        return createdRefreshToken;
     }
 
-    public UserResponse.Login createAccessToken(User user){
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(user.getId()).orElseThrow(RefreshTokenNotFoundException::new);
-        if (!refreshToken.verifyExpiration()) {
-            throw new RefreshTokenExpiredException();
-        }
-        Token token = tokenProvider.generateRefreshToken();
-        refreshToken.update(token.getToken(), token.getExpiredAt());
+    public UserResponse.Login createAccessToken(String refreshToken) {
+        //refresh token 유효성 검사와 userId 가져오기
+        Long userId = tokenProvider.getUserIdFromRefreshToken(refreshToken);
 
-        return UserResponse.Login.build(user.getId(), user.getName(), tokenProvider.generateAccessToken(user));
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        RefreshToken findRefreshToken = refreshTokenRepository.findByUserId(userId).orElseThrow(RefreshTokenNotFoundException::new);
+
+        //refresh token 업데이트
+        Token createdRefreshToken = tokenProvider.generateRefreshToken(user);
+        findRefreshToken.update(createdRefreshToken.getToken(), createdRefreshToken.getExpiredAt());
+
+        return UserResponse.Login.build(user.getId(), user.getName(), tokenProvider.generateAccessToken(user), createdRefreshToken);
     }
 }

@@ -24,4 +24,12 @@ public class UserRequest {
 
         private String password;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class RefreshToken {
+        private String refreshToken;
+    }
 }

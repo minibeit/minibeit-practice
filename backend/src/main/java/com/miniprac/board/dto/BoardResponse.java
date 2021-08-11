@@ -2,11 +2,15 @@ package com.miniprac.board.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.miniprac.board.domain.Board;
-import com.miniprac.board.domain.BoardLike;
+import com.miniprac.board.domain.BoardFile;
+import com.miniprac.common.dto.FileDto;
+import com.miniprac.user.domain.User;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class BoardResponse {
     @Getter
@@ -63,16 +67,19 @@ public class BoardResponse {
         private String content;
         private String place;
         private String author;
+        private String contact;
         private Integer pay;
         private Integer time;
         private Integer likes;
+        private Boolean isMine;
+        private List<FileDto> images;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         private LocalDate dueDate;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime doDate;
 
-        public static BoardResponse.GetOne build(Board board, int likes) {
+        public static BoardResponse.GetOne build(Board board, User user, int likes) {
             return GetOne.builder()
                     .id(board.getId())
                     .category(board.getCategory().getType().name())
@@ -82,9 +89,15 @@ public class BoardResponse {
                     .author(board.getCreatedBy().getName())
                     .pay(board.getPay())
                     .time(board.getTime())
+                    .contact(board.getPhoneNum())
+                    .isMine(board.getCreatedBy().getId().equals(user.getId()))
                     .dueDate(board.getDueDate())
                     .doDate(board.getDoDate())
                     .likes(likes)
+                    .images(board.getBoardFileList().stream()
+                            .map(BoardFile::getFile)
+                            .map(FileDto::build)
+                            .collect(Collectors.toList()))
                     .build();
         }
     }

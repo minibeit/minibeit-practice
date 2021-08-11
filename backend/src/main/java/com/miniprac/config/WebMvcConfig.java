@@ -1,14 +1,18 @@
 package com.miniprac.config;
 
+import com.miniprac.security.token.JwtRefreshTokenInterceptor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
-
+    private final JwtRefreshTokenInterceptor jwtTokenInterceptor;
     /****************************************************************************************
      * CORS 설정
      * 모두 허용함
@@ -32,5 +36,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         characterEncodingFilter.setEncoding("UTF-8");
         characterEncodingFilter.setForceEncoding(true);
         return characterEncodingFilter;
+    }
+
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(jwtTokenInterceptor).addPathPatterns("/api/user/refreshtoken");
     }
 }

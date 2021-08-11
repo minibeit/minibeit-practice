@@ -50,6 +50,11 @@ dependencies {
     implementation "org.flywaydb:flyway-core"
 
     /**
+     * Aws
+     */
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
+    
+    /**
      * Test Dependencies
      */
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
