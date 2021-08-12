@@ -5,7 +5,6 @@ import * as S from '../style';
 
 export default function PFeedView(props){
     const history = useHistory();
-    console.log(props)
     const postId = props.postId
     const accessToken = props.accessToken
     const isMine = props.data.isMine;
@@ -32,6 +31,11 @@ export default function PFeedView(props){
                 ? <button onClick={deleteFuc}>삭제</button>
                 : null
             }
+            {
+                props.data.images && props.data.images !== 0
+                ? viewImages(props.data.images)
+                : null
+            }
             <p>본문 - {props.data.content}</p>
             <p>타입 - {props.data.category}</p>
             <p>날짜 - {props.data.doDate}</p>
@@ -41,4 +45,10 @@ export default function PFeedView(props){
             <p>예상 소요시간 - {props.data.time}분</p>
         </S.FeedContainer>
     )
+}
+
+function viewImages(images){
+    for(var i=0;i<images.length;i++){
+        return <S.FeedImg src={`${images[i].url}`}/>
+    }
 }
