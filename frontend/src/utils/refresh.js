@@ -13,22 +13,25 @@ axiosInstance.interceptors.response.use(
     
     if (status === 401) {
       if (error.response.data.message === "Full authentication is required to access this resource") {
-        console.log(error)
+        
         const originalRequest = config;
+        console.log(originalRequest)
         const preAccessToken = localStorage.getItem("accessToken");
         // token refresh 요청
-        const { data } = await axios.post(
-          'http://3.36.95.15:8080/api/user/refreshtoken',{}, // token refresh api
+        console.log(preAccessToken)
+        const data2  = await axios.post( 
+          'http://3.36.95.15:8080/api/user/refreshtoken',{},// token refresh api
           {
               headers: {
-                  Authorization: `Bearer ${preAccessToken}`
-              }
-          });
+                  Authorization: `Bearer ${preAccessToken}`,
+          }});
+        console.log(data2)
         // 새로운 토큰 저장
         const {
           accessToken: newAccessToken,
           accessTokenExpiredAt: newAccessTokenExpiredAt,
-        } = data;
+        } = data2;
+        console.log(data2)
         localStorage.setItem("accessToken", newAccessToken);
         localStorage.setItem("accessTokenExpiredAt", newAccessTokenExpiredAt);
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
