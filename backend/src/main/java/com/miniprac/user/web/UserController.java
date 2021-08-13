@@ -12,7 +12,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 
@@ -56,20 +55,22 @@ public class UserController {
     }
 
     private void createCookie(HttpServletResponse response, String refreshToken) {
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
-                .domain("localhost")
+        ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN, refreshToken)
                 .httpOnly(true)
-                .sameSite("None")
-                .secure(true)
                 .path("/")
+                .maxAge(14 * 24 * 60 * 60)
                 .build();
 
         response.addHeader("Set-Cookie", cookie.toString());
     }
 
     private void deleteCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie(REFRESH_TOKEN, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN, "")
+                .httpOnly(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 }
