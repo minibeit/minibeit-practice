@@ -8,10 +8,10 @@ import com.miniprac.user.dto.UserRequest;
 import com.miniprac.user.dto.UserResponse;
 import com.miniprac.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 
@@ -21,7 +21,7 @@ import java.net.URI;
 public class UserController {
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
-    private static final String REFRESH_TOKEN="refresh_token";
+    private static final String REFRESH_TOKEN = "refresh_token";
 
     @PostMapping("/signup")
     public ResponseEntity<UserResponse.OnlyId> signup(@RequestBody UserRequest.Signup request) {
@@ -55,15 +55,22 @@ public class UserController {
     }
 
     private void createCookie(HttpServletResponse response, String refreshToken) {
-        Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(14 * 24 * 60 * 60);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN, refreshToken)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(14 * 24 * 60 * 60)
+                .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
     private void deleteCookie(HttpServletResponse response) {
-        Cookie cookie=new Cookie(REFRESH_TOKEN,null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from(REFRESH_TOKEN, "")
+                .httpOnly(true)
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 }
