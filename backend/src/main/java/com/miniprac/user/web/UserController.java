@@ -8,6 +8,7 @@ import com.miniprac.user.dto.UserRequest;
 import com.miniprac.user.dto.UserResponse;
 import com.miniprac.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ import java.net.URI;
 public class UserController {
     private final UserService userService;
     private final RefreshTokenService refreshTokenService;
-    private static final String REFRESH_TOKEN="refresh_token";
+    private static final String REFRESH_TOKEN = "refresh_token";
 
     @PostMapping("/signup")
     public ResponseEntity<UserResponse.OnlyId> signup(@RequestBody UserRequest.Signup request) {
@@ -55,14 +56,19 @@ public class UserController {
     }
 
     private void createCookie(HttpServletResponse response, String refreshToken) {
-        Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(14 * 24 * 60 * 60);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .domain("localhost")
+                .httpOnly(true)
+                .sameSite("None")
+                .secure(true)
+                .path("/")
+                .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
     private void deleteCookie(HttpServletResponse response) {
-        Cookie cookie=new Cookie(REFRESH_TOKEN,null);
+        Cookie cookie = new Cookie(REFRESH_TOKEN, null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
