@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.miniprac.board.domain.Board.isLikeMine;
+
 public class BoardResponse {
     @Getter
     @Builder
@@ -42,7 +44,7 @@ public class BoardResponse {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime doDate;
 
-        public static BoardResponse.GetList build(Board board, int like) {
+        public static BoardResponse.GetList build(Board board) {
             return GetList.builder()
                     .id(board.getId())
                     .title(board.getTitle())
@@ -51,7 +53,7 @@ public class BoardResponse {
                     .dueDate(board.getDueDate())
                     .doDate(board.getDoDate())
                     .contact(board.getPhoneNum())
-                    .likes(like)
+                    .likes(board.getBoardLikes().size())
                     .build();
         }
     }
@@ -72,6 +74,7 @@ public class BoardResponse {
         private Integer time;
         private Integer likes;
         private Boolean isMine;
+        private Boolean isLikeMine;
         private List<FileDto> images;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
@@ -79,7 +82,7 @@ public class BoardResponse {
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         private LocalDateTime doDate;
 
-        public static BoardResponse.GetOne build(Board board, User user, int likes) {
+        public static BoardResponse.GetOne build(Board board, User user) {
             return GetOne.builder()
                     .id(board.getId())
                     .category(board.getCategory().getType().name())
@@ -91,15 +94,18 @@ public class BoardResponse {
                     .time(board.getTime())
                     .contact(board.getPhoneNum())
                     .isMine(board.getCreatedBy().getId().equals(user.getId()))
+                    .isLikeMine(isLikeMine(board, user))
                     .dueDate(board.getDueDate())
                     .doDate(board.getDoDate())
-                    .likes(likes)
+                    .likes(board.getBoardLikes().size())
                     .images(board.getBoardFileList().stream()
                             .map(BoardFile::getFile)
                             .map(FileDto::build)
                             .collect(Collectors.toList()))
                     .build();
         }
+
+
     }
 }
 

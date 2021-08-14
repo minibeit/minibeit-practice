@@ -36,22 +36,15 @@ public class BoardController {
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardResponse.GetOne> getOne(@PathVariable Long boardId, @CurrentUser CustomUserDetails customUserDetails) {
         Board board = boardService.getOne(boardId);
-        int count = boardService.likesCount(boardId);
 
-        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board, customUserDetails.getUser(), count));
+        return ResponseEntity.ok().body(BoardResponse.GetOne.build(board, customUserDetails.getUser()));
     }
 
     @GetMapping("/list")
     public Page<BoardResponse.GetList> getList(PageDto pageDto, BoardRequest.GetListByCategory request) {
         Page<Board> list = boardService.getList(pageDto, request);
 
-        List<Board> content = list.getContent();
-        List<BoardResponse.GetList> response = new ArrayList<>();
-
-        for (int i = 0; i < content.size(); ++i) {
-            int count = boardService.likesCount(content.get(i).getId());
-            response.add(BoardResponse.GetList.build(content.get(i), count));
-        }
+        List<BoardResponse.GetList> response = list.stream().map(BoardResponse.GetList::build).collect(Collectors.toList());
 
         return new PageImpl<>(response, pageDto.of(), list.getTotalElements());
     }
@@ -73,6 +66,7 @@ public class BoardController {
     public ResponseEntity<BoardResponse.OnlyId> likes(@PathVariable Long boardId,
                                                       @CurrentUser CustomUserDetails userDetails){
         boardService.createLike(boardId, userDetails.getUser());
+
         return ResponseEntity.ok().body(BoardResponse.OnlyId.builder().id(boardId).build());
     }
 }

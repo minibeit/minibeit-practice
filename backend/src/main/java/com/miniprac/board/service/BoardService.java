@@ -57,11 +57,6 @@ public class BoardService {
         return boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
     }
 
-    @Transactional(readOnly = true)
-    public int likesCount(Long boardId){
-        return boardLikeRepository.findAllByBoardId(boardId).size();
-    }
-
     public Board update(BoardRequest.Update request, Long boardId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
         permissionCheck(user, board);
@@ -95,12 +90,14 @@ public class BoardService {
     public void createLike(Long boardId, User user){
 
         Optional<BoardLike> findBoardLike = boardLikeRepository.findByBoardIdAndCreatedById(boardId, user.getId());
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
 
         if(findBoardLike.isEmpty()){
-            Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
-            BoardLike boardLike = BoardLike.create(board);
+            BoardLike boardLike = board.addBoardLikes();
             boardLikeRepository.save(boardLike);
         }else{
+            //이미 존재
+            board.deleteBoardLikes(findBoardLike.get());
             boardLikeRepository.delete(findBoardLike.get());
         }
     }

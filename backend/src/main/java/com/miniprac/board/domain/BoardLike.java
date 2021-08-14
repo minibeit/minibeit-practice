@@ -22,11 +22,13 @@ public class BoardLike extends BaseEntity {
     private Board board;
 
 
+    public void setBoard(Board board){
+        this.board = board;
+    }
     public static BoardLike create(Board board){
         return BoardLike.builder()
                 .board(board).
                 build();
     }
-
 
 }

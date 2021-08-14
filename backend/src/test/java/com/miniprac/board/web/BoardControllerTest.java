@@ -1,10 +1,8 @@
 package com.miniprac.board.web;
 
 import com.miniprac.MvcTest;
-import com.miniprac.board.domain.Board;
-import com.miniprac.board.domain.BoardCategory;
-import com.miniprac.board.domain.BoardCategoryType;
-import com.miniprac.board.domain.BoardFile;
+import com.miniprac.board.domain.*;
+import com.miniprac.board.dto.BoardResponse;
 import com.miniprac.board.service.BoardService;
 import com.miniprac.file.domain.File;
 import com.miniprac.user.domain.User;
@@ -47,7 +45,6 @@ class BoardControllerTest extends MvcTest {
     private BoardService boardService;
 
     private User user;
-    private User user2;
     private Board board1;
     private Board board2;
     private Board board3;
@@ -57,8 +54,9 @@ class BoardControllerTest extends MvcTest {
     @BeforeEach
     public void setup() {
         user = User.builder().id(1L).email("test@test.com").password("1234").name("테스터").build();
-        user2 = User.builder().id(2L).email("test2@test.com").password("4321").name("테스터2").build();
         boardCategory = BoardCategory.builder().id(1L).type(BoardCategoryType.SURVEY).build();
+        BoardLike boardLike1 = BoardLike.create(board1);
+        boardLike1.setCreatedBy(user);
         board1 = Board.builder()
                 .id(1L)
                 .title("피실험자 모집1")
@@ -71,6 +69,7 @@ class BoardControllerTest extends MvcTest {
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
+                .boardLikes(Collections.singletonList(boardLike1))
                 .build();
         board1.setCreatedBy(user);
 
@@ -86,6 +85,7 @@ class BoardControllerTest extends MvcTest {
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
+                .boardLikes(Collections.singletonList(BoardLike.create(board2)))
                 .build();
         board2.setCreatedBy(user);
         board3 = Board.builder()
@@ -100,6 +100,7 @@ class BoardControllerTest extends MvcTest {
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
+                .boardLikes(Collections.singletonList(BoardLike.create(board3)))
                 .build();
         board3.setCreatedBy(user);
 
@@ -198,12 +199,9 @@ class BoardControllerTest extends MvcTest {
     @Test
     @DisplayName("게시물 단건 조회 문서화")
     public void getOne() throws Exception {
+
         given(boardService.getOne(any())).willReturn(board1);
 
-        boardService.createLike(1L, user);
-
-        //int count = boardService.likesCount(1L);
-        //BoardResponse.GetOne.build(board1, count);
         ResultActions results = mvc.perform(RestDocumentationRequestBuilders
                 .get("/api/board/{boardId}", 1));
 
@@ -225,8 +223,9 @@ class BoardControllerTest extends MvcTest {
                                 fieldWithPath("time").type(JsonFieldType.NUMBER).description("소요시간(분단위)"),
                                 fieldWithPath("dueDate").type(JsonFieldType.STRING).description("마감날짜"),
                                 fieldWithPath("doDate").type(JsonFieldType.STRING).description("실험/설문 날짜"),
-                                fieldWithPath("likes").type(JsonFieldType.NUMBER).description("좋아요 개수")
+                                fieldWithPath("likes").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                                 fieldWithPath("isMine").type(JsonFieldType.BOOLEAN).description("로그인 유저와 게시물 작성자가 같다면 true"),
+                                fieldWithPath("isLikeMine").type(JsonFieldType.BOOLEAN).description("로그인 유저가 게시물 좋아요를 눌렀다면 true"),
                                 fieldWithPath("images[].url").type(JsonFieldType.STRING).description("이미지 url")
                         )
                 ));
