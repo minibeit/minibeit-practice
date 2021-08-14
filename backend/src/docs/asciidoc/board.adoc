@@ -52,7 +52,6 @@ include::{snippets}/board-getList/response-fields.adoc[]
 `POST /api/board/{boardId}`
 
 요청 HTTP
-
 include::{snippets}/board-update/path-parameters.adoc[]
 include::{snippets}/board-update/request-parameters.adoc[]
 include::{snippets}/board-update/request-parts.adoc[]
@@ -71,5 +70,19 @@ include::{snippets}/board-delete/path-parameters.adoc[]
 
 성공 응답 HTTP
 include::{snippets}/board-delete/http-response.adoc[]
+
+=== 게시물 좋아요
+
+`POST /api/board/like/{boardId}`
+
+요청 HTTP
+include::{snippets}/board-like/http-request.adoc[]
+include::{snippets}/board-like/path-parameters.adoc[]
+
+성공 HTTP
+include::{snippets}/board-like/http-response.adoc[]
+
+
+
 
 

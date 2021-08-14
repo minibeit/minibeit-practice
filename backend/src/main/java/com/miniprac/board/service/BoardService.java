@@ -3,8 +3,10 @@ package com.miniprac.board.service;
 import com.miniprac.board.domain.Board;
 import com.miniprac.board.domain.BoardCategory;
 import com.miniprac.board.domain.BoardCategoryType;
-import com.miniprac.board.domain.BoardFile;
+import com.miniprac.board.domain.BoardLike;
 import com.miniprac.board.domain.repository.BoardCategoryRepository;
+import com.miniprac.board.domain.repository.BoardLikeRepository;
+import com.miniprac.board.domain.BoardFile;
 import com.miniprac.board.domain.repository.BoardFileRepository;
 import com.miniprac.board.domain.repository.BoardRepository;
 import com.miniprac.board.dto.BoardRequest;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
     private final BoardCategoryRepository boardCategoryRepository;
+    private final BoardLikeRepository boardLikeRepository;
     private final FileService fileService;
 
     public Board create(BoardRequest.Create request) {
@@ -62,6 +66,9 @@ public class BoardService {
             if (request.getFiles() != null) {
                 List<File> fileList = fileService.uploadFiles(request.getFiles());
 
+                permissionCheck(user, board);
+                category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
+
                 List<BoardFile> routeReviewFiles = fileList.stream()
                         .map(f -> BoardFile.builder().file(f).board(board).build())
                         .collect(Collectors.toList());
@@ -78,6 +85,20 @@ public class BoardService {
         permissionCheck(user, board);
         boardFileDelete(board);
         boardRepository.delete(board);
+    }
+
+    public void createLike(Long boardId, User user) {
+
+        Optional<BoardLike> findBoardLike = boardLikeRepository.findByBoardIdAndCreatedById(boardId, user.getId());
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+
+        if (findBoardLike.isEmpty()) {
+            BoardLike boardLike = BoardLike.create(board);
+            boardLike.addBoard(board);
+            boardLikeRepository.save(boardLike);
+        } else {
+            boardLikeRepository.delete(findBoardLike.get());
+        }
     }
 
     private void permissionCheck(User user, Board board) {

@@ -2,6 +2,7 @@ package com.miniprac.board.domain;
 
 import com.miniprac.board.dto.BoardRequest;
 import com.miniprac.common.domain.BaseEntity;
+import com.miniprac.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,6 +25,10 @@ public class Board extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private BoardCategory category;
+
+    @OneToMany(mappedBy = "board")
+    @Builder.Default
+    private List<BoardLike> boardLikes = new ArrayList<>();
 
     private String title;
 
@@ -85,4 +90,10 @@ public class Board extends BaseEntity {
         this.dueDate = request.getDueDate();
         this.category = category;
     }
+
+
+    public static Boolean isLikeMine(Board board, User user) {
+        return board.getBoardLikes().stream().anyMatch(boardLike -> boardLike.getCreatedBy().getId().equals(user.getId()));
+    }
+
 }

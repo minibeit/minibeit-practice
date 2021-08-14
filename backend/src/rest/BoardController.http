@@ -110,3 +110,8 @@ Content-Disposition: form-data; name="files"; filename="enjoy2.png"
 ###
 DELETE {{apiUrl}}/board/1
 Authorization: {{authorizationToken}}
+
+###
+POST {{apiUrl}}/board/like/2
+Authorization: {{authorizationToken}}
+

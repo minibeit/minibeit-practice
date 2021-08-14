@@ -1,11 +1,8 @@
 package com.miniprac.board.web;
 
 import com.miniprac.MvcTest;
-import com.miniprac.board.domain.Board;
-import com.miniprac.board.domain.BoardCategory;
-import com.miniprac.board.domain.BoardCategoryType;
-import com.miniprac.board.domain.BoardFile;
-import com.miniprac.board.dto.BoardRequest;
+import com.miniprac.board.domain.*;
+import com.miniprac.board.dto.BoardResponse;
 import com.miniprac.board.service.BoardService;
 import com.miniprac.file.domain.File;
 import com.miniprac.user.domain.User;
@@ -18,6 +15,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -57,6 +55,8 @@ class BoardControllerTest extends MvcTest {
     public void setup() {
         user = User.builder().id(1L).email("test@test.com").password("1234").name("테스터").build();
         boardCategory = BoardCategory.builder().id(1L).type(BoardCategoryType.SURVEY).build();
+        BoardLike boardLike1 = BoardLike.create(board1);
+        boardLike1.setCreatedBy(user);
         board1 = Board.builder()
                 .id(1L)
                 .title("피실험자 모집1")
@@ -69,8 +69,10 @@ class BoardControllerTest extends MvcTest {
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
+                .boardLikes(Collections.singletonList(boardLike1))
                 .build();
         board1.setCreatedBy(user);
+
         board2 = Board.builder()
                 .id(2L)
                 .title("피실험자 모집2")
@@ -83,6 +85,7 @@ class BoardControllerTest extends MvcTest {
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
+                .boardLikes(Collections.singletonList(BoardLike.create(board2)))
                 .build();
         board2.setCreatedBy(user);
         board3 = Board.builder()
@@ -97,6 +100,7 @@ class BoardControllerTest extends MvcTest {
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
+                .boardLikes(Collections.singletonList(BoardLike.create(board3)))
                 .build();
         board3.setCreatedBy(user);
 
@@ -184,6 +188,7 @@ class BoardControllerTest extends MvcTest {
                                 fieldWithPath("content[].author").type(JsonFieldType.STRING).description("게시물 작성자 이름"),
                                 fieldWithPath("content[].dueDate").type(JsonFieldType.STRING).description("마감날짜"),
                                 fieldWithPath("content[].doDate").type(JsonFieldType.STRING).description("실험/설문 날짜"),
+                                fieldWithPath("content[].likes").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                                 fieldWithPath("totalElements").description("전체 개수"),
                                 fieldWithPath("last").description("마지막 페이지인지 식별"),
                                 fieldWithPath("totalPages").description("전체 페이지")
@@ -194,6 +199,7 @@ class BoardControllerTest extends MvcTest {
     @Test
     @DisplayName("게시물 단건 조회 문서화")
     public void getOne() throws Exception {
+
         given(boardService.getOne(any())).willReturn(board1);
 
         ResultActions results = mvc.perform(RestDocumentationRequestBuilders
@@ -217,7 +223,9 @@ class BoardControllerTest extends MvcTest {
                                 fieldWithPath("time").type(JsonFieldType.NUMBER).description("소요시간(분단위)"),
                                 fieldWithPath("dueDate").type(JsonFieldType.STRING).description("마감날짜"),
                                 fieldWithPath("doDate").type(JsonFieldType.STRING).description("실험/설문 날짜"),
+                                fieldWithPath("likes").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                                 fieldWithPath("isMine").type(JsonFieldType.BOOLEAN).description("로그인 유저와 게시물 작성자가 같다면 true"),
+                                fieldWithPath("isLikeMine").type(JsonFieldType.BOOLEAN).description("로그인 유저가 게시물 좋아요를 눌렀다면 true"),
                                 fieldWithPath("images[].url").type(JsonFieldType.STRING).description("이미지 url")
                         )
                 ));
@@ -284,8 +292,33 @@ class BoardControllerTest extends MvcTest {
                 .andDo(print())
                 .andDo(document("board-delete",
                         pathParameters(
-                                parameterWithName("boardId").description("수정할 게시물 식별자")
+                                parameterWithName("boardId").description("삭제할 게시물 식별자")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("게시글 좋아요 문서화")
+    public void createLike() throws Exception {
+        //given
+
+        ResultActions result = mvc.perform(RestDocumentationRequestBuilders
+                .post("/api/board/like/{boardId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+        );
+
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("board-like",
+                        pathParameters(
+                                parameterWithName("boardId").description("좋아요 할 게시물 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("좋아요 누른 게시물 식별자")
+                        ))
+                );
+
+        //then
     }
 }
