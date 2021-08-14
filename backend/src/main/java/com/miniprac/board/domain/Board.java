@@ -91,16 +91,6 @@ public class Board extends BaseEntity {
         this.category = category;
     }
 
-    public BoardLike addBoardLikes(){
-        BoardLike boardLike = BoardLike.create(this);
-        this.boardLikes.add(boardLike);
-        boardLike.setBoard(this);
-        return boardLike;
-    }
-
-    public void deleteBoardLikes(BoardLike boardLike){
-        this.boardLikes.remove(boardLike);
-    }
 
     public static Boolean isLikeMine(Board board, User user) {
         return board.getBoardLikes().stream().anyMatch(boardLike -> boardLike.getCreatedBy().getId().equals(user.getId()));

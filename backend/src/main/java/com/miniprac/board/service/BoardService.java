@@ -66,7 +66,7 @@ public class BoardService {
             if (request.getFiles() != null) {
                 List<File> fileList = fileService.uploadFiles(request.getFiles());
 
-        permissionCheck(user, board);
+                permissionCheck(user, board);
                 category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
 
                 List<BoardFile> routeReviewFiles = fileList.stream()
@@ -87,17 +87,16 @@ public class BoardService {
         boardRepository.delete(board);
     }
 
-    public void createLike(Long boardId, User user){
+    public void createLike(Long boardId, User user) {
 
         Optional<BoardLike> findBoardLike = boardLikeRepository.findByBoardIdAndCreatedById(boardId, user.getId());
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
 
-        if(findBoardLike.isEmpty()){
-            BoardLike boardLike = board.addBoardLikes();
+        if (findBoardLike.isEmpty()) {
+            BoardLike boardLike = BoardLike.create(board);
+            boardLike.addBoard(board);
             boardLikeRepository.save(boardLike);
-        }else{
-            //이미 존재
-            board.deleteBoardLikes(findBoardLike.get());
+        } else {
             boardLikeRepository.delete(findBoardLike.get());
         }
     }
