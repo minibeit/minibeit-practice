@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../recoil/userState";
 import { logoutFunc } from "../../utils/auth";
@@ -9,6 +9,7 @@ export default function NavBar() {
   const data = useRecoilValue(userState);
   const loginState = data.isLogin;
   const username = data.name;
+  const history = useHistory();
 
   const logout = async () => {
     try {
@@ -23,6 +24,12 @@ export default function NavBar() {
       console.log(e.response.data.error.msg);
       alert(e.response.data.error.msg);
     }
+  };
+  const google = async (e) => {
+    window.location.replace(
+      "http://taskagile.site/oauth2/authorization/google"
+    );
+    console.log(e);
   };
   return (
     <S.NavBarContainer>
@@ -56,6 +63,10 @@ export default function NavBar() {
               <Link to="/login">
                 <p>로그인</p>
               </Link>
+              <a href="http://taskagile.site/oauth2/authorization/google">
+                구글 아이디로 로그인
+              </a>
+              <p onClick={google}>구글로 로그인</p>
             </S.NavBarAuth>
           )}
         </S.NavBarAuth>
