@@ -47,10 +47,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         Map<String, Object> body = new HashMap<>();
-        body.put("id", user.getOauthId());
+        body.put("id", user.getId());
         body.put("name", user.getName());
         body.put("accessToken", token.getToken());
-        body.put("accessTokenExpiredAt", token.getExpiredAt());
+        body.put("accessTokenExpiredAt", token.getExpiredAt().toString());
 
 
         ResponseCookie cookie = ResponseCookie.from("refresh_token", refreshToken.getToken())
