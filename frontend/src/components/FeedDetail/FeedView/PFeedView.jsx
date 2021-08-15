@@ -1,17 +1,23 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { deleteFeed } from '../../../api/feedDataAPI';
 
 import * as S from '../style';
 
 export default function PFeedView(props){
     const history = useHistory();
-    const postId = props.postId
-    const accessToken = props.accessToken
+    const postId = props.postId;
     const isMine = props.data.isMine;
     const deleteFuc = ()=>{
         var result = window.confirm('삭제하시겠습니까?')
         if(result == true){
-            props.deleteFeed(postId, accessToken)
+            deleteFeed(postId)
+            history.goBack();
+        }
+    }
+    const viewImages = (images)=>{
+        for(var i=0;i<images.length;i++){
+            return <S.FeedImg src={`${images[i].url}`}/>
         }
     }
     
@@ -45,10 +51,4 @@ export default function PFeedView(props){
             <p>예상 소요시간 - {props.data.time}분</p>
         </S.FeedContainer>
     )
-}
-
-function viewImages(images){
-    for(var i=0;i<images.length;i++){
-        return <S.FeedImg src={`${images[i].url}`}/>
-    }
 }

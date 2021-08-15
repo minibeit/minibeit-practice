@@ -1,6 +1,5 @@
 /*eslint-disable*/
 import React from "react";
-import { useHistory } from 'react-router-dom';
 
 /* style */
 import * as S from '../style';
