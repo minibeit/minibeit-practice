@@ -8,16 +8,28 @@ function SchoolModal(props) {
   const Information = [
     {
       id: 1,
-      name: "Samule",
+      name: "고려대학교",
     },
-    { id: 2, name: "Sam" },
+    { id: 2, name: "연세대학교" },
     {
       id: 3,
-      name: "Mark",
+      name: "서울대학교",
     },
     {
       id: 4,
-      name: "Markus",
+      name: "중앙대학교",
+    },
+    {
+      id: 5,
+      name: "성균관대학교",
+    },
+    {
+      id: 6,
+      name: "성신여자대학교",
+    },
+    {
+      id: 7,
+      name: "한림대학교",
     },
   ];
   const searchSpace = (event) => {
