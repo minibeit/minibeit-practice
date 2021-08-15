@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { filterState } from "../../../recoil/filterState";
+import { useRecoilValue } from "recoil";
 import { SchoolModal } from "../../Common";
 import * as S from "../style";
 
 export default function PFeedListTopContainer({ category }) {
   const [isShowing, setIsShowing] = useState(false);
-  const [school, setSchool] = useState(null);
+  const [school, setSchool] = useState(useRecoilValue(filterState).school);
   const openModal = () => {
     setIsShowing(true);
   };

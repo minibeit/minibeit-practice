@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useRecoilState } from "recoil";
 import { createPortal } from "react-dom";
+import { filterState } from "../../recoil/filterState";
 import * as S from "./style";
 
 function SchoolModal(props) {
   const { message, closeModal } = props;
   const [search, setSearch] = useState(null);
+  const [school, setSchool] = useRecoilState(filterState);
   const Information = [
     {
       id: 1,
@@ -39,6 +42,7 @@ function SchoolModal(props) {
   const getSchool = async (event) => {
     console.log(event.target.textContent);
     await closeModal(event.target.textContent);
+    setSchool({ school: event.target.textContent });
   };
   const items = Information.filter((data) => {
     console.log(data);
