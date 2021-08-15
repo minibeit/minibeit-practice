@@ -19,6 +19,7 @@ export const FLPageWrapper = styled.div``;
 export const FLPageLists = styled.ul``;
 export const FLPageNumber = styled.li``;
 export const FLPageButton = styled.button``;
+export const SchoolBtn = styled.button``;
 
 export const CalendarWrapper = styled.div`
   width: 350px;
