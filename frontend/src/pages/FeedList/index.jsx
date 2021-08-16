@@ -2,7 +2,7 @@ import React from "react";
 
 /* Components */
 import { NavBar } from "../../components/Common";
-import { FeedCards } from "../../components/FeedList";
+import { FeedCards, FeedCalendar } from "../../components/FeedList";
 
 export default function FeedList({match}) {
   const category = match.params.category;
@@ -10,6 +10,7 @@ export default function FeedList({match}) {
     <>
       <NavBar/>
       <h1>{category} list</h1>
+      <FeedCalendar/>
       <FeedCards category={category}/>
     </>
   );

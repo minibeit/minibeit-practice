@@ -17,3 +17,9 @@ export const ButtonContainer = styled.div`
 export const PageButton = styled.button`
 
 `;
+export const Calendar = styled.div`
+
+`;
+export const MonthController = styled.div`
+
+`;
