@@ -65,8 +65,8 @@ class BoardControllerTest extends MvcTest {
                 .time(20)
                 .phoneNum("010-1234-5678")
                 .category(boardCategory)
-                .dueDate(LocalDate.of(2021, 8, 20))
-                .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
+                .dueDate(LocalDate.of(2021, 8, 10))
+                .doDate(LocalDateTime.of(2021, 8, 15, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
                 .build();
         board1.setCreatedBy(user);
@@ -80,8 +80,8 @@ class BoardControllerTest extends MvcTest {
                 .time(30)
                 .phoneNum("010-1234-5678")
                 .category(boardCategory)
-                .dueDate(LocalDate.of(2021, 8, 20))
-                .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
+                .dueDate(LocalDate.of(2021, 8, 10))
+                .doDate(LocalDateTime.of(2021, 8, 15, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
                 .build();
         board2.setCreatedBy(user);
@@ -95,8 +95,8 @@ class BoardControllerTest extends MvcTest {
                 .time(40)
                 .phoneNum("010-1234-5678")
                 .category(boardCategory)
-                .dueDate(LocalDate.of(2021, 8, 20))
-                .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
+                .dueDate(LocalDate.of(2021, 8, 10))
+                .doDate(LocalDateTime.of(2021, 8, 15, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
                 .build();
         board3.setCreatedBy(user);
@@ -129,7 +129,7 @@ class BoardControllerTest extends MvcTest {
                         .param("pay", "20000")
                         .param("time", "20")
                         .param("dueDate", "2021-08-20")
-                        .param("doDate", "2021-08-10T09:30:00")
+                        .param("doDate", "2021-08-10T09:30")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .characterEncoding("UTF-8")
         );
@@ -158,14 +158,14 @@ class BoardControllerTest extends MvcTest {
     }
 
     @Test
-    @DisplayName("게시물 목록 조회 문서화")
-    public void getList() throws Exception {
+    @DisplayName("카테고리를 기준으로 게시물 목록 조회 문서화")
+    public void getListByCategory() throws Exception {
 
         Page<Board> boardPage = new PageImpl<>(boardList, PageRequest.of(1, 2), boardList.size());
-        given(boardService.getList(any(), any())).willReturn(boardPage);
+        given(boardService.getListByCategory(any(), any())).willReturn(boardPage);
 
         ResultActions results = mvc.perform(
-                get("/api/board/list")
+                get("/api/board/list/category")
                         .param("category", "survey")
                         .param("page", "1")
                         .param("size", "2")
@@ -173,7 +173,7 @@ class BoardControllerTest extends MvcTest {
 
         results.andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("board-getList",
+                .andDo(document("board-getList-category",
                         requestParameters(
                                 parameterWithName("category").description("조회할 게시물 카테고리 SURVEY or EXPERIMENT"),
                                 parameterWithName("page").description("조회할 페이지"),
@@ -196,9 +196,47 @@ class BoardControllerTest extends MvcTest {
     }
 
     @Test
+    @DisplayName("학교,날짜를 기준으로 게시물 목록 조회 문서화")
+    public void getList() throws Exception {
+        Page<Board> boardPage = new PageImpl<>(boardList, PageRequest.of(1, 5), boardList.size());
+        given(boardService.getListBySchoolAndDate(any(), any())).willReturn(boardPage);
+
+        ResultActions results = mvc.perform(
+                get("/api/board/list")
+                        .param("school", "고려대학교")
+                        .param("date", "2021-08-15")
+                        .param("page", "1")
+                        .param("size", "5")
+        );
+
+        results.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("board-getList-schoolAndDate",
+                        requestParameters(
+                                parameterWithName("page").description("조회할 페이지"),
+                                parameterWithName("size").description("조회할 사이즈"),
+                                parameterWithName("school").description("조회할 게시물 학교"),
+                                parameterWithName("date").description("조회할 게시물 실험 날짜(doDate)")
+                        ),
+                        relaxedResponseFields(
+                                fieldWithPath("content[].id").type(JsonFieldType.NUMBER).description("게시물 식별자"),
+                                fieldWithPath("content[].title").type(JsonFieldType.STRING).description("제목"),
+                                fieldWithPath("content[].place").type(JsonFieldType.STRING).description("장소"),
+                                fieldWithPath("content[].contact").type(JsonFieldType.STRING).description("핸드폰 번호"),
+                                fieldWithPath("content[].author").type(JsonFieldType.STRING).description("게시물 작성자 이름"),
+                                fieldWithPath("content[].dueDate").type(JsonFieldType.STRING).description("마감날짜"),
+                                fieldWithPath("content[].doDate").type(JsonFieldType.STRING).description("실험/설문 날짜"),
+                                fieldWithPath("content[].likes").type(JsonFieldType.NUMBER).description("좋아요 개수"),
+                                fieldWithPath("totalElements").description("전체 개수"),
+                                fieldWithPath("last").description("마지막 페이지인지 식별"),
+                                fieldWithPath("totalPages").description("전체 페이지")
+                        )
+                ));
+    }
+
+    @Test
     @DisplayName("게시물 단건 조회 문서화")
     public void getOne() throws Exception {
-
         given(boardService.getOne(any())).willReturn(board1);
 
         ResultActions results = mvc.perform(RestDocumentationRequestBuilders
@@ -249,7 +287,7 @@ class BoardControllerTest extends MvcTest {
                 .param("pay", "33000")
                 .param("time", "60")
                 .param("dueDate", "2021-08-21")
-                .param("doDate", "2021-08-25T09:30:00")
+                .param("doDate", "2021-08-25T09:30")
                 .param("fileChanged", "true")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")

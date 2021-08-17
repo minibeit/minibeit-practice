@@ -1,7 +1,6 @@
 package com.miniprac.board.web;
 
 import com.miniprac.board.domain.Board;
-import com.miniprac.board.domain.BoardLike;
 import com.miniprac.board.dto.BoardRequest;
 import com.miniprac.board.dto.BoardResponse;
 import com.miniprac.board.service.BoardService;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +21,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/api/board")
 public class BoardController {
-
     private final BoardService boardService;
 
     @PostMapping
@@ -40,9 +37,18 @@ public class BoardController {
         return ResponseEntity.ok().body(BoardResponse.GetOne.build(board, customUserDetails.getUser()));
     }
 
+    @GetMapping("/list/category")
+    public Page<BoardResponse.GetList> getListByCategory(PageDto pageDto, BoardRequest.GetListByCategory request) {
+        Page<Board> list = boardService.getListByCategory(pageDto, request);
+
+        List<BoardResponse.GetList> response = list.stream().map(BoardResponse.GetList::build).collect(Collectors.toList());
+
+        return new PageImpl<>(response, pageDto.of(), list.getTotalElements());
+    }
+
     @GetMapping("/list")
-    public Page<BoardResponse.GetList> getList(PageDto pageDto, BoardRequest.GetListByCategory request) {
-        Page<Board> list = boardService.getList(pageDto, request);
+    public Page<BoardResponse.GetList> getListBySchoolAndDate(PageDto pageDto, BoardRequest.GetListBySchoolAndDate request) {
+        Page<Board> list = boardService.getListBySchoolAndDate(request, pageDto);
 
         List<BoardResponse.GetList> response = list.stream().map(BoardResponse.GetList::build).collect(Collectors.toList());
 
@@ -62,9 +68,9 @@ public class BoardController {
 
         return ResponseEntity.ok().build();
     }
+
     @PostMapping("/like/{boardId}")
-    public ResponseEntity<BoardResponse.OnlyId> likes(@PathVariable Long boardId,
-                                                      @CurrentUser CustomUserDetails userDetails){
+    public ResponseEntity<BoardResponse.OnlyId> likes(@PathVariable Long boardId, @CurrentUser CustomUserDetails userDetails) {
         boardService.createLike(boardId, userDetails.getUser());
 
         return ResponseEntity.ok().body(BoardResponse.OnlyId.builder().id(boardId).build());

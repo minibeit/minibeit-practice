@@ -43,18 +43,22 @@ Content-Disposition: form-data; name="dueDate";
 --boundary
 Content-Disposition: form-data; name="doDate";
 
-2021-08-10T09:30:00
+2021-08-10T09:30
 --boundary
 Content-Disposition: form-data; name="files"; filename="enjoy.png"
 
 < ./../main/resources/mock/images/enjoy.png
 
 ###
-GET {{apiUrl}}/board/list?page=1&size=10&category=experiment
+GET {{apiUrl}}/board/list/category?page=1&size=10&category=experiment
 Authorization: {{authorizationToken}}
 
 ###
-GET {{apiUrl}}/board/3
+GET {{apiUrl}}/board/list?page=1&size=10&school=고려대학교&date=2021-08-10
+Authorization: {{authorizationToken}}
+
+###
+GET {{apiUrl}}/board/2
 Authorization: {{authorizationToken}}
 
 ###
@@ -97,7 +101,7 @@ Content-Disposition: form-data; name="dueDate";
 --boundary
 Content-Disposition: form-data; name="doDate";
 
-2021-08-25T09:30:00
+2021-08-25T09:30
 --boundary
 Content-Disposition: form-data; name="fileChanged";
 

@@ -28,7 +28,7 @@ public class BoardRequest {
 
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate dueDate;
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         private LocalDateTime doDate;
     }
 
@@ -40,6 +40,18 @@ public class BoardRequest {
     public static class GetListByCategory {
         private String category;
     }
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class GetListBySchoolAndDate {
+        private String school;
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        private LocalDate date;
+    }
+
 
     @Setter
     @Getter
@@ -59,7 +71,7 @@ public class BoardRequest {
 
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate dueDate;
-        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         private LocalDateTime doDate;
     }
 
