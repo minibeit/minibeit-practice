@@ -1,13 +1,9 @@
 package com.miniprac.board.service;
 
-import com.miniprac.board.domain.Board;
-import com.miniprac.board.domain.BoardCategory;
-import com.miniprac.board.domain.BoardCategoryType;
-import com.miniprac.board.domain.BoardLike;
+import com.miniprac.board.domain.*;
 import com.miniprac.board.domain.repository.BoardCategoryRepository;
-import com.miniprac.board.domain.repository.BoardLikeRepository;
-import com.miniprac.board.domain.BoardFile;
 import com.miniprac.board.domain.repository.BoardFileRepository;
+import com.miniprac.board.domain.repository.BoardLikeRepository;
 import com.miniprac.board.domain.repository.BoardRepository;
 import com.miniprac.board.dto.BoardRequest;
 import com.miniprac.board.service.exception.BoardCategoryNotFoundException;
@@ -22,8 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,9 +43,14 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Board> getList(PageDto pageDto, BoardRequest.GetListByCategory request) {
+    public Page<Board> getListByCategory(PageDto pageDto, BoardRequest.GetListByCategory request) {
         BoardCategory category = boardCategoryRepository.findByType(BoardCategoryType.from(request.getCategory())).orElseThrow(BoardCategoryNotFoundException::new);
         return boardRepository.findAllByCategoryId(category.getId(), pageDto.of());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Board> getListBySchoolAndDate(BoardRequest.GetListBySchoolAndDate request, PageDto pageDto) {
+        return boardRepository.findAllBySchoolAndDate(request, pageDto.of());
     }
 
     @Transactional(readOnly = true)
@@ -88,13 +89,11 @@ public class BoardService {
     }
 
     public void createLike(Long boardId, User user) {
-
         Optional<BoardLike> findBoardLike = boardLikeRepository.findByBoardIdAndCreatedById(boardId, user.getId());
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
 
         if (findBoardLike.isEmpty()) {
             BoardLike boardLike = BoardLike.create(board);
-            boardLike.addBoard(board);
             boardLikeRepository.save(boardLike);
         } else {
             boardLikeRepository.delete(findBoardLike.get());

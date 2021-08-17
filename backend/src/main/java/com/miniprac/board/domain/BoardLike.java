@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Builder
 @Table(name = "board_like")
 public class BoardLike extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,16 +20,15 @@ public class BoardLike extends BaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-
-    public static BoardLike create(Board board){
-        return BoardLike.builder()
-                .board(board).
-                build();
-    }
-
-
-    public void addBoard(Board board){
+    private void addBoard(Board board) {
         board.getBoardLikes().add(this);
         this.board = board;
+    }
+
+    public static BoardLike create(Board board) {
+        BoardLike boardLike = BoardLike.builder().board(board).build();
+        boardLike.addBoard(board);
+
+        return boardLike;
     }
 }
