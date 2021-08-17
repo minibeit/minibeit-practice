@@ -88,13 +88,11 @@ public class BoardService {
     }
 
     public void createLike(Long boardId, User user) {
-
         Optional<BoardLike> findBoardLike = boardLikeRepository.findByBoardIdAndCreatedById(boardId, user.getId());
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
 
         if (findBoardLike.isEmpty()) {
             BoardLike boardLike = BoardLike.create(board);
-            boardLike.addBoard(board);
             boardLikeRepository.save(boardLike);
         } else {
             boardLikeRepository.delete(findBoardLike.get());

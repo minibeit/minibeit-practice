@@ -23,6 +23,10 @@ Content-Disposition: form-data; name="category";
 
 SURVEY
 --boundary
+Content-Disposition: form-data; name="school";
+
+고려대학교
+--boundary
 Content-Disposition: form-data; name="pay";
 
 20000

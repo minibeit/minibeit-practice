@@ -22,14 +22,6 @@ public class Board extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private BoardCategory category;
-
-    @OneToMany(mappedBy = "board")
-    @Builder.Default
-    private List<BoardLike> boardLikes = new ArrayList<>();
-
     private String title;
 
     private String content;
@@ -39,21 +31,29 @@ public class Board extends BaseEntity {
     @Column(name = "phone_num")
     private String phoneNum;
 
+    private String school;
+
     private int pay;
 
     private int time;
 
-    //마감 날짜
     @Column(name = "due_date")
     private LocalDate dueDate;
 
-    // 실험/ 설문 날짜 시간
     @Column(name = "do_date")
     private LocalDateTime doDate;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<BoardFile> boardFileList = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private BoardCategory category;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    @Builder.Default
+    private List<BoardLike> boardLikes = new ArrayList<>();
 
     private void addFiles(List<BoardFile> boardFiles) {
         boardFiles.forEach(boardFile -> {
@@ -68,6 +68,7 @@ public class Board extends BaseEntity {
                 .content(request.getContent())
                 .place(request.getPlace())
                 .phoneNum(request.getPhoneNum())
+                .school(request.getSchool())
                 .pay(request.getPay())
                 .time(request.getTime())
                 .dueDate(request.getDueDate())
@@ -91,9 +92,7 @@ public class Board extends BaseEntity {
         this.category = category;
     }
 
-
     public static Boolean isLikeMine(Board board, User user) {
         return board.getBoardLikes().stream().anyMatch(boardLike -> boardLike.getCreatedBy().getId().equals(user.getId()));
     }
-
 }

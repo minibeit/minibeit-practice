@@ -21,6 +21,7 @@ public class BoardRequest {
         private String place;
         private String phoneNum;
         private String category;
+        private String school;
         private int time;
         private int pay;
         private List<MultipartFile> files;

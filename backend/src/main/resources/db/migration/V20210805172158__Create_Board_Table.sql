@@ -7,6 +7,7 @@ CREATE TABLE `board`
     `content`     VARCHAR(100),
     `place`       VARCHAR(150) NOT NULL,
     `phone_num`   VARCHAR(50)  NOT NULL,
+    `school`      VARCHAR(100) NOT NULL,
     `pay`         INTEGER      NOT NULL,
     `time`        INTEGER      NOT NULL,
     `due_date`    DATE         NOT NULL,

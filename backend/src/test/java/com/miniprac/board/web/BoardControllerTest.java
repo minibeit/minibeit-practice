@@ -1,8 +1,10 @@
 package com.miniprac.board.web;
 
 import com.miniprac.MvcTest;
-import com.miniprac.board.domain.*;
-import com.miniprac.board.dto.BoardResponse;
+import com.miniprac.board.domain.Board;
+import com.miniprac.board.domain.BoardCategory;
+import com.miniprac.board.domain.BoardCategoryType;
+import com.miniprac.board.domain.BoardFile;
 import com.miniprac.board.service.BoardService;
 import com.miniprac.file.domain.File;
 import com.miniprac.user.domain.User;
@@ -15,7 +17,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -55,8 +56,6 @@ class BoardControllerTest extends MvcTest {
     public void setup() {
         user = User.builder().id(1L).email("test@test.com").password("1234").name("테스터").build();
         boardCategory = BoardCategory.builder().id(1L).type(BoardCategoryType.SURVEY).build();
-        BoardLike boardLike1 = BoardLike.create(board1);
-        boardLike1.setCreatedBy(user);
         board1 = Board.builder()
                 .id(1L)
                 .title("피실험자 모집1")
@@ -69,7 +68,6 @@ class BoardControllerTest extends MvcTest {
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
-                .boardLikes(Collections.singletonList(boardLike1))
                 .build();
         board1.setCreatedBy(user);
 
@@ -85,9 +83,9 @@ class BoardControllerTest extends MvcTest {
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
-                .boardLikes(Collections.singletonList(BoardLike.create(board2)))
                 .build();
         board2.setCreatedBy(user);
+
         board3 = Board.builder()
                 .id(3L)
                 .title("피실험자 모집3")
@@ -100,7 +98,6 @@ class BoardControllerTest extends MvcTest {
                 .dueDate(LocalDate.of(2021, 8, 20))
                 .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
-                .boardLikes(Collections.singletonList(BoardLike.create(board3)))
                 .build();
         board3.setCreatedBy(user);
 
@@ -128,6 +125,7 @@ class BoardControllerTest extends MvcTest {
                         .param("place", "고려대 신공학관")
                         .param("phoneNum", "010-1234-5678")
                         .param("category", "SURVEY")
+                        .param("school", "고려대학교")
                         .param("pay", "20000")
                         .param("time", "20")
                         .param("dueDate", "2021-08-20")
@@ -143,6 +141,7 @@ class BoardControllerTest extends MvcTest {
                                 parameterWithName("title").description("제목"),
                                 parameterWithName("content").description("내용"),
                                 parameterWithName("place").description("장소"),
+                                parameterWithName("school").description("학교"),
                                 parameterWithName("pay").description("급여"),
                                 parameterWithName("time").description("소요시간(분단위)"),
                                 parameterWithName("phoneNum").description("연락처"),
@@ -300,8 +299,6 @@ class BoardControllerTest extends MvcTest {
     @Test
     @DisplayName("게시글 좋아요 문서화")
     public void createLike() throws Exception {
-        //given
-
         ResultActions result = mvc.perform(RestDocumentationRequestBuilders
                 .post("/api/board/like/{boardId}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -318,7 +315,5 @@ class BoardControllerTest extends MvcTest {
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("좋아요 누른 게시물 식별자")
                         ))
                 );
-
-        //then
     }
 }
