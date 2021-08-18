@@ -39,10 +39,13 @@ function SchoolModal(props) {
     let keyword = event.target.value;
     setSearch(keyword);
   };
-  const getSchool = async (event) => {
-    console.log(event.target.textContent);
-    await closeModal(event.target.textContent);
-    setSchool({ school: event.target.textContent });
+  const getSchool = async (e) => {
+    console.log(e.target.attributes[0].nodeValue);
+    await closeModal(e.target.textContent, e.target.attributes[0].nodeValue);
+    setSchool({
+      school: e.target.textContent,
+      schoolId: e.target.attributes[0].nodeValue,
+    });
   };
   const items = Information.filter((data) => {
     console.log(data);
@@ -53,7 +56,9 @@ function SchoolModal(props) {
   }).map((data) => {
     return (
       <li key={data.id} style={{ position: "relative", left: "10vh" }}>
-        <span onClick={getSchool}>{data.name}</span>
+        <span onClick={getSchool} data-key={data.id}>
+          {data.name}
+        </span>
       </li>
     );
   });

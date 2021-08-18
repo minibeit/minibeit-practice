@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { feedlistApi } from "../../../utils";
+import { filterState } from "../../../recoil/filterState";
+import { useRecoilValue } from "recoil";
 import PFeedListSection from "./PFeedListSection";
 import * as S from "../style";
 
@@ -9,11 +11,13 @@ export default function FeedListSection({ category }) {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(5);
   const [endPage, setEndPage] = useState(1);
+  const school = useRecoilValue(filterState).school;
+  const date = "2021-08-10";
   const [totalElement, setTotalElement] = useState(1);
 
   const getFeedList = async () => {
     try {
-      const result = await feedlistApi(category, page, size);
+      const result = await feedlistApi(school, date, page, size);
       if (result) {
         setPosts(result.post);
         setEndPage(result.endpage);

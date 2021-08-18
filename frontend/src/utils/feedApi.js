@@ -11,16 +11,16 @@ export const feedCreateApi = async (
     time,
     place,
     content,
-   phoneNum,
+    phoneNum,
     files,
-    category) =>{
+    category,
+    school) =>{
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
     formData.append('place', place);
     formData.append('pay', pay);
     formData.append('time', time);
-    
     formData.append('files', files);
     
     console.log( title,
@@ -32,13 +32,15 @@ export const feedCreateApi = async (
         content,
         phoneNum,
         files,
-        category)
+        category,
+        school)
     formData.append('phoneNum', phoneNum);
     formData.append('category', category);
     formData.append('dueDate', dueDate);
     formData.append('doDate', doDate);
+    formData.append('school', school);
     const accessToken = localStorage.getItem('accessToken');  
-    console.log(accessToken) 
+    console.log(formData) 
     const result = await axios.post(
         FEED_NEW,formData,{
             headers:{
@@ -46,14 +48,8 @@ export const feedCreateApi = async (
             }
         }
     )
-    .then((res)=>{
-        return res;
-      })
-      .catch((err)=>{
-        return err
-      });
-      console.log(result)
-      return result.data;
+    console.log(result)
+    return result.data;
 }
 
 export const feedDeleteApi = async (postId) =>{
@@ -146,10 +142,10 @@ export const feedEditApi = async (
         return result.data;
 }
 
-export const feedlistApi = async (category, page, size) =>{
+export const feedlistApi = async (school, date, page, size) =>{
     const accessToken = localStorage.getItem('accessToken');
     const result = await axios
-    .get(`http://3.36.95.15:8080/api/board/list?category=${category}&page=${page}&size=${size}`,{
+    .get(`http://3.36.95.15:8080/api/board/list?school=${school}&date=${date}&size=${page}&size=${size}`,{
         headers: {
             Authorization: `Bearer ${accessToken}`
         },cache: true

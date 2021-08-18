@@ -14,7 +14,8 @@ function FNContainer({ category }) {
     place,
     content,
     phoneNum,
-    files
+    files,
+    school
   ) => {
     try {
       const result = await feedCreateApi(
@@ -27,16 +28,17 @@ function FNContainer({ category }) {
         content,
         phoneNum,
         files,
-        category
+        category,
+        school
       );
-      console.log(result.id);
+      console.log(result);
       if (result.id) {
         window.alert("게시물 생성에 성공!");
         history.push(`/feedList/${category}/${result.id}`);
       }
     } catch (e) {
-      console.log(e.response.data.error.msg);
-      alert(e.response.data.error.msg);
+      console.log(e);
+      alert(e);
     }
   };
   return <PFNContainer category={category} FNHandler={FNHandler} />;

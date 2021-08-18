@@ -6,17 +6,22 @@ import * as S from "../style";
 
 export default function PFeedListTopContainer({ category }) {
   const [isShowing, setIsShowing] = useState(false);
-  const [school, setSchool] = useState(useRecoilValue(filterState).school);
+  const [schoolState, setSchoolState] = useState(useRecoilValue(filterState));
   const openModal = () => {
     setIsShowing(true);
   };
-  const closeModal = (name) => {
+  const closeModal = (name, schoolid) => {
     setIsShowing(false);
-    setSchool(name);
+    console.log(name, schoolid);
+    console.log(schoolState);
+    setSchoolState({
+      school: name,
+      schoolId: schoolid,
+    });
   };
   return (
     <S.FLTopWrapper>
-      {school}
+      {schoolState.school}
       <S.SchoolBtn onClick={openModal}>Open</S.SchoolBtn>
       {category === "survey" ? (
         <S.FLTitle>설문조사</S.FLTitle>

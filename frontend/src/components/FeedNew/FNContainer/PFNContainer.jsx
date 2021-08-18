@@ -14,24 +14,27 @@ function PFNContainer({ category, FNHandler }) {
     place: "",
     content: "",
     phoneNum: "",
+    school: "",
   });
   const [files, setFiles] = useState();
-  const { title, dueDate, doDate, pay, time, place, content, phoneNum } =
-    inputs;
+  const {
+    title,
+    dueDate,
+    doDate,
+    pay,
+    time,
+    place,
+    content,
+    phoneNum,
+    school,
+  } = inputs;
   const onChange = (e) => {
     const { value, name } = e.target;
     console.log(name, value);
-    if (name == "doDate") {
-      setInputs({
-        ...inputs,
-        [name]: value + ":00",
-      });
-    } else {
-      setInputs({
-        ...inputs,
-        [name]: value,
-      });
-    }
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
   };
   const fileChange = (e) => {
     setFiles(e.target.files[0]);
@@ -45,6 +48,13 @@ function PFNContainer({ category, FNHandler }) {
           name="title"
           type="text"
           value={title || ""}
+          onChange={onChange}
+        />
+        <S.FNSchool
+          placeholder="학교"
+          name="school"
+          type="text"
+          value={school || ""}
           onChange={onChange}
         />
 
@@ -103,7 +113,8 @@ function PFNContainer({ category, FNHandler }) {
               place,
               content,
               phoneNum,
-              files
+              files,
+              school
             );
           }}
         >

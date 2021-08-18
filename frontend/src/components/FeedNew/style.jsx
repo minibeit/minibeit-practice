@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const FNBottomWrapper = styled.div``;
 export const FNTitle = styled.input``;
+export const FNSchool = styled.input``;
 export const FNType = styled.div``;
 export const FNauthor = styled.div``;
 export const FNdueDate = styled.input``;
