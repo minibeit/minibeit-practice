@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import { userState } from "../../../recoil/userState";
 import * as S from "../style";
 
-function PFEContainer({ post, category, FEHandler }) {
+function PFEContainer({ post, FEHandler }) {
   const author = useRecoilValue(userState).name;
   const {
     content,
@@ -78,10 +78,6 @@ function PFEContainer({ post, category, FEHandler }) {
           value={inputs.title}
           onChange={onChange}
         />
-
-        <S.FEType>
-          <p>유형 : {category}</p>
-        </S.FEType>
         <S.FEauthor>
           <p>작성자 : {author}</p>
         </S.FEauthor>

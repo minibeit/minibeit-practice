@@ -3,7 +3,7 @@ import { useHistory } from "react-router";
 import { feedCreateApi } from "../../../utils";
 import PFNContainer from "./PFNContainer";
 
-function FNContainer({ category }) {
+function FNContainer() {
   const history = useHistory();
   const FNHandler = async (
     title,
@@ -28,19 +28,18 @@ function FNContainer({ category }) {
         content,
         phoneNum,
         files,
-        category,
         school
       );
       console.log(result);
       if (result.id) {
         window.alert("게시물 생성에 성공!");
-        history.push(`/feedList/${category}/${result.id}`);
+        history.push(`/feedList/${result.id}`);
       }
     } catch (e) {
       console.log(e);
       alert(e);
     }
   };
-  return <PFNContainer category={category} FNHandler={FNHandler} />;
+  return <PFNContainer FNHandler={FNHandler} />;
 }
 export default FNContainer;

@@ -1,6 +1,5 @@
 import React from "react";
 import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
 import { feedDeleteApi } from "../../../utils";
 import * as S from "../style";
 
@@ -20,19 +19,13 @@ function PFDBottomContainer({ post }) {
     title,
     images,
   } = post;
-  let { category } = post;
   console.log(images);
-  if (category === "SURVEY") {
-    category = "survey";
-  } else {
-    category = "experiment";
-  }
   const deleteFeed = async () => {
     try {
       const result = await feedDeleteApi(id);
       console.log(result);
 
-      history.push(`/feedList/${category}`);
+      history.push(`/feedList`);
     } catch (e) {
       console.log(e.response.data.error.msg);
       alert(e.response.data.error.msg);
@@ -47,7 +40,7 @@ function PFDBottomContainer({ post }) {
           <S.FDeditbutton
             onClick={() => {
               history.push({
-                pathname: `/feedList/${category}/${id}/feedEdit`,
+                pathname: `/feedList/${id}/feedEdit`,
               });
             }}
           >
@@ -60,9 +53,6 @@ function PFDBottomContainer({ post }) {
         <S.FDBTitle>
           <p>{title}</p>
         </S.FDBTitle>
-        <S.FDType>
-          <p>{category}</p>
-        </S.FDType>
         <S.FDauthor>
           <p>{author}</p>
         </S.FDauthor>

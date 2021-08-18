@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import { userState } from "../../../recoil/userState";
 import * as S from "../style";
 
-function PFNContainer({ category, FNHandler }) {
+function PFNContainer({ FNHandler }) {
   const author = useRecoilValue(userState).name;
   const [inputs, setInputs] = useState({
     title: "",
@@ -58,9 +58,6 @@ function PFNContainer({ category, FNHandler }) {
           onChange={onChange}
         />
 
-        <S.FNType>
-          <p>유형 : {category}</p>
-        </S.FNType>
         <S.FNauthor>
           <p>작성자 : {author}</p>
         </S.FNauthor>

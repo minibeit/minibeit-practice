@@ -1,10 +1,10 @@
 import React from "react";
 import PFeedListTopContainer from "./PFeedListTopContainer";
 
-export default function FeedListTopContainer({ category }) {
+export default function FeedListTopContainer() {
   return (
     <>
-      <PFeedListTopContainer category={category} />
+      <PFeedListTopContainer />
     </>
   );
 }

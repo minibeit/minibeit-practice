@@ -44,13 +44,18 @@ export default function NavBar() {
       </S.NavBarLogoContainer>
       <S.NavBarMenuContainer>
         <S.NavBarMenu>
-          <Link to="/explainPage/recruit">
-            <p>모집하기</p>
+          <Link to="/explainPage">
+            <p>소개</p>
           </Link>
         </S.NavBarMenu>
         <S.NavBarMenu>
-          <Link to="/explainPage/apply">
+          <Link to="/feedList">
             <p>지원하기</p>
+          </Link>
+        </S.NavBarMenu>
+        <S.NavBarMenu>
+          <Link to="/feedList/feedNew">
+            <p>모집하기</p>
           </Link>
         </S.NavBarMenu>
         <S.NavBarAuth>

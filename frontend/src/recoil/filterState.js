@@ -6,6 +6,7 @@ export const filterState = atom({
     default: {
         school: null,
         schoolId: null,
+        date: null,
     },
     effects_UNSTABLE: [persistAtom],
 })

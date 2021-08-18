@@ -5,7 +5,7 @@ import { useRecoilValue } from "recoil";
 import PFeedListSection from "./PFeedListSection";
 import * as S from "../style";
 
-export default function FeedListSection({ category }) {
+export default function FeedListSection() {
   //더미데이터는 category에서 받아온 엔드포인트로 하나의 카테코리에 헤당되는 데이터만 받아올것
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -39,7 +39,7 @@ export default function FeedListSection({ category }) {
   return (
     <>
       {posts.map((post) => (
-        <PFeedListSection key={post.id} sectioncate={category} post={post} />
+        <PFeedListSection key={post.id} post={post} />
       ))}
       <p>{page} 페이지</p>
       <S.FLPageWrapper>

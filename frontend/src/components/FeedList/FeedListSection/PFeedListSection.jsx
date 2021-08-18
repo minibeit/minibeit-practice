@@ -2,11 +2,11 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import * as S from "../style";
 
-export default function PFeedListSection({ sectioncate, post }) {
+export default function PFeedListSection({ post }) {
   const { author, doDate, dueDate, id, place, title } = post;
   const history = useHistory();
   const detail = () => {
-    history.push(`/feedList/${sectioncate}/${id}`);
+    history.push(`/feedList/${id}`);
   };
   return (
     <S.FLSectionWrapper onClick={detail}>

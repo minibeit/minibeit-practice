@@ -2,11 +2,11 @@ import React from "react";
 import { FEContainer } from "../../components/FeedEdit";
 
 export default function FeedEdit({ match }) {
-  const { category, postId } = match.params;
+  const { postId } = match.params;
 
   return (
     <>
-      <FEContainer category={category} postId={postId} />
+      <FEContainer postId={postId} />
     </>
   );
 }

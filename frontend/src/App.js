@@ -24,12 +24,12 @@ function App() {
           <Route path="/signup" component={Signup} />
           <Route path="/mypage/edit" component={MypageEdit}/>
           <Route path="/mypage" component={Mypage} />
-          <Route path="/feedList/:category/:postId/feedEdit"  component={FeedEdit} />
-          <Route path="/feedList/:category/feedNew"  component={FeedNew} />
-          <Route path="/feedList/:category/:postId" exact component={FeedDetail} />
-          <Route path="/feedList/:category" exact component={FeedList} />
+          <Route path="/feedList/:postId/feedEdit"  component={FeedEdit} />
+          <Route path="/feedList/feedNew"  component={FeedNew} />
+          <Route path="/feedList/:postId" exact component={FeedDetail} />
+          <Route path="/feedList" exact component={FeedList} />
           <Route path="/applyHome" component={ApplyHome} />
-          <Route path="/explainPage/:category" component={ExplainPage} />
+          <Route path="/explainPage" component={ExplainPage} />
           <Route path="/" exact component={Main} />
         </Switch>
       </RecoilRoot>

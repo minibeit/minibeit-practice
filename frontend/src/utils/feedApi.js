@@ -13,7 +13,6 @@ export const feedCreateApi = async (
     content,
     phoneNum,
     files,
-    category,
     school) =>{
     const formData = new FormData();
     formData.append('title', title);
@@ -32,10 +31,8 @@ export const feedCreateApi = async (
         content,
         phoneNum,
         files,
-        category,
         school)
     formData.append('phoneNum', phoneNum);
-    formData.append('category', category);
     formData.append('dueDate', dueDate);
     formData.append('doDate', doDate);
     formData.append('school', school);
@@ -98,15 +95,13 @@ export const feedEditApi = async (
     content,
     phoneNum,
     files,
-    category,
-    postId) =>{
+    postId,) =>{
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
     formData.append('place', place);
     formData.append('pay', pay);
     formData.append('time', time);
-    
     formData.append('files', files);
     
     console.log( title,
@@ -118,9 +113,8 @@ export const feedEditApi = async (
         content,
         phoneNum,
         files,
-        category)
+        )
     formData.append('phoneNum', phoneNum);
-    formData.append('category', category);
     formData.append('dueDate', dueDate);
     formData.append('doDate', doDate);
     const accessToken = localStorage.getItem('accessToken');  

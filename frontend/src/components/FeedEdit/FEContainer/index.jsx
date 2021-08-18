@@ -4,7 +4,7 @@ import { feedCreateApi, feedEditApi } from "../../../utils";
 import { feedDetailApi } from "../../../utils";
 import PFEContainer from "./PFEContainer";
 
-function FEContainer({ category, postId }) {
+function FEContainer({ postId }) {
   const history = useHistory();
   const [post, setPost] = useState([]);
   const getFeedDetail = async () => {
@@ -46,19 +46,18 @@ function FEContainer({ category, postId }) {
         content,
         phoneNum,
         files,
-        category,
         postId
       );
       console.log(result.id);
       if (result.id) {
         window.alert("게시물 수정에 성공!");
-        history.push(`/feedList/${category}/${result.id}`);
+        history.push(`/feedList/${result.id}`);
       }
     } catch (e) {
       console.log(e.response.data.error.msg);
       alert(e.response.data.error.msg);
     }
   };
-  return <PFEContainer post={post} category={category} FEHandler={FEHandler} />;
+  return <PFEContainer post={post} FEHandler={FEHandler} />;
 }
 export default FEContainer;
