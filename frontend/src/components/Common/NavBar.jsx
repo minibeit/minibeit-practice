@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../recoil/userState";
@@ -7,7 +7,7 @@ import * as S from "./style";
 
 export default function NavBar() {
   const data = useRecoilValue(userState);
-  const loginState = data.isLogin;
+  const [loginState, setloginState] = useState(data.isLogin);
   const username = data.name;
   const history = useHistory();
 
@@ -19,6 +19,10 @@ export default function NavBar() {
         window.alert("로그아웃이 되었습니다!");
         window.location.replace("/");
         localStorage.clear();
+        setloginState({
+          ...loginState,
+          isLogin: false,
+        });
       }
     } catch (e) {
       console.log(e.response.data.error.msg);

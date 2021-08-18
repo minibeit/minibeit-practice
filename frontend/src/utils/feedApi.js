@@ -80,7 +80,7 @@ export const feedDetailApi = async (postId) =>{
     .get(`http://3.36.95.15:8080/api/board/${postId}`,{
         headers: {
             Authorization: `Bearer ${accessToken}`
-        }
+        },cache: true,
     })
     .then((res)=>{
         return res;
@@ -152,7 +152,7 @@ export const feedlistApi = async (category, page, size) =>{
     .get(`http://3.36.95.15:8080/api/board/list?category=${category}&page=${page}&size=${size}`,{
         headers: {
             Authorization: `Bearer ${accessToken}`
-        }
+        },cache: true
     })
     .then((res)=>{
         return res;
