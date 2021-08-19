@@ -28,6 +28,7 @@ export const ModalContent = styled.div`
   color: white;
   width: 63%;
   height: 100%;
+  overflow: scroll;
 `;
 export const ModalInput = styled.input``;
 export const ModalBottom = styled.div``;

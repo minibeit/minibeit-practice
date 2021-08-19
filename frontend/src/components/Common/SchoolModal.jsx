@@ -1,40 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { createPortal } from "react-dom";
 import { filterState } from "../../recoil/filterState";
 import * as S from "./style";
+import { schoolGetApi } from "../../utils/schoolApi";
 
 function SchoolModal(props) {
   const { message, closeModal } = props;
   const [search, setSearch] = useState(null);
   const [school, setSchool] = useRecoilState(filterState);
-  const Information = [
-    {
-      id: 1,
-      name: "고려대학교",
-    },
-    { id: 2, name: "연세대학교" },
-    {
-      id: 3,
-      name: "서울대학교",
-    },
-    {
-      id: 4,
-      name: "중앙대학교",
-    },
-    {
-      id: 5,
-      name: "성균관대학교",
-    },
-    {
-      id: 6,
-      name: "성신여자대학교",
-    },
-    {
-      id: 7,
-      name: "한림대학교",
-    },
-  ];
+  const [schoollist, setSchoolList] = useState([]);
+
+  const getSchoolInfo = async () => {
+    try {
+      const result = await schoolGetApi();
+      if (result) {
+        console.log(result);
+        setSchoolList(result);
+      }
+    } catch (e) {
+      console.log(e.response.data.error.msg);
+      alert(e.response.data.error.msg);
+    }
+  };
+
+  useEffect(() => {
+    getSchoolInfo();
+  }, []);
   const searchSpace = (event) => {
     let keyword = event.target.value;
     setSearch(keyword);
@@ -48,21 +40,23 @@ function SchoolModal(props) {
       schoolId: e.target.attributes[0].nodeValue,
     });
   };
-  const items = Information.filter((data) => {
-    console.log(data);
-    if (search == null) return data;
-    else if (data.name.toLowerCase().includes(search.toLowerCase())) {
-      return data;
-    }
-  }).map((data) => {
-    return (
-      <li key={data.id} style={{ position: "relative", left: "10vh" }}>
-        <span onClick={getSchool} data-key={data.id}>
-          {data.name}
-        </span>
-      </li>
-    );
-  });
+  const items = schoollist
+    .filter((data) => {
+      console.log(data);
+      if (search == null) return data;
+      else if (data.name.toLowerCase().includes(search.toLowerCase())) {
+        return data;
+      }
+    })
+    .map((data) => {
+      return (
+        <li key={data.id} style={{ position: "relative", left: "10vh" }}>
+          <span onClick={getSchool} data-key={data.id}>
+            {data.name}
+          </span>
+        </li>
+      );
+    });
 
   return createPortal(
     <>
