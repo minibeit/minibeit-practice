@@ -8,8 +8,10 @@ import "./Calender.scss";
 export default function FLCalendar() {
   const [date, setDate] = useRecoilState(filterState);
   console.log(date);
-  const [value, setValue] = useState(new Date(date.date) && new Date());
-
+  const [value, setValue] = useState(
+    date.date == null ? new Date() : new Date(date.date)
+  );
+  console.log(value);
   const onChange = (e) => {
     setValue(e);
     console.log(e);
