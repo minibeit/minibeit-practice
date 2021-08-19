@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/api/board")
 public class BoardController {
-
     private final BoardService boardService;
 
     @PostMapping
@@ -38,9 +37,10 @@ public class BoardController {
         return ResponseEntity.ok().body(BoardResponse.GetOne.build(board, customUserDetails.getUser()));
     }
 
-    @GetMapping("/list")
-    public Page<BoardResponse.GetList> getList(PageDto pageDto, BoardRequest.GetListByCategory request) {
-        Page<Board> list = boardService.getList(pageDto, request);
+    @GetMapping("/school/{schoolId}/list")
+    public Page<BoardResponse.GetList> getListBySchoolAndDate(@PathVariable Long schoolId, PageDto pageDto, BoardRequest.GetListBySchoolAndDate request) {
+        Page<Board> list = boardService.getListBySchoolAndDate(request, schoolId, pageDto);
+
         List<BoardResponse.GetList> response = list.stream().map(BoardResponse.GetList::build).collect(Collectors.toList());
 
         return new PageImpl<>(response, pageDto.of(), list.getTotalElements());
@@ -58,5 +58,12 @@ public class BoardController {
         boardService.deleteBoard(boardId, userDetails.getUser());
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/like/{boardId}")
+    public ResponseEntity<BoardResponse.OnlyId> likes(@PathVariable Long boardId, @CurrentUser CustomUserDetails userDetails) {
+        boardService.createLike(boardId, userDetails.getUser());
+
+        return ResponseEntity.ok().body(BoardResponse.OnlyId.builder().id(boardId).build());
     }
 }

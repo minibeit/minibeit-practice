@@ -19,9 +19,9 @@ Content-Disposition: form-data; name="phoneNum";
 
 010-1234-5678
 --boundary
-Content-Disposition: form-data; name="category";
+Content-Disposition: form-data; name="school";
 
-SURVEY
+고려대학교
 --boundary
 Content-Disposition: form-data; name="pay";
 
@@ -39,22 +39,22 @@ Content-Disposition: form-data; name="dueDate";
 --boundary
 Content-Disposition: form-data; name="doDate";
 
-2021-08-10T09:30:00
+2021-08-10T09:30
 --boundary
 Content-Disposition: form-data; name="files"; filename="enjoy.png"
 
 < ./../main/resources/mock/images/enjoy.png
 
 ###
-GET {{apiUrl}}/board/list?page=1&size=10&category=experiment
+GET {{apiUrl}}/board/school/2/list?page=1&size=10&date=2021-08-25
 Authorization: {{authorizationToken}}
 
 ###
-GET {{apiUrl}}/board/3
+GET {{apiUrl}}/board/1
 Authorization: {{authorizationToken}}
 
 ###
-POST {{apiUrl}}/board/4
+POST {{apiUrl}}/board/1
 Authorization: {{authorizationToken}}
 Content-Type: multipart/form-data; boundary=boundary
 
@@ -75,9 +75,9 @@ Content-Disposition: form-data; name="phoneNum";
 
 010-1234-1234
 --boundary
-Content-Disposition: form-data; name="category";
+Content-Disposition: form-data; name="school";
 
-EXPERIMENT
+연세대학교
 --boundary
 Content-Disposition: form-data; name="pay";
 
@@ -93,7 +93,7 @@ Content-Disposition: form-data; name="dueDate";
 --boundary
 Content-Disposition: form-data; name="doDate";
 
-2021-08-25T09:30:00
+2021-08-25T09:30
 --boundary
 Content-Disposition: form-data; name="fileChanged";
 
@@ -110,3 +110,8 @@ Content-Disposition: form-data; name="files"; filename="enjoy2.png"
 ###
 DELETE {{apiUrl}}/board/1
 Authorization: {{authorizationToken}}
+
+###
+POST {{apiUrl}}/board/like/2
+Authorization: {{authorizationToken}}
+

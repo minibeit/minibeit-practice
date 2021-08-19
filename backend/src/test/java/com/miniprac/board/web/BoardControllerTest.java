@@ -2,12 +2,10 @@ package com.miniprac.board.web;
 
 import com.miniprac.MvcTest;
 import com.miniprac.board.domain.Board;
-import com.miniprac.board.domain.BoardCategory;
-import com.miniprac.board.domain.BoardCategoryType;
 import com.miniprac.board.domain.BoardFile;
-import com.miniprac.board.dto.BoardRequest;
 import com.miniprac.board.service.BoardService;
 import com.miniprac.file.domain.File;
+import com.miniprac.school.domain.School;
 import com.miniprac.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +34,6 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,16 +44,16 @@ class BoardControllerTest extends MvcTest {
     private BoardService boardService;
 
     private User user;
+    private School school;
     private Board board1;
     private Board board2;
     private Board board3;
     private List<Board> boardList = new ArrayList<>();
-    private BoardCategory boardCategory;
 
     @BeforeEach
     public void setup() {
         user = User.builder().id(1L).email("test@test.com").password("1234").name("테스터").build();
-        boardCategory = BoardCategory.builder().id(1L).type(BoardCategoryType.SURVEY).build();
+        school = School.builder().id(1L).name("고려대학교").build();
         board1 = Board.builder()
                 .id(1L)
                 .title("피실험자 모집1")
@@ -64,13 +61,14 @@ class BoardControllerTest extends MvcTest {
                 .place("고려대 신공학관")
                 .pay(20000)
                 .time(20)
+                .school(school)
                 .phoneNum("010-1234-5678")
-                .category(boardCategory)
-                .dueDate(LocalDate.of(2021, 8, 20))
-                .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
+                .dueDate(LocalDate.of(2021, 8, 10))
+                .doDate(LocalDateTime.of(2021, 8, 15, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
                 .build();
         board1.setCreatedBy(user);
+
         board2 = Board.builder()
                 .id(2L)
                 .title("피실험자 모집2")
@@ -78,13 +76,14 @@ class BoardControllerTest extends MvcTest {
                 .place("고려대 신공학관")
                 .pay(50000)
                 .time(30)
+                .school(school)
                 .phoneNum("010-1234-5678")
-                .category(boardCategory)
-                .dueDate(LocalDate.of(2021, 8, 20))
-                .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
+                .dueDate(LocalDate.of(2021, 8, 10))
+                .doDate(LocalDateTime.of(2021, 8, 15, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
                 .build();
         board2.setCreatedBy(user);
+
         board3 = Board.builder()
                 .id(3L)
                 .title("피실험자 모집3")
@@ -92,10 +91,10 @@ class BoardControllerTest extends MvcTest {
                 .place("고려대 신공학관")
                 .pay(30000)
                 .time(40)
+                .school(school)
                 .phoneNum("010-1234-5678")
-                .category(boardCategory)
-                .dueDate(LocalDate.of(2021, 8, 20))
-                .doDate(LocalDateTime.of(2021, 8, 10, 9, 30))
+                .dueDate(LocalDate.of(2021, 8, 10))
+                .doDate(LocalDateTime.of(2021, 8, 15, 9, 30))
                 .boardFileList(Collections.singletonList(BoardFile.create(File.builder().url("image url").build())))
                 .build();
         board3.setCreatedBy(user);
@@ -124,10 +123,11 @@ class BoardControllerTest extends MvcTest {
                         .param("place", "고려대 신공학관")
                         .param("phoneNum", "010-1234-5678")
                         .param("category", "SURVEY")
+                        .param("school", "고려대학교")
                         .param("pay", "20000")
                         .param("time", "20")
                         .param("dueDate", "2021-08-20")
-                        .param("doDate", "2021-08-10T09:30:00")
+                        .param("doDate", "2021-08-10T09:30")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .characterEncoding("UTF-8")
         );
@@ -139,6 +139,7 @@ class BoardControllerTest extends MvcTest {
                                 parameterWithName("title").description("제목"),
                                 parameterWithName("content").description("내용"),
                                 parameterWithName("place").description("장소"),
+                                parameterWithName("school").description("학교"),
                                 parameterWithName("pay").description("급여"),
                                 parameterWithName("time").description("소요시간(분단위)"),
                                 parameterWithName("phoneNum").description("연락처"),
@@ -155,26 +156,28 @@ class BoardControllerTest extends MvcTest {
     }
 
     @Test
-    @DisplayName("게시물 목록 조회 문서화")
+    @DisplayName("학교,날짜를 기준으로 게시물 목록 조회 문서화")
     public void getList() throws Exception {
+        Page<Board> boardPage = new PageImpl<>(boardList, PageRequest.of(1, 5), boardList.size());
+        given(boardService.getListBySchoolAndDate(any(), any(), any())).willReturn(boardPage);
 
-        Page<Board> boardPage = new PageImpl<>(boardList, PageRequest.of(1, 2), boardList.size());
-        given(boardService.getList(any(), any())).willReturn(boardPage);
-
-        ResultActions results = mvc.perform(
-                get("/api/board/list")
-                        .param("category", "survey")
-                        .param("page", "1")
-                        .param("size", "2")
+        ResultActions results = mvc.perform(RestDocumentationRequestBuilders
+                .get("/api/board/school/{schoolId}/list", 1L)
+                .param("date", "2021-08-15")
+                .param("page", "1")
+                .param("size", "5")
         );
 
         results.andExpect(status().isOk())
                 .andDo(print())
-                .andDo(document("board-getList",
+                .andDo(document("board-getList-schoolAndDate",
+                        pathParameters(
+                                parameterWithName("schoolId").description("학교 식별자")
+                        ),
                         requestParameters(
-                                parameterWithName("category").description("조회할 게시물 카테고리 SURVEY or EXPERIMENT"),
                                 parameterWithName("page").description("조회할 페이지"),
-                                parameterWithName("size").description("조회할 사이즈")
+                                parameterWithName("size").description("조회할 사이즈"),
+                                parameterWithName("date").description("조회할 게시물 실험 날짜(doDate)")
                         ),
                         relaxedResponseFields(
                                 fieldWithPath("content[].id").type(JsonFieldType.NUMBER).description("게시물 식별자"),
@@ -184,6 +187,7 @@ class BoardControllerTest extends MvcTest {
                                 fieldWithPath("content[].author").type(JsonFieldType.STRING).description("게시물 작성자 이름"),
                                 fieldWithPath("content[].dueDate").type(JsonFieldType.STRING).description("마감날짜"),
                                 fieldWithPath("content[].doDate").type(JsonFieldType.STRING).description("실험/설문 날짜"),
+                                fieldWithPath("content[].likes").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                                 fieldWithPath("totalElements").description("전체 개수"),
                                 fieldWithPath("last").description("마지막 페이지인지 식별"),
                                 fieldWithPath("totalPages").description("전체 페이지")
@@ -207,7 +211,6 @@ class BoardControllerTest extends MvcTest {
                         ),
                         responseFields(
                                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("게시물 식별자"),
-                                fieldWithPath("category").type(JsonFieldType.STRING).description("카테고리"),
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("제목"),
                                 fieldWithPath("content").type(JsonFieldType.STRING).description("내용"),
                                 fieldWithPath("place").type(JsonFieldType.STRING).description("장소"),
@@ -215,9 +218,12 @@ class BoardControllerTest extends MvcTest {
                                 fieldWithPath("author").type(JsonFieldType.STRING).description("게시물 작성자 이름"),
                                 fieldWithPath("pay").type(JsonFieldType.NUMBER).description("게시물 작성자 이름"),
                                 fieldWithPath("time").type(JsonFieldType.NUMBER).description("소요시간(분단위)"),
+                                fieldWithPath("schoolName").type(JsonFieldType.STRING).description("학교 이름"),
                                 fieldWithPath("dueDate").type(JsonFieldType.STRING).description("마감날짜"),
                                 fieldWithPath("doDate").type(JsonFieldType.STRING).description("실험/설문 날짜"),
+                                fieldWithPath("likes").type(JsonFieldType.NUMBER).description("좋아요 개수"),
                                 fieldWithPath("isMine").type(JsonFieldType.BOOLEAN).description("로그인 유저와 게시물 작성자가 같다면 true"),
+                                fieldWithPath("isLikeMine").type(JsonFieldType.BOOLEAN).description("로그인 유저가 게시물 좋아요를 눌렀다면 true"),
                                 fieldWithPath("images[].url").type(JsonFieldType.STRING).description("이미지 url")
                         )
                 ));
@@ -242,7 +248,7 @@ class BoardControllerTest extends MvcTest {
                 .param("pay", "33000")
                 .param("time", "60")
                 .param("dueDate", "2021-08-21")
-                .param("doDate", "2021-08-25T09:30:00")
+                .param("doDate", "2021-08-25T09:30")
                 .param("fileChanged", "true")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
@@ -284,8 +290,29 @@ class BoardControllerTest extends MvcTest {
                 .andDo(print())
                 .andDo(document("board-delete",
                         pathParameters(
-                                parameterWithName("boardId").description("수정할 게시물 식별자")
+                                parameterWithName("boardId").description("삭제할 게시물 식별자")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("게시글 좋아요 문서화")
+    public void createLike() throws Exception {
+        ResultActions result = mvc.perform(RestDocumentationRequestBuilders
+                .post("/api/board/like/{boardId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+        );
+
+        result.andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("board-like",
+                        pathParameters(
+                                parameterWithName("boardId").description("좋아요 할 게시물 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("좋아요 누른 게시물 식별자")
+                        ))
+                );
     }
 }
