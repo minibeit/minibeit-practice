@@ -19,9 +19,9 @@ Content-Disposition: form-data; name="phoneNum";
 
 010-1234-5678
 --boundary
-Content-Disposition: form-data; name="school";
+Content-Disposition: form-data; name="schoolId";
 
-고려대학교
+1
 --boundary
 Content-Disposition: form-data; name="pay";
 
@@ -54,7 +54,7 @@ GET {{apiUrl}}/board/1
 Authorization: {{authorizationToken}}
 
 ###
-POST {{apiUrl}}/board/1
+POST {{apiUrl}}/board/4
 Authorization: {{authorizationToken}}
 Content-Type: multipart/form-data; boundary=boundary
 
@@ -75,9 +75,9 @@ Content-Disposition: form-data; name="phoneNum";
 
 010-1234-1234
 --boundary
-Content-Disposition: form-data; name="school";
+Content-Disposition: form-data; name="schoolId";
 
-연세대학교
+5
 --boundary
 Content-Disposition: form-data; name="pay";
 

@@ -37,7 +37,7 @@ public class BoardService {
     private final FileService fileService;
 
     public Board create(BoardRequest.Create request) {
-        School school = schoolRepository.findByName(request.getSchool()).orElseThrow(SchoolNotFoundException::new);
+        School school = schoolRepository.findById(request.getSchoolId()).orElseThrow(SchoolNotFoundException::new);
         List<File> files = fileService.uploadFiles(request.getFiles());
         List<BoardFile> boardFiles = files.stream().map(BoardFile::create).collect(Collectors.toList());
         Board board = Board.create(request, school, boardFiles);
@@ -58,7 +58,7 @@ public class BoardService {
 
     public Board update(BoardRequest.Update request, Long boardId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
-        School school = schoolRepository.findByName(request.getSchool()).orElseThrow(SchoolNotFoundException::new);
+        School school = schoolRepository.findById(request.getSchoolId()).orElseThrow(SchoolNotFoundException::new);
         permissionCheck(user, board);
 
         if (request.isFileChanged()) {

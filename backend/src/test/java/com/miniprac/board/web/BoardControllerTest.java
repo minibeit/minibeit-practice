@@ -123,7 +123,7 @@ class BoardControllerTest extends MvcTest {
                         .param("place", "고려대 신공학관")
                         .param("phoneNum", "010-1234-5678")
                         .param("category", "SURVEY")
-                        .param("school", "고려대학교")
+                        .param("schoolId", "1")
                         .param("pay", "20000")
                         .param("time", "20")
                         .param("dueDate", "2021-08-20")
@@ -139,7 +139,7 @@ class BoardControllerTest extends MvcTest {
                                 parameterWithName("title").description("제목"),
                                 parameterWithName("content").description("내용"),
                                 parameterWithName("place").description("장소"),
-                                parameterWithName("school").description("학교"),
+                                parameterWithName("schoolId").description("학교 식별자"),
                                 parameterWithName("pay").description("급여"),
                                 parameterWithName("time").description("소요시간(분단위)"),
                                 parameterWithName("phoneNum").description("연락처"),
@@ -244,7 +244,7 @@ class BoardControllerTest extends MvcTest {
                 .param("content", "모집 수정완료")
                 .param("place", "고려대 신공학관")
                 .param("phoneNum", "010-1234-1234")
-                .param("category", "EXPERIMENT")
+                .param("schoolId", "1")
                 .param("pay", "33000")
                 .param("time", "60")
                 .param("dueDate", "2021-08-21")
@@ -267,7 +267,7 @@ class BoardControllerTest extends MvcTest {
                                 parameterWithName("pay").description("급여"),
                                 parameterWithName("time").description("소요시간(분단위)"),
                                 parameterWithName("phoneNum").description("연락처"),
-                                parameterWithName("category").description("카테고리 SURVEY or EXPERIMENT"),
+                                parameterWithName("schoolId").description("학교 식별자"),
                                 parameterWithName("fileChanged").description("첨부파일이나 이미지가 수정되었다면 true 그렇지 않다면 false"),
                                 parameterWithName("dueDate").description("마감날짜"),
                                 parameterWithName("doDate").description("실험/설문 날짜")),

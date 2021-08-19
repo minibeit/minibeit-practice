@@ -21,7 +21,7 @@ public class BoardRequest {
         private String place;
         private String phoneNum;
         private String category;
-        private String school;
+        private Long schoolId;
         private int time;
         private int pay;
         private List<MultipartFile> files;
@@ -62,7 +62,7 @@ public class BoardRequest {
         private String content;
         private String place;
         private String phoneNum;
-        private String school;
+        private Long schoolId;
         private int pay;
         private int time;
         private boolean fileChanged;
