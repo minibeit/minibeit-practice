@@ -20,7 +20,10 @@ export const feedCreateApi = async (
     formData.append('place', place);
     formData.append('pay', pay);
     formData.append('time', time);
-    formData.append('files', files);
+    if(files){
+        formData.append('files', files);
+    }
+   
     
     console.log( title,
         dueDate,
