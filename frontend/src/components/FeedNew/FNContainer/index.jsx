@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { feedCreateApi } from "../../../utils";
+import { schoolGetApi } from "../../../utils/schoolApi";
 import PFNContainer from "./PFNContainer";
 
 function FNContainer() {
   const history = useHistory();
+  const [schoolList, setSchoolList] = useState([]);
+  const getSchoolList = async () => {
+    try {
+      const result = await schoolGetApi();
+      if (result) {
+        console.log(result);
+        setSchoolList(result);
+      }
+    } catch (e) {
+      console.log(e.response.data.error.msg);
+      alert(e.response.data.error.msg);
+    }
+  };
+
+  useEffect(() => {
+    getSchoolList();
+  }, []);
   const FNHandler = async (
     title,
     dueDate,
@@ -40,6 +58,6 @@ function FNContainer() {
       alert(e);
     }
   };
-  return <PFNContainer FNHandler={FNHandler} />;
+  return <PFNContainer schoolList={schoolList} FNHandler={FNHandler} />;
 }
 export default FNContainer;

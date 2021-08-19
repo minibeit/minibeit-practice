@@ -35,7 +35,7 @@ export const feedCreateApi = async (
     formData.append('phoneNum', phoneNum);
     formData.append('dueDate', dueDate);
     formData.append('doDate', doDate);
-    formData.append('school', school);
+    formData.append('schoolId', school);
     const accessToken = localStorage.getItem('accessToken');  
     console.log(formData) 
     const result = await axios.post(

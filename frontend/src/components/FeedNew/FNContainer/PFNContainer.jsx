@@ -3,7 +3,8 @@ import { useRecoilValue } from "recoil";
 import { userState } from "../../../recoil/userState";
 import * as S from "../style";
 
-function PFNContainer({ FNHandler }) {
+function PFNContainer({ schoolList, FNHandler }) {
+  console.log(schoolList);
   const author = useRecoilValue(userState).name;
   const [inputs, setInputs] = useState({
     title: "",
@@ -50,13 +51,17 @@ function PFNContainer({ FNHandler }) {
           value={title || ""}
           onChange={onChange}
         />
-        <S.FNSchool
-          placeholder="학교"
-          name="school"
-          type="text"
-          value={school || ""}
-          onChange={onChange}
-        />
+        <S.FNSchool name="school" defaultValue={"DEFAULT"} onChange={onChange}>
+          <option value="DEFAULT" disabled>
+            학교를 선택하세요
+          </option>
+          {schoolList.map(({ id, name }) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <option value={id} key={id}>
+              {name}
+            </option>
+          ))}
+        </S.FNSchool>
 
         <S.FNauthor>
           <p>작성자 : {author}</p>

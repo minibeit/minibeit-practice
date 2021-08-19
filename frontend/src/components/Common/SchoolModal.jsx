@@ -15,7 +15,6 @@ function SchoolModal(props) {
     try {
       const result = await schoolGetApi();
       if (result) {
-        console.log(result);
         setSchoolList(result);
       }
     } catch (e) {
