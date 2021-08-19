@@ -43,6 +43,7 @@ function SchoolModal(props) {
     console.log(e.target.attributes[0].nodeValue);
     await closeModal(e.target.textContent, e.target.attributes[0].nodeValue);
     setSchool({
+      ...school,
       school: e.target.textContent,
       schoolId: e.target.attributes[0].nodeValue,
     });
