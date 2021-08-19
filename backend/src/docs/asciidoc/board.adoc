@@ -41,6 +41,7 @@ include::{snippets}/board-getOne/response-fields.adoc[]
 
 요청 HTTP
 include::{snippets}/board-getList-schoolAndDate/http-request.adoc[]
+include::{snippets}/board-getList-schoolAndDate/path-parameters.adoc[]
 include::{snippets}/board-getList-schoolAndDate/request-parameters.adoc[]
 
 성공 응답 HTTP

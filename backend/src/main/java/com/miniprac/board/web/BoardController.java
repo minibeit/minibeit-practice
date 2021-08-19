@@ -37,9 +37,9 @@ public class BoardController {
         return ResponseEntity.ok().body(BoardResponse.GetOne.build(board, customUserDetails.getUser()));
     }
 
-    @GetMapping("/list")
-    public Page<BoardResponse.GetList> getListBySchoolAndDate(PageDto pageDto, BoardRequest.GetListBySchoolAndDate request) {
-        Page<Board> list = boardService.getListBySchoolAndDate(request, pageDto);
+    @GetMapping("/school/{schoolId}/list")
+    public Page<BoardResponse.GetList> getListBySchoolAndDate(@PathVariable Long schoolId, PageDto pageDto, BoardRequest.GetListBySchoolAndDate request) {
+        Page<Board> list = boardService.getListBySchoolAndDate(request, schoolId, pageDto);
 
         List<BoardResponse.GetList> response = list.stream().map(BoardResponse.GetList::build).collect(Collectors.toList());
 

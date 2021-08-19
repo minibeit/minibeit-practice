@@ -47,7 +47,6 @@ public class BoardRequest {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class GetListBySchoolAndDate {
-        private String school;
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate date;
     }

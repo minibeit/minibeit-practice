@@ -46,7 +46,7 @@ Content-Disposition: form-data; name="files"; filename="enjoy.png"
 < ./../main/resources/mock/images/enjoy.png
 
 ###
-GET {{apiUrl}}/board/list?page=1&size=10&school=고려대학교&date=2021-08-10
+GET {{apiUrl}}/board/school/2/list?page=1&size=10&date=2021-08-25
 Authorization: {{authorizationToken}}
 
 ###

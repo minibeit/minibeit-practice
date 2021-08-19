@@ -46,8 +46,9 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Board> getListBySchoolAndDate(BoardRequest.GetListBySchoolAndDate request, PageDto pageDto) {
-        return boardRepository.findAllBySchoolAndDate(request, pageDto.of());
+    public Page<Board> getListBySchoolAndDate(BoardRequest.GetListBySchoolAndDate request, Long schoolId, PageDto pageDto) {
+        School school = schoolRepository.findById(schoolId).orElseThrow(SchoolNotFoundException::new);
+        return boardRepository.findAllBySchoolAndDate(request, school, pageDto.of());
     }
 
     @Transactional(readOnly = true)

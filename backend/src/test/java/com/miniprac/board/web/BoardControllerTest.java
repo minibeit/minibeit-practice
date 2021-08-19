@@ -34,7 +34,6 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,7 +53,7 @@ class BoardControllerTest extends MvcTest {
     @BeforeEach
     public void setup() {
         user = User.builder().id(1L).email("test@test.com").password("1234").name("테스터").build();
-        school= School.builder().id(1L).name("고려대학교").build();
+        school = School.builder().id(1L).name("고려대학교").build();
         board1 = Board.builder()
                 .id(1L)
                 .title("피실험자 모집1")
@@ -160,23 +159,24 @@ class BoardControllerTest extends MvcTest {
     @DisplayName("학교,날짜를 기준으로 게시물 목록 조회 문서화")
     public void getList() throws Exception {
         Page<Board> boardPage = new PageImpl<>(boardList, PageRequest.of(1, 5), boardList.size());
-        given(boardService.getListBySchoolAndDate(any(), any())).willReturn(boardPage);
+        given(boardService.getListBySchoolAndDate(any(), any(), any())).willReturn(boardPage);
 
-        ResultActions results = mvc.perform(
-                get("/api/board/list")
-                        .param("school", "고려대학교")
-                        .param("date", "2021-08-15")
-                        .param("page", "1")
-                        .param("size", "5")
+        ResultActions results = mvc.perform(RestDocumentationRequestBuilders
+                .get("/api/board/school/{schoolId}/list", 1L)
+                .param("date", "2021-08-15")
+                .param("page", "1")
+                .param("size", "5")
         );
 
         results.andExpect(status().isOk())
                 .andDo(print())
                 .andDo(document("board-getList-schoolAndDate",
+                        pathParameters(
+                                parameterWithName("schoolId").description("학교 식별자")
+                        ),
                         requestParameters(
                                 parameterWithName("page").description("조회할 페이지"),
                                 parameterWithName("size").description("조회할 사이즈"),
-                                parameterWithName("school").description("조회할 게시물 학교"),
                                 parameterWithName("date").description("조회할 게시물 실험 날짜(doDate)")
                         ),
                         relaxedResponseFields(
