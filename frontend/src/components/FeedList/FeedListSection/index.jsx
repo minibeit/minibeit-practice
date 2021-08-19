@@ -11,8 +11,8 @@ export default function FeedListSection() {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(5);
   const [endPage, setEndPage] = useState(1);
-  const school = useRecoilValue(filterState).school;
-  const date = "2021-08-10";
+  const school = useRecoilValue(filterState).schoolId;
+  const date = useRecoilValue(filterState).dateApi;
   const [totalElement, setTotalElement] = useState(1);
 
   const getFeedList = async () => {
@@ -31,7 +31,7 @@ export default function FeedListSection() {
 
   useEffect(() => {
     getFeedList();
-  }, [page]);
+  }, [school, date, page, size]);
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(totalElement / size); i++) {
     pageNumbers.push(i);

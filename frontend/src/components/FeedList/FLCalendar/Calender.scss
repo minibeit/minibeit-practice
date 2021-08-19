@@ -6,11 +6,11 @@
 
     .react-calendar__navigation {
         display: flex;
-  align-items: center;
-  padding: 12px;
-  border-radius: 6px 6px 0 0;
-  background-color: #1abc9c;
-  color: #fff;
+        align-items: center;
+        padding: 12px;
+        border-radius: 6px 6px 0 0;
+        background-color: #1abc9c;
+        color: #fff;
         .react-calendar__navigation__arrow {
             display: flex;
             width: 30px;
@@ -41,12 +41,11 @@
         background: #e70220;
         color: white;
     }
-    
+    .react-calendar__tile--active:enabled,
     .react-calendar__tile--active:enabled:hover,
     .react-calendar__tile--active:enabled:focus {
-        border-radius: 99px;
-    background-color: red;
-    color: #fff;
+        background-color: red;
+        color: #fff;
     }
     
     .react-calendar__tile,
@@ -56,6 +55,7 @@
         justify-content: center;
         align-items: center;
         height: 30px;
+        background: white;
         
     }
 }

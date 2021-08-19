@@ -8,18 +8,21 @@ import "./Calender.scss";
 export default function FLCalendar() {
   const [date, setDate] = useRecoilState(filterState);
   console.log(date);
-  const [value, setValue] = useState(new Date(date.date) || new Date());
+  const [value, setValue] = useState(new Date(date.date) && new Date());
 
   const onChange = (e) => {
     setValue(e);
     console.log(e);
-    const nowDay = e.getDate();
-    const nowMonth = e.getMonth() + 1;
+    const nowDay = e.getDate() < 10 ? "0" + e.getDate() : e.getDate();
+    let nowMonth = e.getMonth() + 1;
+    nowMonth = nowMonth < 10 ? "0" + nowMonth : nowMonth;
     const nowYear = e.getFullYear();
     const nowDate = nowYear + "-" + nowMonth + "-" + nowDay;
+    console.log(nowDate);
     setDate({
       ...date,
       date: new Date(e),
+      dateApi: nowDate,
     });
   };
   return (

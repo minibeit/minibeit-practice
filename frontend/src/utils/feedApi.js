@@ -138,8 +138,9 @@ export const feedEditApi = async (
 
 export const feedlistApi = async (school, date, page, size) =>{
     const accessToken = localStorage.getItem('accessToken');
+    console.log(school,date,page,size)
     const result = await axios
-    .get(`http://3.36.95.15:8080/api/board/list?school=${school}&date=${date}&size=${page}&size=${size}`,{
+    .get(`http://3.36.95.15:8080/api/board/school/${school}/list?date=${date}&page=${page}&size=${size}`,{
         headers: {
             Authorization: `Bearer ${accessToken}`
         },cache: true
