@@ -46,6 +46,13 @@ function PFDBottomContainer({ post }) {
           >
             수정하기
           </S.FDeditbutton>
+          <S.FDlistbutton
+            onClick={() => {
+              window.location.replace("/feedList");
+            }}
+          >
+            목록으로
+          </S.FDlistbutton>
         </>
       ) : null}
 
