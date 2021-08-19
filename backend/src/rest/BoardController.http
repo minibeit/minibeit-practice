@@ -19,10 +19,6 @@ Content-Disposition: form-data; name="phoneNum";
 
 010-1234-5678
 --boundary
-Content-Disposition: form-data; name="category";
-
-SURVEY
---boundary
 Content-Disposition: form-data; name="school";
 
 고려대학교
@@ -50,19 +46,15 @@ Content-Disposition: form-data; name="files"; filename="enjoy.png"
 < ./../main/resources/mock/images/enjoy.png
 
 ###
-GET {{apiUrl}}/board/list/category?page=1&size=10&category=experiment
-Authorization: {{authorizationToken}}
-
-###
 GET {{apiUrl}}/board/list?page=1&size=10&school=고려대학교&date=2021-08-10
 Authorization: {{authorizationToken}}
 
 ###
-GET {{apiUrl}}/board/2
+GET {{apiUrl}}/board/1
 Authorization: {{authorizationToken}}
 
 ###
-POST {{apiUrl}}/board/4
+POST {{apiUrl}}/board/1
 Authorization: {{authorizationToken}}
 Content-Type: multipart/form-data; boundary=boundary
 
@@ -83,9 +75,9 @@ Content-Disposition: form-data; name="phoneNum";
 
 010-1234-1234
 --boundary
-Content-Disposition: form-data; name="category";
+Content-Disposition: form-data; name="school";
 
-EXPERIMENT
+연세대학교
 --boundary
 Content-Disposition: form-data; name="pay";
 

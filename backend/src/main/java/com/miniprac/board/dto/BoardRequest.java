@@ -63,7 +63,7 @@ public class BoardRequest {
         private String content;
         private String place;
         private String phoneNum;
-        private String category;
+        private String school;
         private int pay;
         private int time;
         private boolean fileChanged;

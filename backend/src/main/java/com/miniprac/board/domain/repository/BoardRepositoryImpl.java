@@ -21,11 +21,12 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     @Override
     public Page<Board> findAllBySchoolAndDate(BoardRequest.GetListBySchoolAndDate request, Pageable pageable) {
         JPAQuery<Board> query = queryFactory.selectFrom(board)
-                .where(board.school.eq(request.getSchool())
-                        .and(board.doDate.year().eq(request.getDate().getYear())
+//                .where(board.school.eq(request.getSchool())
+                .where(
+                        (board.doDate.year().eq(request.getDate().getYear())
                                 .and(board.doDate.month().eq(request.getDate().getMonthValue()))
                                 .and(board.doDate.dayOfMonth().eq(request.getDate().getDayOfMonth())))
-                        .and(board.dueDate.after(LocalDate.now())))
+                                .and(board.dueDate.after(LocalDate.now())))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 

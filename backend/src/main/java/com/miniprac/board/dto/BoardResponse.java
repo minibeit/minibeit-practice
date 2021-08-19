@@ -64,12 +64,12 @@ public class BoardResponse {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class GetOne {
         private Long id;
-        private String category;
         private String title;
         private String content;
         private String place;
         private String author;
         private String contact;
+        private String schoolName;
         private Integer pay;
         private Integer time;
         private Integer likes;
@@ -85,7 +85,6 @@ public class BoardResponse {
         public static BoardResponse.GetOne build(Board board, User user) {
             return GetOne.builder()
                     .id(board.getId())
-                    .category(board.getCategory().getType().name())
                     .title(board.getTitle())
                     .content(board.getContent())
                     .place(board.getPlace())
@@ -97,6 +96,7 @@ public class BoardResponse {
                     .isLikeMine(isLikeMine(board, user))
                     .dueDate(board.getDueDate())
                     .doDate(board.getDoDate())
+                    .schoolName(board.getSchool().getName())
                     .likes(board.getBoardLikes().size())
                     .images(board.getBoardFileList().stream()
                             .map(BoardFile::getFile)
