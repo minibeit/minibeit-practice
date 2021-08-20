@@ -9,12 +9,13 @@ export default function FeedListSection() {
   //더미데이터는 category에서 받아온 엔드포인트로 하나의 카테코리에 헤당되는 데이터만 받아올것
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
-  const [size, setSize] = useState(5);
-  const [endPage, setEndPage] = useState(1);
+  const [size] = useState(5);
+  const [ setEndPage] = useState(1);
   const school = useRecoilValue(filterState).schoolId;
   const date = useRecoilValue(filterState).dateApi;
   const [totalElement, setTotalElement] = useState(1);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getFeedList = async () => {
     try {
       const result = await feedlistApi(school, date, page, size);
@@ -31,7 +32,7 @@ export default function FeedListSection() {
 
   useEffect(() => {
     getFeedList();
-  }, [school, date, page, size]);
+  }, [school, date, page, size, getFeedList]);
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(totalElement / size); i++) {
     pageNumbers.push(i);

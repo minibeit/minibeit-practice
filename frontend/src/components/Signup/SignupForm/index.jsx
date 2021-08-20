@@ -7,7 +7,7 @@ import PSignupForm from "./PSignupForm";
 
 export default function SignupForm() {
   const history = useHistory();
-  const [loginState, setLoginState] = useRecoilState(userState);
+  const [ setLoginState] = useRecoilState(userState);
   const signupHandler = async (username, useremail, password) => {
     try {
       const check = await signUpfunc(username, useremail, password);

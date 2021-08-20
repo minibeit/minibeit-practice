@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { feedCreateApi, feedEditApi } from "../../../utils";
+import { feedEditApi } from "../../../utils";
 import { feedDetailApi } from "../../../utils";
 import PFEContainer from "./PFEContainer";
 
@@ -22,7 +22,7 @@ function FEContainer({ postId }) {
 
   useEffect(() => {
     getFeedDetail();
-  }, []);
+  });
 
   const FEHandler = async (
     title,

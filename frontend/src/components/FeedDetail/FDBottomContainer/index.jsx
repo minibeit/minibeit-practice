@@ -20,7 +20,7 @@ function FDBottomContainer({ postId }) {
 
   useEffect(() => {
     getFeedDetail();
-  }, []);
+  });
   return <PFDBottomContainer post={post} />;
 }
 export default FDBottomContainer;

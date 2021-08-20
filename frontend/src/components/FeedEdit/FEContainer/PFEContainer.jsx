@@ -9,14 +9,11 @@ function PFEContainer({ post, FEHandler }) {
     content,
     doDate,
     dueDate,
-    id,
-    isMine,
     contact,
     pay,
     place,
     time,
     title,
-    images,
   } = post;
   console.log(post, title);
   const [inputs, setInputs] = useState({
@@ -43,7 +40,7 @@ function PFEContainer({ post, FEHandler }) {
       phoneNum: contact,
     });
     console.log(inputs);
-  }, []);
+  }, [post.title, post.dueDate, post.doDate, pay, time, place, content, contact, inputs]);
 
   const [files, setFiles] = useState();
 
@@ -52,7 +49,7 @@ function PFEContainer({ post, FEHandler }) {
     console.log(inputs);
     const { value, name } = e.target;
     console.log(name, value);
-    if (name == "doDate") {
+    if (name === "doDate") {
       setInputs({
         ...inputs,
         [name]: value + ":00",

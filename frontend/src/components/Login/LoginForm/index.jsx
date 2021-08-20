@@ -7,7 +7,7 @@ import { userState } from "../../../recoil/userState";
 
 export default function LoginForm() {
   const history = useHistory();
-  const [loginState, setLoginState] = useRecoilState(userState);
+  const [ setLoginState] = useRecoilState(userState);
   const loginHandler = async (useremail, password) => {
     try {
       const result = await obtainToken(useremail, password);
