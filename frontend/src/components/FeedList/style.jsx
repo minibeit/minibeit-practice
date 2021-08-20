@@ -24,13 +24,16 @@ export const MonthController = styled.div`
 
 `;
 export const SelectModal = styled.div`
-    height: 300px;
-    width: 300px;
-    background-color:black;
+    height: 25rem;
+    width: 25rem;
+    background-color:grey;
+    position:absolute;
+    transform: translate(-50%, 0);
+    left:50%;
 `;
 export const ListInModal = styled.div`
-    height:80%;
-    width: 80%;
+    height:70%;
+    width: 70%;
     position:relative;
     transform: translate(-50%, -50%);
     top:50%;
@@ -38,6 +41,7 @@ export const ListInModal = styled.div`
     background-color: white;
     overflow-y: scroll;
 `;
-export const SchoolList = styled.div`
-
+export const ListItem = styled.div`
+    height: 30px;
+    text-align: center;
 `;

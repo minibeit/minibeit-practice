@@ -7,29 +7,12 @@ import { getSchoolData } from '../../../api/feedDataAPI';
 
 export default function PReactCalendarEx(){
     const [value, onChange] = useState(new Date()); // 날짜 설정위한 state
-    const [showSelectBox, setShowSelectBox] = useState(false)
-
-    function clickSelectBtn(){
-        if(showSelectBox === false){
-            setShowSelectBox(true)
-        } else{
-            setShowSelectBox(false)
-        }
-    }
 
     useEffect(()=>{
         getSchoolData()
     },[])
 
     return (
-        <>
-            <button onClick={clickSelectBtn}>학교선택</button>
-            {
-                showSelectBox === true
-                ? <S.SelectModal><S.ListInModal></S.ListInModal></S.SelectModal>
-                : null
-            }
-            
             <Calendar
                 onChange={onChange}
                 value={value}
@@ -38,6 +21,5 @@ export default function PReactCalendarEx(){
                 minDetail="year"
                 tileClassName="day-tile"
             />
-        </>
     )
 }

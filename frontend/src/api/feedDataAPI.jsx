@@ -80,17 +80,17 @@ export const deleteFeed = (postId)=>{
     })
 }
 
-export const getSchoolData = ()=>{
+export const getSchoolData = async()=>{
     const accessToken = localStorage.getItem('accessToken');
-    axios({
-        method: 'POST',
+    return await axios({
+        method: 'GET',
         url: 'http://3.36.95.15:8080/api/school/list',
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
     })
     .then((res)=>{
-        console.log(res)
+        return res.data
     })
     .catch((err)=>{
         console.log(err)
