@@ -23,3 +23,21 @@ export const Calendar = styled.div`
 export const MonthController = styled.div`
 
 `;
+export const SelectModal = styled.div`
+    height: 300px;
+    width: 300px;
+    background-color:black;
+`;
+export const ListInModal = styled.div`
+    height:80%;
+    width: 80%;
+    position:relative;
+    transform: translate(-50%, -50%);
+    top:50%;
+    left:50%;
+    background-color: white;
+    overflow-y: scroll;
+`;
+export const SchoolList = styled.div`
+
+`;

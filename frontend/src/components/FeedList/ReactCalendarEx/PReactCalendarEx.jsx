@@ -1,20 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';  //라이브러리 설치
-import 'react-calendar/dist/Calendar.css'; //캘린더에 css적용하는 css파일
 
+import './PReactCalendar.css'; //캘린더에 css적용하는 css파일
 import * as S from '../style';
+import { getSchoolData } from '../../../api/feedDataAPI';
 
 export default function PReactCalendarEx(){
     const [value, onChange] = useState(new Date()); // 날짜 설정위한 state
-    console.log(value)
+    const [showSelectBox, setShowSelectBox] = useState(false)
+
+    function clickSelectBtn(){
+        if(showSelectBox === false){
+            setShowSelectBox(true)
+        } else{
+            setShowSelectBox(false)
+        }
+    }
+
+    useEffect(()=>{
+        getSchoolData()
+    },[])
+
     return (
         <>
+            <button onClick={clickSelectBtn}>학교선택</button>
+            {
+                showSelectBox === true
+                ? <S.SelectModal><S.ListInModal></S.ListInModal></S.SelectModal>
+                : null
+            }
+            
             <Calendar
                 onChange={onChange}
                 value={value}
                 calendarType="US"
                 locale="en-US"  //언어 설정
                 minDetail="year"
+                tileClassName="day-tile"
             />
         </>
     )

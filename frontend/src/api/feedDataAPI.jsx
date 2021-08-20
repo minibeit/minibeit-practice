@@ -79,3 +79,20 @@ export const deleteFeed = (postId)=>{
         alert(err)
     })
 }
+
+export const getSchoolData = ()=>{
+    const accessToken = localStorage.getItem('accessToken');
+    axios({
+        method: 'POST',
+        url: 'http://3.36.95.15:8080/api/school/list',
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+    })
+    .then((res)=>{
+        console.log(res)
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
+}
