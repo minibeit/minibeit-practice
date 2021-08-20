@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
+import {RecoilRoot} from 'recoil';
 import ApplyHome from './pages/ApplyHome';
 import ExplainPage from './pages/ExplainPage';
 import FeedDetail from './pages/FeedDetail';
@@ -16,20 +17,22 @@ import Signup from './pages/Signup';
 function App() {
   return (
     <>
-      <GlobalStyle />
-      <Switch>
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
-        <Route path="/mypage/edit" component={MypageEdit}/>
-        <Route path="/mypage" component={Mypage} />
-        <Route path="/feedList/:categry/:postPk/feedEdit"  component={FeedEdit} />
-        <Route path="/feedList/:categry/:postPk/feedNew"  component={FeedNew} />
-        <Route path="/feedList/:categry/:postPk" exact component={FeedDetail} />
-        <Route path="/feedList/:category" exact component={FeedList} />
-        <Route path="/applyHome" component={ApplyHome} />
-        <Route path="/explainPage/:category" component={ExplainPage} />
-        <Route path="/" exact component={Main} />
-      </Switch>
+      <RecoilRoot>
+        <GlobalStyle />
+        <Switch>
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/mypage/edit" component={MypageEdit}/>
+          <Route path="/mypage" component={Mypage} />
+          <Route path="/feedList/:postId/feedEdit"  component={FeedEdit} />
+          <Route path="/feedList/feedNew"  component={FeedNew} />
+          <Route path="/feedList/:postId" exact component={FeedDetail} />
+          <Route path="/feedList" exact component={FeedList} />
+          <Route path="/applyHome" component={ApplyHome} />
+          <Route path="/explainPage" component={ExplainPage} />
+          <Route path="/" exact component={Main} />
+        </Switch>
+      </RecoilRoot>
     </>
   );
 }
