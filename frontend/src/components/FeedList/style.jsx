@@ -43,5 +43,8 @@ export const ListInModal = styled.div`
 `;
 export const ListItem = styled.div`
     height: 30px;
+    margin: 5px;
     text-align: center;
+    cursor: pointer;
+    border: 1px grey solid;
 `;

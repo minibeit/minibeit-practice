@@ -9,7 +9,7 @@ export default function SchoolSelectModal(){
     const [showSelectBox, setShowSelectBox] = useState(false)
     const [schoolData, setSchoolData] = useState()
     const [schoolFilter, setSchoolFilter] = useRecoilState(schoolFilterState)
-    console.log(schoolFilter);
+    
     function clickSelectBtn(){
         if(showSelectBox === false){
             setShowSelectBox(true)
@@ -28,6 +28,7 @@ export default function SchoolSelectModal(){
                 setShowSelectBox={setShowSelectBox}
                 clickSelectBtn={clickSelectBtn}
                 schoolData={schoolData}
+                schoolFilter={schoolFilter}
                 setSchoolFilter={setSchoolFilter}
             />
         </>
